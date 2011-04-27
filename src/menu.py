@@ -79,10 +79,8 @@ def getLegalOptions(offense,defense,offweapon):
     legalOptions=[]
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     if dist>4:
-        legalOptions=[allOptions[0]] #run
-        #TODO: hey yeah
-        
-    if dist>0: #TODO Hey does fixme show up
+        legalOptions=[allOptions[0]] #run    #TODO: hey yeah
+    if dist>0: #TODO: Hey does fixme show up
         legalOptions.append(allOptions[1]) #walk
     if dist==0:
         legalOptions=[allOptions[2]] #punch
