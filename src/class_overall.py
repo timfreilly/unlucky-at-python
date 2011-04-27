@@ -50,7 +50,6 @@ class Actor:
         self.wound=0        #negative, based on lost/total hp
         self.concuss=0      #negative up to 15
         self.intimcount=0
-        self.dist=8
         self.x=0
         self.y=0
         
@@ -67,7 +66,9 @@ class Actor:
         else:
             print "Error text!"
     def rangeChanceCalc(self,defense,offweapon):
-        rangeChance=50+getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound+self.concuss+offweapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+defense.movedebuff
+        rangeChance=(50+getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound
+                     +self.concuss+offweapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+
+                     defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense,offweapon):
         meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
