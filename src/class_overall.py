@@ -44,7 +44,7 @@ class Actor:
         self.losthp=0
         self.draw=False
         self.drawdebuff=0   #negative on the turn you draw
-        self.move=0         #negative number
+        self.movedebuff=0         #negative number 
         self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
         self.wound=0        #negative, based on lost/total hp
@@ -67,10 +67,10 @@ class Actor:
         else:
             print "Error text!"
     def rangeChanceCalc(self,defense,offweapon):
-        rangeChance=50+getBonus(self.conc)+self.drawdebuff+self.move+self.dig+self.wound+self.concuss+offweapon.range*max(abs(offense.x-defense.y),abs(offense.x-defense.y))+defense.move
+        rangeChance=50+getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound+self.concuss+offweapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+defense.movedebuff
         return rangeChance
     def meleeChanceCalc(self,defense,offweapon):
-        meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.move
+        meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
         return meleeChance
     def getLocation(self,roll=999):
         if roll==999:
@@ -151,4 +151,19 @@ class Actor:
             self.wound=-10
         else:
             pass
-
+    def move(self,defense,distance):
+        self.movedebuff = int(-distance *2.5) #will charge as much for a 6 move as an 8
+        if distance < 1: #moving backwards
+            self.x += distance if self.x < defense.x else -distance
+            self.y += distance if self.y < defense.y else -distance
+            return
+        if abs(self.x-defense.x) <=distance: #run will bring them to the closest spot
+            self.x = defense.x + (1 if self.x > defense.x else -1)
+        else:
+            self.x += distance if self.x < defense.x else -distance
+                
+        if abs(self.y-defense.y) <=distance: #run will bring them to the closest spot
+            self.y = defense.y + (1 if self.y > defense.y else -1)
+        else:
+            self.y += distance if self.y < defense.y else -distance
+        

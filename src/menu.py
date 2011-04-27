@@ -79,12 +79,12 @@ def getLegalOptions(offense,defense,offweapon):
     legalOptions=[]
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     if dist>4:
-        legalOptions=[allOptions[0]] #run    #TODO: hey yeah
-    if dist>0: #TODO: Hey does fixme show up
+        legalOptions=[allOptions[0]] #run    
+    if dist>1: 
         legalOptions.append(allOptions[1]) #walk
-    if dist==0:
+    if dist==1: 
         legalOptions=[allOptions[2]] #punch
-    if dist==0 and defense.grapple==0:
+    if dist==1 and defense.grapple==0: 
         legalOptions.append(allOptions[3]) #grab
     if defense.grapple==0 and offense.grapple==0:
         legalOptions.append(allOptions[12]) #back away
@@ -96,7 +96,7 @@ def getLegalOptions(offense,defense,offweapon):
             legalOptions.append(allOptions[5]) #draw and dig
         else:
             legalOptions.append(allOptions[6]) #fire
-    if dist<=2 and offweapon.special=="saber":
+    if dist<=2 and offweapon.special=="saber": #dist 2 probably ok?
         legalOptions.append(allOptions[14]) #saberize   
     legalOptions.append(allOptions[7]) #intimidate
     if offense.dig<=10:
@@ -150,28 +150,14 @@ def menuChoice(offense,defense,offweapon):
     turnText=turnText.replace("HALF",str(dist/2))
     print turnText
     turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
-    if turnAction=="RUN": #fix for coordinates
-        if dist<=8:
-            offense.dist=0
-            defense.dist=0 
-        else:
-            offense.dist=offense.dist-4
-            defense.dist=defense.dist-4 
-        offense.move=-20
+    if turnAction=="RUN":
+        offense.move(defense,8)
         return 1
-    elif turnAction=="WALK": #fix for coordinates
-        if dist<=4:
-            offense.dist=0
-            defense.dist=0
-        else:
-            offense.dist=offense.dist-2
-            defense.dist=defense.dist-2
-        offense.move=-10
+    elif turnAction=="WALK":
+        offense.move(defense,4)
         return 1
-    elif turnAction=="BACKAWAY": #fix for coordinates
-        offense.dist=offense.dist+1
-        defense.dist=defense.dist+1
-        offense.move=-5
+    elif turnAction=="BACKAWAY": 
+        offense.move(defense,-2)
     elif turnAction=="PUNCH":
         offense.punch(defense,offweapon)
         offense.dig=0
@@ -229,12 +215,14 @@ def menuChoice(offense,defense,offweapon):
         print "Total Health Points: ",offense.hp,"\t\tLost Health Points: ",offense.losthp
         print "Buff from Dig Deep: ", offense.dig,"\t\tIntimidation success: ",offense.intimcount
         print "Debuff from wounds: ",offense.wound,"\t\tDebuff from concussion: ",offense.concuss
+        print "Position X:",offense.x,'Y:',offense.y
         print
         print "Current stats for",defense.name,":"
         print "Bravery: ",defense.brav,"\t\tConcentration: ",defense.conc,"\t\tGrit: ",defense.grit
         print "Total Health Points: ",defense.hp,"\t\tLost Health Points: ",defense.losthp
         print "Buff from Dig Deep: ", defense.dig,"\t\tIntimidation success: ",defense.intimcount
         print "Debuff from wounds: ",defense.wound,"\t\tDebuff from concussion: ",defense.concuss
+        print "Position X:",defense.x,'Y:',defense.y
         print
         time.sleep(2)
         return 0
