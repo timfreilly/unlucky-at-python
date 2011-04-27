@@ -191,7 +191,7 @@ def menuChoice(offense,defense,offweapon):
         return 1
     
     elif turnAction=="MENU":
-        print "A high Bravery means better punches, but you must be 0 distance away."
+        print "A high Bravery means better punches, but you must up close."
         print "If you Grab the banker, your punches are more likely to hit."
         print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
         print "Intimidation relies on your Grit and the banker's Grit. If you win the\n battle of wills you get a point,but losing subtracts a point. 3 points wins the game!"

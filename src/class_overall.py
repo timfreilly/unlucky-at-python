@@ -44,8 +44,7 @@ class Actor:
         self.wound=0        #negative, based on lost/total hp
         self.concuss=0      #negative up to 15
         self.intimcount=0
-        self.x=0
-        self.y=0
+        self.x, self.y=0
         self.isNPC=False
         
         
@@ -56,7 +55,6 @@ class Actor:
             return self._name
     def set_name(self,name):
         self._name = name
-        
     name = property(get_name,set_name) #use name for middle of a sentence
 
     def get_cap_name(self):
@@ -64,7 +62,7 @@ class Actor:
             return self._name.capitalize()
         else:
             return self._name
-    cap_name = property(get_cap_name) #use cap_name for the start of a sentance
+    cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
     def addRoots(self,root):
         if root==1:
