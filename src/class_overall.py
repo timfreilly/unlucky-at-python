@@ -44,7 +44,8 @@ class Actor:
         self.wound=0        #negative, based on lost/total hp
         self.concuss=0      #negative up to 15
         self.intimcount=0
-        self.x, self.y=0
+        self.x=0
+        self.y=0
         self.isNPC=False
         
         

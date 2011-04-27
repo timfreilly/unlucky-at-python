@@ -233,31 +233,7 @@ def errorCatch(offense,defense, offweapon):
         return False
    
 
-def gameEnd(offense,defense):
-    print
-    print
-    if defense.wound<=-20:
-        print defense.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
-        return True
-    elif offense.intimcount==3:
-        print "You've intimidated",defense.name,"into submission and make off with the cash!"
-        return True
-    elif defense.concuss<=-15:
-        print defense.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
-        return True
-    elif defense.intimcount==3:
-        print defense.cap_name,"is far too intimidating and will never back down.  You lose!"
-        return True
-    elif offense.wound<=-20:
-        print "You have sustained serious wounds.  You lose!"
-        return True
-    elif turnCount>10:
-        print "You've waited too long and the sheriff walks in the door.  You lose!"
-        return True
-    elif quitChoice==True:
-        return True
-    else:
-        return False
+
     
     
 print "Welcome to Unlucky at Python"
@@ -273,73 +249,107 @@ print "to be captured.  Good luck, partner!"
 print
 
 
-
-
-#Character creation and choice of roots
-
-player=class_overall.Actor(raw_input("What is your character's name?"))
-player.x = 16
-player.y = 16
-print player
-print
-print "A Root improves one of your stats.  Bravery improves"
-print "punches, Concentration improves shooting, and Grit improves"
-print "intimidation."
-print
-if (player.brav+player.conc+player.grit)>120:
-    player.addRoots(rootsMenu())
-else:
-    print "Total stats are under 120.  Choose two Roots."
-    player.addRoots(rootsMenu())
-    player.addRoots(rootsMenu())
-print player
-print
-playerWeapon=weaponChoose(player.cap_name,weaponsMenu())
-#print playerWeapon
-
-print
-print "Creating stats for the banker."
-time.sleep(1)
-banker=class_overall.Actor("the banker")
-banker.x = 0
-banker.y = 0
-banker.isNPC=True
-if (banker.brav+banker.conc+banker.grit)>120:
-    banker.addRoots(random.randint(1,3))
-    print "The banker added one Root."
-else:
-    banker.addRoots(random.randint(1,3))
-    banker.addRoots(random.randint(1,3))
-    print "The banker added two Roots."
-print banker
-print
-bankerWeaponChoice=random.randint(1,4)
-bankerWeapon=weaponChoose(banker.cap_name,bankerWeaponChoice)
-#print bankerWeapon
-time.sleep(1)
-
-quitChoice=False
-turnCount=1
-while gameEnd(player,banker)==False:
-    print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
-    print "Beginning turn number ",turnCount,"."
-    print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
-    time.sleep(1)
-    quitChoice=errorCatch(player,banker,playerWeapon)  #player turn
- 
-    
-    print
-    turnCount+=1
-
-    banker.getWounds()
-    if gameEnd(player,banker)==True:  #checks for game end before banker turn
+class Scenario:
+    def __init__(self):
+        self.players = [] #eventually useful?
+        self.npcs = [] #eventually useful?
+        
+    def createPlayer(self):
+        self.player=class_overall.Actor(raw_input("What is your character's name?"))
+        self.player.x = 16
+        self.player.y = 16
+        print self.player
         print
-        print "Goodbye!"
-        break
+        print "A Root improves one of your stats.  Bravery improves punches,"
+        print "Concentration improves shooting, and Grit improves intimidation."
+        print
+        if (self.player.brav+self.player.conc+self.player.grit)>120:
+            self.player.addRoots(rootsMenu())
+        else:
+            print "Total stats are under 120.  Choose two Roots."
+            self.player.addRoots(rootsMenu())
+            self.player.addRoots(rootsMenu())
+        print self.player
+        print
+        self.playerWeapon=weaponChoose(self.player.cap_name,weaponsMenu())
+        
+    def createNPC(self):
+        print
+        print "Creating stats for the banker."
+        time.sleep(1)
+        self.npc=class_overall.Actor("the banker")
+        self.npc.x = 0
+        self.npc.y = 0
+        self.npc.isNPC=True
+        if (self.npc.brav+self.npc.conc+self.npc.grit)>120:
+            self.npc.addRoots(random.randint(1,3))
+            print "The banker added one Root."
+        else:
+            self.npc.addRoots(random.randint(1,3))
+            self.npc.addRoots(random.randint(1,3))
+            print "The banker added two Roots."
+        print self.npc
+        print
+        bankerWeaponChoice=random.randint(1,4)
+        self.bankerWeapon=weaponChoose(self.npc.cap_name,bankerWeaponChoice)
+        #print bankerWeapon
+        time.sleep(1)
 
-    menuChoice(banker,player,bankerWeapon) #banker turn
-    
-    time.sleep(1)
+    def gameEnd(self,offense,defense):
+        print
+        print
+        if defense.wound<=-20:
+            print defense.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
+            return True
+        elif offense.intimcount==3:
+            print "You've intimidated",defense.name,"into submission and make off with the cash!"
+            return True
+        elif defense.concuss<=-15:
+            print defense.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
+            return True
+        elif defense.intimcount==3:
+            print defense.cap_name,"is far too intimidating and will never back down.  You lose!"
+            return True
+        elif offense.wound<=-20:
+            print "You have sustained serious wounds.  You lose!"
+            return True
+        elif self.turnCount>10:
+            print "You've waited too long and the sheriff walks in the door.  You lose!"
+            return True
+        elif self.quitChoice==True:
+            return True
+        else:
+            return False
 
-    print
-    player.getWounds()
+    def playGame(self):
+        
+        self.quitChoice=False
+        self.turnCount=1
+        while self.gameEnd(self.player,self.npc)==False:
+            print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
+            print "Beginning turn number ",self.turnCount,"."
+            print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
+            time.sleep(1)
+            self.quitChoice=errorCatch(self.player,self.npc,self.playerWeapon)  #player turn
+         
+            
+            print
+            self.turnCount+=1
+        
+            self.npc.getWounds()
+            if self.gameEnd(self.player,self.npc)==True:  #checks for game end before banker turn
+                print
+                print "Goodbye!"
+                break
+        
+            menuChoice(self.npc,self.player,self.bankerWeapon) #banker turn
+            
+            time.sleep(1)
+        
+            print
+            self.player.getWounds()
+            
+game = Scenario()
+game.createPlayer()
+game.createNPC()
+game.playGame()
