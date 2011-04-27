@@ -5,6 +5,9 @@ import random
 import math
 
 
+import class_weapon
+
+
 locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4th slot has no value for lower body parts
                    ["Right Leg", 40, 70, 200, 1000],
                    ["Non-Gun Arm", 50, 90, 200, 1000],
@@ -14,8 +17,6 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
                    ["Gut",  30, 60, 80, 200],
                    ["Chest", 20, 70, 80, 200],
                    ["Head", 10, 40, 70, 100]]
-
-
 
 
     
@@ -74,12 +75,46 @@ class Actor:
             self.grit+=10
         else:
             print "Error text!"
-    def rangeChanceCalc(self,defense,offweapon):
+    def addWeapon(self):
+        if self.isNPC:
+            weaponChoice=random.randint(1,4)
+        else:
+            weaponChoice = 0
+            print "Choose your weapon:"
+            print "1. Six-shooter \tMedium range penalty\tSix bullets/ reload \tStandard damage"
+            print "2. Shotgun \tHigh range penalty \tThree bullets/ reload \tIncreased damage"
+            print "3. Rifle \tNo range penalty \tOne bullet/ reload \tMassive damage"
+            print "4. Saber \tUsable from 0 to 2 feet\tNo reload \tIncreased damage"
+            while weaponChoice < 1 or weaponChoice > 4:
+                try:
+                    weaponChoice=input("Which weapon will you use?")
+                except SyntaxError:
+                    print "Please enter your choice by number."
+                except NameError:
+                    print "Please enter your choice by number."
+        
+        if weaponChoice==1:
+            self.weapon=class_weapon.Weapon(self.name,1,6,"standard",0,True)
+            print self.cap_name," chooses a six-shooter."
+        elif weaponChoice==2:
+            self.weapon=class_weapon.Weapon(self.name,2,3,"standard",10,True)
+            print self.cap_name," chooses a shotgun."
+        elif weaponChoice==3:
+            self.weapon=class_weapon.Weapon(self.name,0,1,"standard",30,True)
+            print self.cap_name," chooses a rifle."
+        elif weaponChoice==4:
+            self.weapon=class_weapon.Weapon(self.name,0,10,"saber",20,False)
+            print self.cap_name," chooses a saber."
+      
+        
+        
+        
+    def rangeChanceCalc(self,defense):
         rangeChance=(50+getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound
-                     +self.concuss+offweapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+
+                     +self.concuss+self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+
                      defense.movedebuff)
         return rangeChance
-    def meleeChanceCalc(self,defense,offweapon):
+    def meleeChanceCalc(self,defense):
         meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
         return meleeChance
     def getLocation(self,roll=999):
@@ -92,9 +127,9 @@ class Actor:
         else :
             location=locationAndDamage[(roll-20)/10]
         return location
-    def getDamage(self,location,isMelee,offweapon, roll=999): #Concussion(melee) is true, range false
+    def getDamage(self,location,isMelee, roll=999): #Concussion(melee) is true, range false
         if roll ==999:
-            roll=reRoll()+offweapon.sharp
+            roll=reRoll()+self.weapon.sharp
         if roll <=location[1]:
             damage=2
             depth="Scratch damage "
@@ -108,31 +143,31 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if isMelee==False:
-            print damage,"damage."
-        else:
+        if isMelee:
             damage=damage/2
-            print damage,"damage and ",damage,"concussion."
+            print damage,"damage and",damage,"concussion."
+        else:
+            print damage,"damage."
         return damage
 
-    def shoot(self,defense,offweapon):
+    def shoot(self,defense):
         roll=reRoll()
-        if roll<=self.rangeChanceCalc(defense,offweapon):
-            damage=self.getDamage(self.getLocation(),False,offweapon)
+        if roll<=self.rangeChanceCalc(defense):
+            damage=self.getDamage(self.getLocation(),False)
             defense.losthp+=damage
         else:
             print "Shot missed!"
-    def punch(self,defense,offweapon):
+    def punch(self,defense):
         roll=reRoll()
-        if roll<=self.meleeChanceCalc(defense,offweapon):
-            damage=self.getDamage(self.getLocation(),True,offweapon)
+        if roll<=self.meleeChanceCalc(defense):
+            damage=self.getDamage(self.getLocation(),True)
             defense.losthp+=damage
             defense.concuss-=damage
         else:
             print "Missed!"
-    def grab(self,defense,offweapon):
+    def grab(self,defense):
         roll=reRoll()
-        if roll<=self.meleeChanceCalc(defense,offweapon):
+        if roll<=self.meleeChanceCalc(defense):
             print "Grab succeeds! Future punches are more likely to hit."
             defense.grapple=15
         else:

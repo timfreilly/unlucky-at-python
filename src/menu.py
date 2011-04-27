@@ -20,37 +20,6 @@ def rootsMenu():
         except NameError:
             print "Please enter your choice by number."
     return root
-
-def weaponsMenu():
-    weaponChoice = 0
-    print "Choose your weapon:"
-    print "1. Six-shooter \tMedium range penalty\tSix bullets/ reload \tStandard damage"
-    print "2. Shotgun \tHigh range penalty \tThree bullets/ reload \tIncreased damage"
-    print "3. Rifle \tNo range penalty \tOne bullet/ reload \tMassive damage"
-    print "4. Saber \tUsable from 0 to 2 feet\tNo reload \tIncreased damage"
-    while weaponChoice < 1 or weaponChoice > 4:
-        try:
-            weaponChoice=input("Which weapon will you use?")
-        except SyntaxError:
-            print "Please enter your choice by number."
-        except NameError:
-            print "Please enter your choice by number."
-    return weaponChoice
-
-def weaponChoose(name,weaponChoice):
-    if weaponChoice==1:
-        x=class_weapon.Weapon(name,1,6,"standard",0,True)
-        print name," chooses a six-shooter."
-    elif weaponChoice==2:
-        x=class_weapon.Weapon(name,2,3,"standard",10,True)
-        print name," chooses a shotgun."
-    elif weaponChoice==3:
-        x=class_weapon.Weapon(name,0,1,"standard",30,True)
-        print name," chooses a rifle."
-    elif weaponChoice==4:
-        x=class_weapon.Weapon(name,0,10,"saber",20,False)
-        print name," chooses a saber."
-    return x
     
 
 allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE.", "RUN"],
@@ -69,7 +38,7 @@ allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE
             ["Reload your gun.", "OFFENSE reloads.", "RELOAD"],
             ["Slash at the banker with your saber.", "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
-def getLegalOptions(offense,defense,offweapon):
+def getLegalOptions(offense,defense):
     legalOptions=[]
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     if dist>4:
@@ -82,15 +51,15 @@ def getLegalOptions(offense,defense,offweapon):
         legalOptions.append(allOptions[3]) #grab
     if defense.grapple==0 and offense.grapple==0:
         legalOptions.append(allOptions[12]) #back away
-    if offweapon.type==True:
-        if offweapon.bullets==0:
+    if offense.weapon.type==True:
+        if offense.weapon.bullets==0:
             legalOptions.append(allOptions[13]) #reload
         elif offense.draw==False:
             legalOptions.append(allOptions[4]) #draw and fire
             legalOptions.append(allOptions[5]) #draw and dig
         else:
             legalOptions.append(allOptions[6]) #fire
-    if dist<=2 and offweapon.special=="saber": #dist 2 probably ok?
+    if dist<=2 and offense.weapon.special=="saber": #dist 2 probably ok?
         legalOptions.append(allOptions[14]) #saberize   
     legalOptions.append(allOptions[7]) #intimidate
     if offense.dig<=10:
@@ -103,10 +72,10 @@ def getLegalOptions(offense,defense,offweapon):
 
 
 
-def menuChoice(offense,defense,offweapon):
+def menuChoice(offense,defense):
 
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
-    legalOptions=getLegalOptions(offense,defense,offweapon)
+    legalOptions=getLegalOptions(offense,defense)
     if offense.isNPC:
         print offense.cap_name,"takes a turn.",
         count=0
@@ -153,34 +122,34 @@ def menuChoice(offense,defense,offweapon):
     elif turnAction=="BACKAWAY": 
         offense.move(defense,-2)
     elif turnAction=="PUNCH":
-        offense.punch(defense,offweapon)
+        offense.punch(defense)
         offense.dig=0
         return 1
     elif turnAction=="GRAB":
-        offense.grab(defense,offweapon)
+        offense.grab(defense)
         offense.dig=0
         return 1
     elif turnAction=="RELOAD":
-        offweapon.bullets=offweapon.maxbullets
+        offense.weapon.bullets=offense.weapon.maxbullets
         return 1
     elif turnAction=="DRAWFIRE":
         offense.draw=True
         offense.drawdebuff=-10
-        offense.shoot(defense,offweapon)
+        offense.shoot(defense)
         offense.dig=0
-        offweapon.bullets-=1
+        offense.weapon.bullets-=1
         return 1
     elif turnAction=="DRAWDIG":
         offense.draw=True
         offense.dig+=5
         return 1
     elif turnAction=="FIRE":
-        offense.shoot(defense,offweapon)
+        offense.shoot(defense)
         offense.dig=0
-        offweapon.bullets-=1
+        offense.weapon.bullets-=1
         return 1
     elif turnAction=="SABER":
-        offense.punch(defense,offweapon)
+        offense.punch(defense)
         offense.dig=0
     elif turnAction=="INTIM":
         offense.intimidate(defense)
@@ -223,10 +192,10 @@ def menuChoice(offense,defense,offweapon):
     elif turnAction=="QUIT":
         return 2
 
-def errorCatch(offense,defense, offweapon):
+def errorCatch(offense,defense):
     successfulChoice=0
     while successfulChoice==0: #errors return 0, successes return 1
-        successfulChoice=menuChoice(offense,defense,offweapon)
+        successfulChoice=menuChoice(offense,defense)
     if successfulChoice==2:
         return True  #return this value to quitChoice
     else:
@@ -268,7 +237,8 @@ class Scenario:
             self.player.addRoots(rootsMenu())
         print self.player
         print
-        self.playerWeapon=weaponChoose(self.player.cap_name,weaponsMenu())
+        self.player.addWeapon()
+        
         
     def createNPC(self):
         print
@@ -287,9 +257,7 @@ class Scenario:
             print "The banker added two Roots."
         print self.npc
         print
-        bankerWeaponChoice=random.randint(1,4)
-        self.bankerWeapon=weaponChoose(self.npc.cap_name,bankerWeaponChoice)
-        #print bankerWeapon
+        self.npc.addWeapon()
         time.sleep(1)
 
     def gameEnd(self,offense,defense):
@@ -327,7 +295,7 @@ class Scenario:
             print "Beginning turn number ",self.turnCount,"."
             print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
             time.sleep(1)
-            self.quitChoice=errorCatch(self.player,self.npc,self.playerWeapon)  #player turn
+            self.quitChoice=errorCatch(self.player,self.npc)  #player turn
          
             
             print
@@ -339,7 +307,7 @@ class Scenario:
                 print "Goodbye!"
                 break
         
-            menuChoice(self.npc,self.player,self.bankerWeapon) #banker turn
+            menuChoice(self.npc,self.player) #banker turn
             
             time.sleep(1)
         
