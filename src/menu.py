@@ -6,20 +6,6 @@ import time
 import class_overall
 #import class_weapon
 
-
-def rootsMenu():
-    print "(1) Troublemaker: +10 bravery"
-    print "(2) Wary eye: +10 concentration"
-    print "(3) Tanned hide: +10 grit"
-    root = 0
-    while root != 1 and root != 2 and root != 3:
-        try:
-            root=input("Choose the number of your Root: ")
-        except SyntaxError:
-            print "Please enter your choice by number."
-        except NameError:
-            print "Please enter your choice by number."
-    return root
     
 
 allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE.", "RUN"],
@@ -51,7 +37,7 @@ def getLegalOptions(offense,defense):
         legalOptions.append(allOptions[3]) #grab
     if defense.grapple==0 and offense.grapple==0:
         legalOptions.append(allOptions[12]) #back away
-    if offense.weapon.type==True:
+    if offense.weapon.isRange==True:
         if offense.weapon.bullets==0:
             legalOptions.append(allOptions[13]) #reload
         elif offense.draw==False:
@@ -74,7 +60,7 @@ def getLegalOptions(offense,defense):
 
 def menuChoice(offense,defense):
 
-    dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
+    dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y)) #D&D 4E geometry
     legalOptions=getLegalOptions(offense,defense)
     if offense.isNPC:
         print offense.cap_name,"takes a turn.",
@@ -226,15 +212,7 @@ class Scenario:
         self.player.y = 16
         print self.player
         print
-        print "A Root improves one of your stats.  Bravery improves punches,"
-        print "Concentration improves shooting, and Grit improves intimidation."
-        print
-        if (self.player.brav+self.player.conc+self.player.grit)>120:
-            self.player.addRoots(rootsMenu())
-        else:
-            print "Total stats are under 120.  Choose two Roots."
-            self.player.addRoots(rootsMenu())
-            self.player.addRoots(rootsMenu())
+        self.player.addRoots()
         print self.player
         print
         self.player.addWeapon()
@@ -248,13 +226,7 @@ class Scenario:
         self.npc.x = 0
         self.npc.y = 0
         self.npc.isNPC=True
-        if (self.npc.brav+self.npc.conc+self.npc.grit)>120:
-            self.npc.addRoots(random.randint(1,3))
-            print "The banker added one Root."
-        else:
-            self.npc.addRoots(random.randint(1,3))
-            self.npc.addRoots(random.randint(1,3))
-            print "The banker added two Roots."
+        self.npc.addRoots()
         print self.npc
         print
         self.npc.addWeapon()

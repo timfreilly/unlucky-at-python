@@ -7,15 +7,21 @@ import math
 
 import class_weapon
 
-
+locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4th slot has no value for lower body parts
+                   ["Right Leg", 40, 70, 200, 1000],
+                   ["Non-Gun Arm", 50, 90, 200, 1000],
+                   ["Gun Arm", 30, 80, 200, 1000],
+                   ["Left Shoulder", 40, 70, 90, 200],
+                   ["Right Shoulder", 40, 70, 90, 200],
+                   ["Gut",  30, 60, 80, 200],
+                   ["Chest", 20, 70, 80, 200],
+                   ["Head", 10, 40, 70, 100]]
     
 def getBonus(stat):
-    bonus=3*math.floor((stat-40)/10)
-    return bonus
+    return 3*math.floor((stat-40)/10)
 
 def reRoll():
-    roll=random.randint(1,100)
-    return roll
+    return random.randint(1,100)
 
 
 class Actor:
@@ -43,7 +49,7 @@ class Actor:
         return self.cap_name+"'s stats: "+str(self.hp)+" Health Points, \nBravery: "+str(self.brav)+"\tConcentration: "+str(self.conc)+"\tGrit: "+str(self.grit)
     
     def get_name(self):
-            return self._name
+        return self._name
     def set_name(self,name):
         self._name = name
     name = property(get_name,set_name) #use name for middle of a sentence
@@ -55,15 +61,41 @@ class Actor:
             return self._name
     cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
-    def addRoots(self,root):
-        if root==1:
-            self.brav+=10
-        elif root==2:
-            self.conc+=10
-        elif root==3:
-            self.grit+=10
-        else:
-            print "Error text!"
+
+    def addRoots(self):
+        if not self.isNPC:
+            print "A Root improves one of your stats.  Bravery improves punches,"
+            print "Concentration improves shooting, and Grit improves intimidation."
+            print
+        roots = 1 if (self.brav+self.conc+self.grit)>120 else 2
+        if not self.isNPC and roots == 2:
+            print "Due to your tough upbringing, pick two Roots."
+            print
+        while roots:
+            roots -= 1
+            if self.isNPC:
+                root = random.randint(1,3)
+            else:
+                print "(1) Troublemaker: +10 bravery"
+                print "(2) Wary eye: +10 concentration"
+                print "(3) Tanned hide: +10 grit"
+                root = 0
+                while root != 1 and root != 2 and root != 3:
+                    try:
+                        root=input("Choose the number of your Root: ")
+                    except SyntaxError:
+                        print "Please enter your choice by number."
+                    except NameError:
+                        print "Please enter your choice by number."
+                print
+            if root==1:
+                self.brav+=10
+            elif root==2:
+                self.conc+=10
+            elif root==3:
+                self.grit+=10
+
+
     def addWeapon(self):
         if self.isNPC:
             weaponChoice=random.randint(1,4)
@@ -107,15 +139,7 @@ class Actor:
         meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
         return meleeChance
     def getLocation(self):
-        locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4th slot has no value for lower body parts
-                   ["Right Leg", 40, 70, 200, 1000],
-                   ["Non-Gun Arm", 50, 90, 200, 1000],
-                   ["Gun Arm", 30, 80, 200, 1000],
-                   ["Left Shoulder", 40, 70, 90, 200],
-                   ["Right Shoulder", 40, 70, 90, 200],
-                   ["Gut",  30, 60, 80, 200],
-                   ["Chest", 20, 70, 80, 200],
-                   ["Head", 10, 40, 70, 100]]
+        
         roll=reRoll()
         if roll<=15:
             location=locationAndDamage[0]
@@ -139,11 +163,11 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if self.weapon.isMelee:
+        if self.weapon.isRange:
+            print damage,"damage."
+        else:
             damage=damage/2
             print damage,"damage and",damage,"concussion."
-        else:
-            print damage,"damage."
         return damage
 
     def shoot(self,defense):
