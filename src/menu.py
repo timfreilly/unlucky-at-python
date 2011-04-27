@@ -7,12 +7,6 @@ import class_overall
 import class_weapon
 
 
-def smartCaps(name):
-    if name.find("the ")==0: #if the name starts with "the "
-        return name.capitalize()
-    else:
-        return name
-
 def rootsMenu():
         print "(1) Troublemaker: +10 bravery"
         print "(2) Wary eye: +10 concentration"
@@ -46,16 +40,16 @@ def weaponsMenu():
 def weaponChoose(name,weaponChoice):
     if weaponChoice==1:
         x=class_weapon.Weapon(name,1,6,"standard",0,True)
-        print smartCaps(name)," chooses a six-shooter."
+        print name," chooses a six-shooter."
     elif weaponChoice==2:
         x=class_weapon.Weapon(name,2,3,"standard",10,True)
-        print smartCaps(name)," chooses a shotgun."
+        print name," chooses a shotgun."
     elif weaponChoice==3:
         x=class_weapon.Weapon(name,0,1,"standard",30,True)
-        print smartCaps(name)," chooses a rifle."
+        print name," chooses a rifle."
     elif weaponChoice==4:
         x=class_weapon.Weapon(name,0,10,"saber",20,False)
-        print smartCaps(name)," chooses a saber."
+        print name," chooses a saber."
     return x
     
 
@@ -114,7 +108,7 @@ def menuChoice(offense,defense,offweapon):
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     legalOptions=getLegalOptions(offense,defense,offweapon)
     if offense.isNPC:
-        print smartCaps(offense),"takes a turn.",
+        print offense.cap_name,"takes a turn.",
         count=0
         while count<=3:
             print ".",
@@ -144,7 +138,7 @@ def menuChoice(offense,defense,offweapon):
             print "Please enter your choice by number."
             return 0
     turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
-    turnText=turnText.replace("OFFENSE",smartCaps(offense.name))
+    turnText=turnText.replace("OFFENSE",offense.name)
     turnText=turnText.replace("DEFENSE",defense.name)
     turnText=turnText.replace("DISTANCE",str(dist))
     turnText=turnText.replace("HALF",str(dist/2))
@@ -243,16 +237,16 @@ def gameEnd(offense,defense):
     print
     print
     if defense.wound<=-20:
-        print smartCaps(defense), "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
+        print defense.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
         return True
     elif offense.intimcount==3:
         print "You've intimidated",defense.name,"into submission and make off with the cash!"
         return True
     elif defense.concuss<=-15:
-        print smartCaps(defense),"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
+        print defense.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
         return True
     elif defense.intimcount==3:
-        print smartCaps(defense),"is far too intimidating and will never back down.  You lose!"
+        print defense.cap_name,"is far too intimidating and will never back down.  You lose!"
         return True
     elif offense.wound<=-20:
         print "You have sustained serious wounds.  You lose!"
@@ -300,7 +294,7 @@ else:
     player.addRoots(rootsMenu())
 print player
 print
-playerWeapon=weaponChoose(player.name,weaponsMenu())
+playerWeapon=weaponChoose(player.cap_name,weaponsMenu())
 #print playerWeapon
 
 print
@@ -320,7 +314,7 @@ else:
 print banker
 print
 bankerWeaponChoice=random.randint(1,4)
-bankerWeapon=weaponChoose(banker.name,bankerWeaponChoice)
+bankerWeapon=weaponChoose(banker.cap_name,bankerWeaponChoice)
 #print bankerWeapon
 time.sleep(1)
 

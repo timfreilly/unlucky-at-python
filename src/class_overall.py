@@ -27,16 +27,10 @@ def reRoll():
     roll=random.randint(1,100)
     return roll
 
-def smartCaps(name):
-    if name.find("the ")==0:  #if the name starts with "the "
-        return name.capitalize()
-    else:
-        return name
-
 
 class Actor:
     def __init__(self, chosenName):
-        self.name=chosenName
+        self._name=chosenName
         self.brav=random.randint(1,100)
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
@@ -56,7 +50,22 @@ class Actor:
         
         
     def __str__(self):
-        return smartCaps(self.name)+"'s stats: "+str(self.hp)+" Health Points, \nBravery: "+str(self.brav)+"\tConcentration: "+str(self.conc)+"\tGrit: "+str(self.grit)
+        return self.cap_name+"'s stats: "+str(self.hp)+" Health Points, \nBravery: "+str(self.brav)+"\tConcentration: "+str(self.conc)+"\tGrit: "+str(self.grit)
+    
+    def get_name(self):
+            return self._name
+    def set_name(self,name):
+        self._name = name
+        
+    name = property(get_name,set_name) #use name for middle of a sentence
+
+    def get_cap_name(self):
+        if self._name.find("the ")==0: #if the name starts with "the "
+            return self._name.capitalize()
+        else:
+            return self._name
+    cap_name = property(get_cap_name) #use cap_name for the start of a sentance
+    
     def addRoots(self,root):
         if root==1:
             self.brav+=10
@@ -137,11 +146,11 @@ class Actor:
             print "Intimidate fails."
             self.intimcount-=1
         print "Overall intimidation score:"
-        print smartCaps(self.name),": ",self.intimcount,"\t\t",defense.name,": ",defense.intimcount
+        print self.cap_name,": ",self.intimcount,"\t\t",defense.cap_name,": ",defense.intimcount
     def getWounds(self):
         wounds=self.losthp/self.hp
         if wounds >=.25:
-            print smartCaps(self.name)," has lost ",self.losthp," points of health and is at "
+            print self.cap_name," has lost ",self.losthp," points of health and is at "
         if wounds >=.75:
             print "a massive disadvantage due to wounds."
             self.wound=-30
