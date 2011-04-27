@@ -4,7 +4,7 @@ import time
 
 
 import class_overall
-import class_weapon
+#import class_weapon
 
 
 def rootsMenu():

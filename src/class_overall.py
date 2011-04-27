@@ -8,17 +8,6 @@ import math
 import class_weapon
 
 
-locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4th slot has no value for lower body parts
-                   ["Right Leg", 40, 70, 200, 1000],
-                   ["Non-Gun Arm", 50, 90, 200, 1000],
-                   ["Gun Arm", 30, 80, 200, 1000],
-                   ["Left Shoulder", 40, 70, 90, 200],
-                   ["Right Shoulder", 40, 70, 90, 200],
-                   ["Gut",  30, 60, 80, 200],
-                   ["Chest", 20, 70, 80, 200],
-                   ["Head", 10, 40, 70, 100]]
-
-
     
 def getBonus(stat):
     bonus=3*math.floor((stat-40)/10)
@@ -117,9 +106,17 @@ class Actor:
     def meleeChanceCalc(self,defense):
         meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
         return meleeChance
-    def getLocation(self,roll=999):
-        if roll==999:
-            roll=reRoll()
+    def getLocation(self):
+        locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4th slot has no value for lower body parts
+                   ["Right Leg", 40, 70, 200, 1000],
+                   ["Non-Gun Arm", 50, 90, 200, 1000],
+                   ["Gun Arm", 30, 80, 200, 1000],
+                   ["Left Shoulder", 40, 70, 90, 200],
+                   ["Right Shoulder", 40, 70, 90, 200],
+                   ["Gut",  30, 60, 80, 200],
+                   ["Chest", 20, 70, 80, 200],
+                   ["Head", 10, 40, 70, 100]]
+        roll=reRoll()
         if roll<=15:
             location=locationAndDamage[0]
         elif roll <=30:
@@ -127,9 +124,8 @@ class Actor:
         else :
             location=locationAndDamage[(roll-20)/10]
         return location
-    def getDamage(self,location,isMelee, roll=999): #Concussion(melee) is true, range false
-        if roll ==999:
-            roll=reRoll()+self.weapon.sharp
+    def getDamage(self,location): #Concussion(melee) is true, range false
+        roll=reRoll()+self.weapon.sharp
         if roll <=location[1]:
             damage=2
             depth="Scratch damage "
@@ -143,7 +139,7 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if isMelee:
+        if self.weapon.isMelee:
             damage=damage/2
             print damage,"damage and",damage,"concussion."
         else:
@@ -153,14 +149,14 @@ class Actor:
     def shoot(self,defense):
         roll=reRoll()
         if roll<=self.rangeChanceCalc(defense):
-            damage=self.getDamage(self.getLocation(),False)
+            damage=self.getDamage(self.getLocation())
             defense.losthp+=damage
         else:
             print "Shot missed!"
     def punch(self,defense):
         roll=reRoll()
         if roll<=self.meleeChanceCalc(defense):
-            damage=self.getDamage(self.getLocation(),True)
+            damage=self.getDamage(self.getLocation())
             defense.losthp+=damage
             defense.concuss-=damage
         else:
