@@ -52,6 +52,7 @@ class Actor:
         self.intimcount=0
         self.x=0
         self.y=0
+        self.isNPC=False
         
         
     def __str__(self):

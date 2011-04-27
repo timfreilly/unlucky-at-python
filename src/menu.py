@@ -101,7 +101,7 @@ def getLegalOptions(offense,defense,offweapon):
     legalOptions.append(allOptions[7]) #intimidate
     if offense.dig<=10:
         legalOptions.append(allOptions[8]) #dig deep
-    if offense.name!="the banker":
+    if not offense.isNPC:
         legalOptions.append(allOptions[9]) #menu help
         legalOptions.append(allOptions[10]) #status
         legalOptions.append(allOptions[11]) #quit
@@ -113,8 +113,8 @@ def menuChoice(offense,defense,offweapon):
 
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     legalOptions=getLegalOptions(offense,defense,offweapon)
-    if offense.name=="the banker":
-        print "The banker takes a turn.",
+    if offense.isNPC:
+        print offense.name.capitalize(),"takes a turn.",
         count=0
         while count<=3:
             print ".",
@@ -124,7 +124,7 @@ def menuChoice(offense,defense,offweapon):
         turnChoice=random.randint(1,len(legalOptions))
         print 
     else: # Prints a menu of legal options on the player's turn
-        print "You are ",dist," feet from the banker."
+        print "You are ",dist," feet from",defense.name+"."
         for x in range(1,len(legalOptions)+1):
             option=legalOptions[x-1][0]
             option=option.replace("DISTANCE",str(dist))
@@ -309,6 +309,7 @@ time.sleep(1)
 banker=class_overall.Actor("the banker")
 banker.x = 0
 banker.y = 0
+banker.isNPC=True
 if (banker.brav+banker.conc+banker.grit)>120:
     banker.addRoots(random.randint(1,3))
     print "The banker added one Root."
