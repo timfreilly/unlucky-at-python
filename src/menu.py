@@ -8,18 +8,18 @@ import class_weapon
 
 
 def rootsMenu():
-        print "(1) Troublemaker: +10 bravery"
-        print "(2) Wary eye: +10 concentration"
-        print "(3) Tanned hide: +10 grit"
-        root = 0
-        while root != 1 and root != 2 and root != 3:
-                try:
-                        root=input("Choose the number of your Root: ")
-                except SyntaxError:
-                        print "Please enter your choice by number."
-                except NameError:
-                        print "Please enter your choice by number."
-        return root
+    print "(1) Troublemaker: +10 bravery"
+    print "(2) Wary eye: +10 concentration"
+    print "(3) Tanned hide: +10 grit"
+    root = 0
+    while root != 1 and root != 2 and root != 3:
+        try:
+            root=input("Choose the number of your Root: ")
+        except SyntaxError:
+            print "Please enter your choice by number."
+        except NameError:
+            print "Please enter your choice by number."
+    return root
 
 def weaponsMenu():
     weaponChoice = 0
@@ -234,20 +234,6 @@ def errorCatch(offense,defense, offweapon):
    
 
 
-    
-    
-print "Welcome to Unlucky at Python"
-print "You have 10 turns to rob a bank."
-print "You will succeed if you:"
-print "Intimidate him more than he intimidates you,"
-print "Hit him until he sustains a concussion,"
-print "or Inflict massive damage."
-print
-print "If he out-intimidates you or you sustain"
-print "massive wounds, you will be weak enough "
-print "to be captured.  Good luck, partner!"
-print
-
 
 class Scenario:
     def __init__(self):
@@ -255,6 +241,17 @@ class Scenario:
         self.npcs = [] #eventually useful?
         
     def createPlayer(self):
+        print "Welcome to Unlucky at Python"
+        print "You have 10 turns to rob a bank."
+        print "You will succeed if you:"
+        print "Intimidate him more than he intimidates you,"
+        print "Hit him until he sustains a concussion,"
+        print "or Inflict massive damage."
+        print
+        print "If he out-intimidates you or you sustain"
+        print "massive wounds, you will be weak enough "
+        print "to be captured.  Good luck, partner!"
+        print
         self.player=class_overall.Actor(raw_input("What is your character's name?"))
         self.player.x = 16
         self.player.y = 16
