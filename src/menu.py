@@ -26,7 +26,7 @@ allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE
 
 def getLegalOptions(offense,defense):
     legalOptions=[]
-    dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
+    dist=offense.distance(defense)
     if dist>4:
         legalOptions=[allOptions[0]] #run    
     if dist>1: 
@@ -60,7 +60,7 @@ def getLegalOptions(offense,defense):
 
 def menuChoice(offense,defense):
 
-    dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y)) #D&D 4E geometry
+    dist=offense.distance(defense) 
     legalOptions=getLegalOptions(offense,defense)
     if offense.isNPC:
         print offense.cap_name,"takes a turn.",
