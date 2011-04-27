@@ -1,6 +1,6 @@
 import random
 import time
-import math
+#import math
 
 
 import class_overall
@@ -114,7 +114,7 @@ def menuChoice(offense,defense,offweapon):
     dist=max(abs(offense.x-defense.y),abs(offense.x-defense.y))
     legalOptions=getLegalOptions(offense,defense,offweapon)
     if offense.isNPC:
-        print offense.name.capitalize(),"takes a turn.",
+        print smartCaps(offense),"takes a turn.",
         count=0
         while count<=3:
             print ".",
@@ -243,16 +243,16 @@ def gameEnd(offense,defense):
     print
     print
     if defense.wound<=-20:
-        print "The banker has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
+        print smartCaps(defense), "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
         return True
     elif offense.intimcount==3:
-        print "You've intimidated the banker into subimssion and make off with the cash!"
+        print "You've intimidated",defense.name,"into submission and make off with the cash!"
         return True
     elif defense.concuss<=-15:
-        print "The banker has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
+        print smartCaps(defense),"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
         return True
     elif defense.intimcount==3:
-        print "The banker is far too intimidating and will never back down.  You lose!"
+        print smartCaps(defense),"is far too intimidating and will never back down.  You lose!"
         return True
     elif offense.wound<=-20:
         print "You have sustained serious wounds.  You lose!"
