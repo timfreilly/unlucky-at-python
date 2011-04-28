@@ -199,7 +199,6 @@ class Scenario:
         self.players.append(self.player)
         self.createNPC()
         self.npcs.append(self.npc)
-        self.rollInitiative()
         
         
     def createPlayer(self):
@@ -265,17 +264,18 @@ class Scenario:
             return False
 
     def rollInitiative(self):
-        #go through each actor and roll initiative for them
-        #add them to a list/dictionary
-        #sort the dictionary?
-        turns = []
+        #does not handle if people roll the an identical place
+        #TODO: have it return an ordered list of actors instead of the weird list of list
+        turnsLists = []
         for actor in self.players+self.npcs:
             place = random.randint(1,10)+actor.getBonus(actor.grit)
-            print 'TESTING: ',actor.name,'rolled a ',place
-            turns.append((place,actor))
-        print 'pre-sort',turns
-        turns = sorted(turns, key=itemgetter(0), reverse=True)
-        print 'post-sort',turns
+            turnsLists.append((place,actor))
+        turnsLists = sorted(turnsLists, key=itemgetter(0), reverse=True)
+        turns = []
+        for entry in turnsLists:
+            turns.append(entry[1])
+        print 'TESTING: sorted turnsLists',turnsLists
+        print 'TESTING: sorted turns list',turns
         return turns
             
 
@@ -291,7 +291,7 @@ class Scenario:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
-            if turnOrder[turnCount][1].isNPC:
+            if turnOrder[turnCount].isNPC:
                 self.npc.getWounds()
                 menuChoice(self.npc,self.player)
             else:
