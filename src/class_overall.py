@@ -44,6 +44,14 @@ class Actor:
     def __str__(self):
         return self.cap_name+"'s stats: "+str(self.hp)+" Health Points, \nBravery: "+str(self.brav)+"\tConcentration: "+str(self.conc)+"\tGrit: "+str(self.grit)
     
+    def showStatus(self):
+        print "Current stats for",self.name,":"
+        print "Bravery: ",self.brav,"\t\tConcentration: ",self.conc,"\t\tGrit: ",self.grit
+        print "Total Health Points: ",self.hp,"\t\tLost Health Points: ",self.losthp
+        print "Buff from Dig Deep: ", self.dig,"\t\tIntimidation success: ",self.intimcount
+        print "Debuff from wounds: ",self.wound,"\t\tDebuff from concussion: ",self.concuss
+        print "Position X:",self.x,'Y:',self.y
+    
     def get_name(self):
         return self._name
     def set_name(self,name):

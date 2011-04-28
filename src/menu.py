@@ -160,19 +160,10 @@ def menuChoice(offense,defense):
         time.sleep(2)
         return 0
     elif turnAction=="STATUS":
-        print "Current stats for",offense.name,":"
-        print "Bravery: ",offense.brav,"\t\tConcentration: ",offense.conc,"\t\tGrit: ",offense.grit
-        print "Total Health Points: ",offense.hp,"\t\tLost Health Points: ",offense.losthp
-        print "Buff from Dig Deep: ", offense.dig,"\t\tIntimidation success: ",offense.intimcount
-        print "Debuff from wounds: ",offense.wound,"\t\tDebuff from concussion: ",offense.concuss
-        print "Position X:",offense.x,'Y:',offense.y
         print
-        print "Current stats for",defense.name,":"
-        print "Bravery: ",defense.brav,"\t\tConcentration: ",defense.conc,"\t\tGrit: ",defense.grit
-        print "Total Health Points: ",defense.hp,"\t\tLost Health Points: ",defense.losthp
-        print "Buff from Dig Deep: ", defense.dig,"\t\tIntimidation success: ",defense.intimcount
-        print "Debuff from wounds: ",defense.wound,"\t\tDebuff from concussion: ",defense.concuss
-        print "Position X:",defense.x,'Y:',defense.y
+        offense.showStatus()
+        print
+        defense.showStatus()
         print
         time.sleep(2)
         return 0
@@ -265,7 +256,7 @@ class Scenario:
 
     def rollInitiative(self):
         #does not handle if people roll the an identical place
-        #TODO: have it return an ordered list of actors instead of the weird list of list
+        #TODO: make this code less ugly
         turnsLists = []
         for actor in self.players+self.npcs:
             place = random.randint(1,10)+actor.getBonus(actor.grit)
@@ -274,8 +265,8 @@ class Scenario:
         turns = []
         for entry in turnsLists:
             turns.append(entry[1])
-        print 'TESTING: sorted turnsLists',turnsLists
-        print 'TESTING: sorted turns list',turns
+        #print 'TESTING: sorted turnsLists',turnsLists
+        #print 'TESTING: sorted turns list',turns
         return turns
             
 
