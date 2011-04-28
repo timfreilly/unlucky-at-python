@@ -1,6 +1,7 @@
 import random
 import time
 #import math
+from operator import itemgetter
 
 
 import class_overall
@@ -194,6 +195,12 @@ class Scenario:
     def __init__(self):
         self.players = [] #eventually useful?
         self.npcs = [] #eventually useful?
+        self.createPlayer()
+        self.players.append(self.player)
+        self.createNPC()
+        self.npcs.append(self.npc)
+        self.rollInitiative()
+        
         
     def createPlayer(self):
         print "Welcome to Unlucky at Python"
@@ -257,35 +264,52 @@ class Scenario:
         else:
             return False
 
+    def rollInitiative(self):
+        #go through each actor and roll initiative for them
+        #add them to a list/dictionary
+        #sort the dictionary?
+        turns = []
+        for actor in self.players+self.npcs:
+            place = random.randint(1,10)+actor.getBonus(actor.grit)
+            print 'TESTING: ',actor.name,'rolled a ',place
+            turns.append((place,actor))
+        print 'pre-sort',turns
+        turns = sorted(turns, key=itemgetter(0), reverse=True)
+        print 'post-sort',turns
+        return turns
+            
+
     def playGame(self):
-        
+        turnOrder = self.rollInitiative()
         self.quitChoice=False
         self.roundCount=1
-        while self.gameEnd(self.player,self.npc)==False:
-            print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
-            print "Beginning round number ",self.roundCount,"."
-            print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
-            time.sleep(1)
-            self.quitChoice=errorCatch(self.player,self.npc)  #player turn
-         
-            
-            print
-            self.roundCount+=1
-        
-            self.npc.getWounds()
-            if self.gameEnd(self.player,self.npc)==True:  #checks for game end before banker turn
+        turnCount = 0
+        while self.gameEnd(self.player,self.npc)==False:  #TODO: Should test thoroughly that game can end mid-turn
+            if not turnCount:
+                print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
+                print "Beginning round number ",self.roundCount,"."
+                print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
-                print "Goodbye!"
-                break
-        
-            menuChoice(self.npc,self.player) #banker turn
-            
-            time.sleep(1)
-        
+                time.sleep(1)
+            if turnOrder[turnCount][1].isNPC:
+                self.npc.getWounds()
+                menuChoice(self.npc,self.player)
+            else:
+                self.player.getWounds()
+                self.quitChoice=errorCatch(self.player,self.npc)
+           
             print
-            self.player.getWounds()
-            
+            time.sleep(1)
+
+            turnCount+=1
+            if turnCount==len(turnOrder):
+                turnCount=0
+                self.roundCount+=1
+
+        print
+        print
+        print 'Goodbye!'
+        
 game = Scenario()
-game.createPlayer()
-game.createNPC()
+
 game.playGame()

@@ -15,8 +15,7 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
                    ["Chest", 20, 70, 80, 200],
                    ["Head", 10, 40, 70, 100]]
     
-def getBonus(stat):
-    return 3*math.floor((stat-40)/10)
+
 
 def reRoll():
     return random.randint(1,100)
@@ -59,7 +58,7 @@ class Actor:
     cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
     def getMaxHP(self):
-        return (30+getBonus(self.grit))
+        return (30+self.getBonus(self.grit))
     hp = property(getMaxHP)
 
     def addRoots(self):
@@ -95,6 +94,8 @@ class Actor:
             elif root==3:
                 self.grit+=10
 
+    def getBonus(self,stat):
+        return 3*math.floor((stat-40)/10)
 
     def addWeapon(self):
         if self.isNPC:
@@ -129,12 +130,12 @@ class Actor:
       
         
     def rangeChanceCalc(self,defense):
-        rangeChance=(50+getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound
+        rangeChance=(50+self.getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound
                      +self.concuss+self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+
                      defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense):
-        meleeChance=50+getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
+        meleeChance=50+self.getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
         return meleeChance
     def getLocation(self):
         
@@ -191,7 +192,7 @@ class Actor:
         else:
             print "Grab missed!"
     def intimidate(self,defense):
-        if getBonus(self.grit)+random.randint(1,10)+self.dig>getBonus(defense.grit)+random.randint(1,10):
+        if self.getBonus(self.grit)+random.randint(1,10)+self.dig>self.getBonus(defense.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."
             self.intimcount+=1
         else:
