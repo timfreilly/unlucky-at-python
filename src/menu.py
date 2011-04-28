@@ -32,10 +32,11 @@ class Scenario:
         self.players = [] #eventually useful?
         self.npcs = [] #eventually useful?
         self.createPlayer()
-        self.players.append(self.player)
         self.createNPC()
-        self.npcs.append(self.npc)
-        
+    
+    def getActors(self):
+        return self.players + self.npcs
+    actors = property(getActors)    
         
     def createPlayer(self):
         print "Welcome to Unlucky at Python"
@@ -50,6 +51,7 @@ class Scenario:
         print "to be captured.  Good luck, partner!"
         print
         self.player=class_overall.Actor(raw_input("What is your character's name?"))
+        self.players.append(self.player)
         self.player.x = 16
         self.player.y = 16
         print self.player
@@ -65,6 +67,7 @@ class Scenario:
         print "Creating stats for the banker."
         time.sleep(1)
         self.npc=class_overall.Actor("the banker", isNPC=True)
+        self.npcs.append(self.npc)
         self.npc.x = 0
         self.npc.y = 0
         self.npc.addRoots()
@@ -97,7 +100,7 @@ class Scenario:
         #does not handle if people roll the an identical place
         #TODO: make this code less ugly
         turnsLists = []
-        for actor in self.players+self.npcs:
+        for actor in self.actors:
             place = random.randint(1,10)+actor.getBonus(actor.grit)
             turnsLists.append((place,actor))
         turnsLists = sorted(turnsLists, key=itemgetter(0), reverse=True)
