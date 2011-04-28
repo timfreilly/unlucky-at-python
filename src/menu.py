@@ -59,7 +59,7 @@ def getLegalOptions(offense,defense):  #builds a list of the possible options
 
 
 
-def menuChoice(offense,defense):
+def menuChoice(offense,defense): #TODO: integrate into Scenario
 
     dist=offense.distance(defense) 
     legalOptions=getLegalOptions(offense,defense)
@@ -167,9 +167,9 @@ def menuChoice(offense,defense):
         time.sleep(2)
         return 0
     elif turnAction=="QUIT":
-        return 2
+        return 2 #must integrate
 
-def errorCatch(offense,defense):
+def errorCatch(offense,defense): #TODO: integrate menuChoice into Scenario so this may be folded in/removed
     successfulChoice=0
     while successfulChoice==0: #errors return 0, successes return 1
         successfulChoice=menuChoice(offense,defense)
@@ -231,10 +231,10 @@ class Scenario:
         print
         print
         if self.npc.wound<=-20:
-            print self.npc.defense.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
+            print self.npc.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
         elif self.player.intimcount==3:
             print "You've intimidated",self.npc.name,"into submission and make off with the cash!"
-        elif self.npc.defense.concuss<=-15:
+        elif self.npc.concuss<=-15:
             print self.npc.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
         elif self.npc.intimcount==3:
             print self.npc.cap_name,"is far too intimidating and will never back down.  You lose!"
@@ -242,8 +242,8 @@ class Scenario:
             print "You have sustained serious wounds.  You lose!"
         elif self.roundCount>10:
             print "You've waited too long and the sheriff walks in the door.  You lose!"
-        elif self.quitChoice==True:
-            return True
+        #elif self.quitChoice==True:
+        #   return True
         else: #if it doesn't match any of the possible game ending conditions, the game has not ended
             return False
         #if any of the above was true, return that the game is over
@@ -270,7 +270,7 @@ class Scenario:
         self.quitChoice=False
         self.roundCount=1
         turnCount = 0
-        while not self.gameEnd():  #TODO: Should test thoroughly that game can end mid-turn
+        while not self.gameEnd() and not self.quitChoice:  #TODO: Should test thoroughly that game can end mid-turn
             if not turnCount:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
