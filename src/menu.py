@@ -24,7 +24,7 @@ allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE
             ["Reload your gun.", "OFFENSE reloads.", "RELOAD"],
             ["Slash at the banker with your saber.", "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
-def getLegalOptions(offense,defense):
+def getLegalOptions(offense,defense):  #builds a list of the possible options
     legalOptions=[]
     dist=offense.distance(defense)
     if dist>4:
@@ -222,10 +222,9 @@ class Scenario:
         print
         print "Creating stats for the banker."
         time.sleep(1)
-        self.npc=class_overall.Actor("the banker")
+        self.npc=class_overall.Actor("the banker", isNPC=True)
         self.npc.x = 0
         self.npc.y = 0
-        self.npc.isNPC=True
         self.npc.addRoots()
         print self.npc
         print

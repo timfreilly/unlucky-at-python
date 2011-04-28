@@ -1,5 +1,3 @@
-
-
 import random
 #import time
 import math
@@ -25,12 +23,11 @@ def reRoll():
 
 
 class Actor:
-    def __init__(self, chosenName):
+    def __init__(self, chosenName, isNPC=False):
         self._name=chosenName
         self.brav=random.randint(1,100)
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
-        self.hp=(30+getBonus(self.grit))
         self.losthp=0
         self.draw=False
         self.drawdebuff=0   #negative on the turn you draw
@@ -42,7 +39,7 @@ class Actor:
         self.intimcount=0
         self.x=0
         self.y=0
-        self.isNPC=False
+        self.isNPC=isNPC
         
         
     def __str__(self):
@@ -61,6 +58,9 @@ class Actor:
             return self._name
     cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
+    def getMaxHP(self):
+        return (30+getBonus(self.grit))
+    hp = property(getMaxHP)
 
     def addRoots(self):
         if not self.isNPC:
