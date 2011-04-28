@@ -9,19 +9,19 @@ import class_overall
 
     
 
-allOptions=[["Run 8 feet to the banker.",               "OFFENSE runs 8 feet toward DEFENSE.",          "RUN"],
-            ["Walk up to 4 feet toward the banker.",    "OFFENSE walks toward DEFENSE.",                "WALK"],       
-            ["Punch the banker.",                       "OFFENSE attempts to punch DEFENSE.",           "PUNCH"],
-            ["Grab the banker.",                        "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
+allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet toward DEFENSE.",          "RUN"],
+            ["Walk up to 4 feet toward DEFENSE.",       "OFFENSE walks toward DEFENSE.",                "WALK"],       
+            ["Punch DEFENSE.",                          "OFFENSE attempts to punch DEFENSE.",           "PUNCH"],
+            ["Grab DEFENSE.",                           "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
             ["Draw your gun and fire.",                 "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
             ["Draw your gun and prepare your next shot.","OFFENSE draws and prepares the next shot.",   "DRAWDIG"],
-            ["Fire your gun.","OFFENSE attempts to shoot DEFENSE.",                                     "FIRE"] ,  
-            ["Attempt to intimidate the banker.",       "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
+            ["Fire your gun.",                          "OFFENSE attempts to shoot DEFENSE.",           "FIRE"] ,  
+            ["Attempt to intimidate DEFENSE.",          "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
             ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for the next move.","DIG"],
             ["Get help with the menu.",                 "",                                             "MENU"],
             ["Check the status of the fight.",          "",                                             "STATUS"],
             ["Quit.",                                   "",                                             "QUIT" ],
-            ["Walk 2 feet away from the banker.",       "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
+            ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
             ["Reload your gun.",                        "OFFENSE reloads.",                             "RELOAD"],
             ["Slash at the banker with your saber.",    "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
@@ -29,10 +29,10 @@ allOptions=[["Run 8 feet to the banker.",               "OFFENSE runs 8 feet tow
 
 class Scenario:
     def __init__(self):
-        self.players = [] #eventually useful?
-        self.npcs = [] #eventually useful?
+        self.players = [] #all players are added here
+        self.npcs = [] #all npcs are added here
         self.createPlayer()
-        self.createNPC()
+        self.createNPC('the banker')
     
     def getActors(self,exclude=None):
         allActors = self.players+self.npcs
@@ -65,11 +65,11 @@ class Scenario:
         self.player.addWeapon()
         
         
-    def createNPC(self):
+    def createNPC(self,name):
         print
-        print "Creating stats for the banker."
+        print "Creating stats for",name
         time.sleep(1)
-        self.npc=class_overall.Actor("the banker", isNPC=True)
+        self.npc=class_overall.Actor(name, isNPC=True)
         self.npcs.append(self.npc)
         self.npc.x = 0
         self.npc.y = 0
@@ -170,6 +170,8 @@ class Scenario:
                 print "You are ",dist," feet from",defense.name+"."
                 for x in range(1,len(legalOptions)+1):
                     option=legalOptions[x-1][0]
+                    option=option.replace("OFFENSE",offense.name)
+                    option=option.replace("DEFENSE",defense.name)
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
                     print x,".",
