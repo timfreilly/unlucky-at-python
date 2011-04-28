@@ -9,21 +9,21 @@ import class_overall
 
     
 
-allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE.", "RUN"],
-            ["Walk up to 4 feet toward the banker.", "OFFENSE walks toward DEFENSE.", "WALK"],       
-            ["Punch the banker.",            "OFFENSE attempts to punch DEFENSE.", "PUNCH"],
-            ["Grab the banker.",             "OFFENSE attempts to grab DEFENSE.","GRAB"],
-            ["Draw your gun and fire.",      "OFFENSE draws and shoots at DEFENSE.", "DRAWFIRE"] ,            
-            ["Draw your gun and prepare your next shot.","OFFENSE draws and prepares the next shot.","DRAWDIG"],
-            ["Fire your gun.","OFFENSE attempts to shoot DEFENSE.", "FIRE"] ,  
-            ["Attempt to intimidate the banker.", "OFFENSE attempts to intimidate DEFENSE.","INTIM"],
-            ["Spend a moment Digging Deep.", "OFFENSE Digs Deep and prepares for the next move.","DIG"],
-            ["Get help with the menu.","", "MENU"],
-            ["Check the status of the fight.","","STATUS"],
-            ["Quit.", "","QUIT" ],
-            ["Walk 2 feet away from the banker.", "OFFENSE walks 2 feet away from DEFENSE.", "BACKAWAY"],
-            ["Reload your gun.", "OFFENSE reloads.", "RELOAD"],
-            ["Slash at the banker with your saber.", "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
+allOptions=[["Run 8 feet to the banker.",               "OFFENSE runs 8 feet toward DEFENSE.",          "RUN"],
+            ["Walk up to 4 feet toward the banker.",    "OFFENSE walks toward DEFENSE.",                "WALK"],       
+            ["Punch the banker.",                       "OFFENSE attempts to punch DEFENSE.",           "PUNCH"],
+            ["Grab the banker.",                        "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
+            ["Draw your gun and fire.",                 "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
+            ["Draw your gun and prepare your next shot.","OFFENSE draws and prepares the next shot.",   "DRAWDIG"],
+            ["Fire your gun.","OFFENSE attempts to shoot DEFENSE.",                                     "FIRE"] ,  
+            ["Attempt to intimidate the banker.",       "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
+            ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for the next move.","DIG"],
+            ["Get help with the menu.",                 "",                                             "MENU"],
+            ["Check the status of the fight.",          "",                                             "STATUS"],
+            ["Quit.",                                   "",                                             "QUIT" ],
+            ["Walk 2 feet away from the banker.",       "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
+            ["Reload your gun.",                        "OFFENSE reloads.",                             "RELOAD"],
+            ["Slash at the banker with your saber.",    "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
 
 
