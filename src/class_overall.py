@@ -223,7 +223,7 @@ class Actor:
             self.wound=-10
         else:
             pass
-    def move(self,defense,speed):
+    def moveTowards(self,defense,speed):
         self.movedebuff = int(-speed *2.5) #will charge as much for a 6 move as an 8
         if speed < 1: #moving backwards
             self.x += speed if self.x < defense.x else -speed
@@ -238,6 +238,6 @@ class Actor:
             self.y = defense.y + (1 if self.y > defense.y else -1)
         else:
             self.y += speed if self.y < defense.y else -speed
-    def distance(self,target): #D&D 4E geometry
+    def distanceTo(self,target): #D&D 4E geometry
         return max(abs(self.x-target.y),abs(self.x-target.y))
         

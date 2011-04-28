@@ -116,7 +116,7 @@ class Scenario:
 
     def getLegalOptions(self,offense,defense):  #builds a list of the possible options
         legalOptions=[]
-        dist=offense.distance(defense)
+        dist=offense.distanceTo(defense)
         if dist>4:
             legalOptions=[allOptions[0]] #run    
         if dist>1: 
@@ -153,7 +153,7 @@ class Scenario:
         turnOver = False
         while not turnOver:
             self.currentActor.getWounds()
-            dist=offense.distance(defense) 
+            dist=offense.distanceTo(defense) 
             legalOptions=self.getLegalOptions(offense,defense)
             if offense.isNPC:
                 print offense.cap_name,"takes a turn.",
@@ -191,13 +191,13 @@ class Scenario:
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
-                offense.move(defense,8)
+                offense.moveTowards(defense,8)
                 turnOver = True
             elif turnAction=="WALK":
-                offense.move(defense,4)
+                offense.moveTowards(defense,4)
                 turnOver = True
             elif turnAction=="BACKAWAY": 
-                offense.move(defense,-2)
+                offense.moveTowards(defense,-2)
                 turnOver = True
             elif turnAction=="PUNCH":
                 offense.punch(defense)
@@ -265,26 +265,28 @@ class Scenario:
         turnOrder = self.rollInitiative()
         self.shouldQuit=False
         self.roundCount=1
-        turnCount = 0
+        turnQueue = turnOrder[:] #makes a copy instead of only referencing
         while not self.gameEnd() and not self.shouldQuit:  #TODO: Should test thoroughly that game can end mid-turn
-            if not turnCount:
+            if turnQueue == turnOrder:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
             
-            self.currentActor = turnOrder[turnCount]
+            
+            
+            self.currentActor = turnQueue.pop()
 
             self.takeTurn()
           
             print
             time.sleep(1)
 
-            turnCount+=1
-            if turnCount==len(turnOrder):
-                turnCount=0
+            if not turnQueue: #if the round is empty
                 self.roundCount+=1
+                turnQueue = turnOrder[:]
+                
 
         print
         print
