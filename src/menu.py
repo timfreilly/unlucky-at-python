@@ -88,8 +88,6 @@ class Scenario:
             print "You have sustained serious wounds.  You lose!"
         elif self.roundCount>10:
             print "You've waited too long and the sheriff walks in the door.  You lose!"
-        #elif self.quitChoice==True:
-        #   return True
         else: #if it doesn't match any of the possible game ending conditions, the game has not ended
             return False
         #if any of the above was true, return that the game is over
@@ -142,7 +140,7 @@ class Scenario:
             legalOptions.append(allOptions[11]) #quit
         return legalOptions
     
-    def menuChoice(self,offense,defense): 
+    def takeTurn(self,offense,defense): 
         turnOver = False
         while not turnOver:
             
@@ -269,9 +267,9 @@ class Scenario:
             turnOrder[turnCount].getWounds()
             
             if turnOrder[turnCount].isNPC:
-                self.menuChoice(self.npc,self.player)
+                self.takeTurn(self.npc,self.player)
             else:
-                self.menuChoice(self.player,self.npc)
+                self.takeTurn(self.player,self.npc)
            
             print
             time.sleep(1)
