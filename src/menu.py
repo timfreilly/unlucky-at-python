@@ -152,6 +152,7 @@ class Scenario:
         
         turnOver = False
         while not turnOver:
+            turnOver = True #only help and status options will cause the turn to not end.
             self.currentActor.getWounds()
             dist=offense.distanceTo(defense) 
             legalOptions=self.getLegalOptions(offense,defense)
@@ -192,50 +193,39 @@ class Scenario:
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
                 offense.moveTowards(defense,8)
-                turnOver = True
             elif turnAction=="WALK":
                 offense.moveTowards(defense,4)
-                turnOver = True
             elif turnAction=="BACKAWAY": 
                 offense.moveTowards(defense,-2)
-                turnOver = True
             elif turnAction=="PUNCH":
                 offense.punch(defense)
                 offense.dig=0
-                turnOver = True
             elif turnAction=="GRAB":
                 offense.grab(defense)
                 offense.dig=0
-                turnOver = True
             elif turnAction=="RELOAD":
                 offense.weapon.bullets=offense.weapon.maxbullets
-                turnOver = True
             elif turnAction=="DRAWFIRE":
                 offense.draw=True
                 offense.drawdebuff=-10
                 offense.shoot(defense)
                 offense.dig=0
                 offense.weapon.bullets-=1
-                turnOver = True
             elif turnAction=="DRAWDIG":
                 offense.draw=True
                 offense.dig+=5
-                turnOver = True
             elif turnAction=="FIRE":
                 offense.shoot(defense)
                 offense.dig=0
                 offense.weapon.bullets-=1
-                turnOver = True
             elif turnAction=="SABER":
                 offense.punch(defense)
                 offense.dig=0
             elif turnAction=="INTIM":
                 offense.intimidate(defense)
                 offense.dig=0
-                turnOver = True
             elif turnAction=="DIG":
                 offense.dig+=10
-                turnOver = True
             elif turnAction=="MENU":
                 print "A high Bravery means better punches, but you must up close."
                 print "If you Grab the banker, your punches are more likely to hit."
@@ -259,7 +249,6 @@ class Scenario:
                 turnOver = False
             elif turnAction=="QUIT":
                 self.shouldQuit = True
-                turnOver = True
 
     def playGame(self):
         turnOrder = self.rollInitiative()
