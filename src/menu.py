@@ -25,45 +25,6 @@ allOptions=[["Run 8 feet to the banker.",    "OFFENSE runs 8 feet toward DEFENSE
             ["Reload your gun.", "OFFENSE reloads.", "RELOAD"],
             ["Slash at the banker with your saber.", "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
-def getLegalOptions(offense,defense):  #builds a list of the possible options
-    legalOptions=[]
-    dist=offense.distance(defense)
-    if dist>4:
-        legalOptions=[allOptions[0]] #run    
-    if dist>1: 
-        legalOptions.append(allOptions[1]) #walk
-    if dist==1: 
-        legalOptions=[allOptions[2]] #punch
-    if dist==1 and defense.grapple==0: 
-        legalOptions.append(allOptions[3]) #grab
-    if defense.grapple==0 and offense.grapple==0:
-        legalOptions.append(allOptions[12]) #back away
-    if offense.weapon.isRange==True:
-        if offense.weapon.bullets==0:
-            legalOptions.append(allOptions[13]) #reload
-        elif offense.draw==False:
-            legalOptions.append(allOptions[4]) #draw and fire
-            legalOptions.append(allOptions[5]) #draw and dig
-        else:
-            legalOptions.append(allOptions[6]) #fire
-    if dist<=2 and offense.weapon.special=="saber": #dist 2 probably ok?
-        legalOptions.append(allOptions[14]) #saberize   
-    legalOptions.append(allOptions[7]) #intimidate
-    if offense.dig<=10:
-        legalOptions.append(allOptions[8]) #dig deep
-    if not offense.isNPC:
-        legalOptions.append(allOptions[9]) #menu help
-        legalOptions.append(allOptions[10]) #status
-        legalOptions.append(allOptions[11]) #quit
-    return legalOptions
-
-
-
-
-
-
-   
-
 
 
 class Scenario:
@@ -148,11 +109,43 @@ class Scenario:
         #print 'TESTING: sorted turnsLists',turnsLists
         #print 'TESTING: sorted turns list',turns
         return turns
+
+    def getLegalOptions(self,offense,defense):  #builds a list of the possible options
+        legalOptions=[]
+        dist=offense.distance(defense)
+        if dist>4:
+            legalOptions=[allOptions[0]] #run    
+        if dist>1: 
+            legalOptions.append(allOptions[1]) #walk
+        if dist==1: 
+            legalOptions=[allOptions[2]] #punch
+        if dist==1 and defense.grapple==0: 
+            legalOptions.append(allOptions[3]) #grab
+        if defense.grapple==0 and offense.grapple==0:
+            legalOptions.append(allOptions[12]) #back away
+        if offense.weapon.isRange==True:
+            if offense.weapon.bullets==0:
+                legalOptions.append(allOptions[13]) #reload
+            elif offense.draw==False:
+                legalOptions.append(allOptions[4]) #draw and fire
+                legalOptions.append(allOptions[5]) #draw and dig
+            else:
+                legalOptions.append(allOptions[6]) #fire
+        if dist<=2 and offense.weapon.special=="saber": #dist 2 probably ok?
+            legalOptions.append(allOptions[14]) #saberize   
+        legalOptions.append(allOptions[7]) #intimidate
+        if offense.dig<=10:
+            legalOptions.append(allOptions[8]) #dig deep
+        if not offense.isNPC:
+            legalOptions.append(allOptions[9]) #menu help
+            legalOptions.append(allOptions[10]) #status
+            legalOptions.append(allOptions[11]) #quit
+        return legalOptions
     
     def menuChoice(self,offense,defense): #TODO: integrate into Scenario
 
         dist=offense.distance(defense) 
-        legalOptions=getLegalOptions(offense,defense)
+        legalOptions=self.getLegalOptions(offense,defense)
         if offense.isNPC:
             print offense.cap_name,"takes a turn.",
             count=0
