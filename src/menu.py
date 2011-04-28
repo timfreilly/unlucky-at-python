@@ -146,12 +146,13 @@ class Scenario:
             legalOptions.append(allOptions[11]) #quit
         return legalOptions
     
-    def takeTurn(self,actor): 
-        offense = actor
-        defense = self.getActors(exclude=actor)[0]
+    def takeTurn(self): 
+        offense = self.currentActor
+        defense = self.getActors(exclude=self.currentActor)[0]
+        
         turnOver = False
         while not turnOver:
-            
+            self.currentActor.getWounds()
             dist=offense.distance(defense) 
             legalOptions=self.getLegalOptions(offense,defense)
             if offense.isNPC:
@@ -272,14 +273,11 @@ class Scenario:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
-            turnOrder[turnCount].getWounds()
             
-            self.takeTurn(turnOrder[turnCount])
-#            if turnOrder[turnCount].isNPC:
-#                self.takeTurn(self.npc,self.player)
-#            else:
-#                self.takeTurn(self.player,self.npc)
-           
+            self.currentActor = turnOrder[turnCount]
+
+            self.takeTurn()
+          
             print
             time.sleep(1)
 
