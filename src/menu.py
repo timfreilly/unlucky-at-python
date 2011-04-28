@@ -34,9 +34,12 @@ class Scenario:
         self.createPlayer()
         self.createNPC()
     
-    def getActors(self):
-        return self.players + self.npcs
-    actors = property(getActors)    
+    def getActors(self,exclude=None):
+        allActors = self.players+self.npcs
+        if exclude:
+            allActors.remove(exclude)
+        return allActors
+    actors = property(getActors)
         
     def createPlayer(self):
         print "Welcome to Unlucky at Python"
@@ -143,7 +146,9 @@ class Scenario:
             legalOptions.append(allOptions[11]) #quit
         return legalOptions
     
-    def takeTurn(self,offense,defense): 
+    def takeTurn(self,actor): 
+        offense = actor
+        defense = self.getActors(exclude=actor)[0]
         turnOver = False
         while not turnOver:
             
@@ -252,15 +257,15 @@ class Scenario:
                 time.sleep(2)
                 turnOver = False
             elif turnAction=="QUIT":
-                self.quitChoice = True
+                self.shouldQuit = True
                 turnOver = True
 
     def playGame(self):
         turnOrder = self.rollInitiative()
-        self.quitChoice=False
+        self.shouldQuit=False
         self.roundCount=1
         turnCount = 0
-        while not self.gameEnd() and not self.quitChoice:  #TODO: Should test thoroughly that game can end mid-turn
+        while not self.gameEnd() and not self.shouldQuit:  #TODO: Should test thoroughly that game can end mid-turn
             if not turnCount:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
@@ -269,10 +274,11 @@ class Scenario:
                 time.sleep(1)
             turnOrder[turnCount].getWounds()
             
-            if turnOrder[turnCount].isNPC:
-                self.takeTurn(self.npc,self.player)
-            else:
-                self.takeTurn(self.player,self.npc)
+            self.takeTurn(turnOrder[turnCount])
+#            if turnOrder[turnCount].isNPC:
+#                self.takeTurn(self.npc,self.player)
+#            else:
+#                self.takeTurn(self.player,self.npc)
            
             print
             time.sleep(1)
