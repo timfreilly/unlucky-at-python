@@ -257,7 +257,7 @@ class Scenario:
         self.shouldQuit=False
         self.roundCount=1
         turnQueue = turnOrder[:] #makes a copy instead of only referencing
-        while not self.gameEnd() and not self.shouldQuit:  #TODO: Should test thoroughly that game can end mid-turn
+        while not self.gameEnd() and not self.shouldQuit: 
             if turnQueue == turnOrder:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
