@@ -59,124 +59,9 @@ def getLegalOptions(offense,defense):  #builds a list of the possible options
 
 
 
-def menuChoice(offense,defense): #TODO: integrate into Scenario
 
-    dist=offense.distance(defense) 
-    legalOptions=getLegalOptions(offense,defense)
-    if offense.isNPC:
-        print offense.cap_name,"takes a turn.",
-        count=0
-        while count<=3:
-            print ".",
-            time.sleep(.5)
-            count+=1
-        print
-        turnChoice=random.randint(1,len(legalOptions))
-        print 
-    else: # Prints a menu of legal options on the player's turn
-        print "You are ",dist," feet from",defense.name+"."
-        for x in range(1,len(legalOptions)+1):
-            option=legalOptions[x-1][0]
-            option=option.replace("DISTANCE",str(dist))
-            option=option.replace("HALF",str(dist/2))
-            print x,".",
-            print option
-        print
-        try:
-            turnChoice=input("What is your choice?")
-        except SyntaxError:
-            print "Please enter your choice by number."
-            return 0 #repeats menu
-        except NameError:
-            print "Please enter your choice by number."
-            return 0
-        if turnChoice>len(legalOptions):
-            print "Please enter your choice by number."
-            return 0
-    turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
-    turnText=turnText.replace("OFFENSE",offense.name)
-    turnText=turnText.replace("DEFENSE",defense.name)
-    turnText=turnText.replace("DISTANCE",str(dist))
-    turnText=turnText.replace("HALF",str(dist/2))
-    print turnText
-    turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
-    if turnAction=="RUN":
-        offense.move(defense,8)
-        return 1
-    elif turnAction=="WALK":
-        offense.move(defense,4)
-        return 1
-    elif turnAction=="BACKAWAY": 
-        offense.move(defense,-2)
-    elif turnAction=="PUNCH":
-        offense.punch(defense)
-        offense.dig=0
-        return 1
-    elif turnAction=="GRAB":
-        offense.grab(defense)
-        offense.dig=0
-        return 1
-    elif turnAction=="RELOAD":
-        offense.weapon.bullets=offense.weapon.maxbullets
-        return 1
-    elif turnAction=="DRAWFIRE":
-        offense.draw=True
-        offense.drawdebuff=-10
-        offense.shoot(defense)
-        offense.dig=0
-        offense.weapon.bullets-=1
-        return 1
-    elif turnAction=="DRAWDIG":
-        offense.draw=True
-        offense.dig+=5
-        return 1
-    elif turnAction=="FIRE":
-        offense.shoot(defense)
-        offense.dig=0
-        offense.weapon.bullets-=1
-        return 1
-    elif turnAction=="SABER":
-        offense.punch(defense)
-        offense.dig=0
-    elif turnAction=="INTIM":
-        offense.intimidate(defense)
-        offense.dig=0
-        return 1
-    elif turnAction=="DIG":
-        offense.dig+=10
-        return 1
-    elif turnAction=="MENU":
-        print "A high Bravery means better punches, but you must up close."
-        print "If you Grab the banker, your punches are more likely to hit."
-        print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
-        print "Intimidation relies on your Grit and the banker's Grit. If you win the\n battle of wills you get a point,but losing subtracts a point. 3 points wins the game!"
-        print "Digging Deep improves any action on your next turn by 10%. You can skip up \n to two turns this way."
-        print "If you draw on the same turn you fire your gun, your are 10% less likely to hit."
-        print "If you draw and wait until your next turn, your shot is 5% more likely to hit."
-        print "Your accuracy with a gun relies on your Concentration."
-        print
-        print
-        time.sleep(2)
-        return 0
-    elif turnAction=="STATUS":
-        print
-        offense.showStatus()
-        print
-        defense.showStatus()
-        print
-        time.sleep(2)
-        return 0
-    elif turnAction=="QUIT":
-        return 2 #must integrate
 
-def errorCatch(offense,defense): #TODO: integrate menuChoice into Scenario so this may be folded in/removed
-    successfulChoice=0
-    while successfulChoice==0: #errors return 0, successes return 1
-        successfulChoice=menuChoice(offense,defense)
-    if successfulChoice==2:
-        return True  #return this value to quitChoice
-    else:
-        return False
+
    
 
 
@@ -263,7 +148,122 @@ class Scenario:
         #print 'TESTING: sorted turnsLists',turnsLists
         #print 'TESTING: sorted turns list',turns
         return turns
-            
+    
+    def menuChoice(self,offense,defense): #TODO: integrate into Scenario
+
+        dist=offense.distance(defense) 
+        legalOptions=getLegalOptions(offense,defense)
+        if offense.isNPC:
+            print offense.cap_name,"takes a turn.",
+            count=0
+            while count<=3:
+                print ".",
+                time.sleep(.5)
+                count+=1
+            print
+            turnChoice=random.randint(1,len(legalOptions))
+            print 
+        else: # Prints a menu of legal options on the player's turn
+            print "You are ",dist," feet from",defense.name+"."
+            for x in range(1,len(legalOptions)+1):
+                option=legalOptions[x-1][0]
+                option=option.replace("DISTANCE",str(dist))
+                option=option.replace("HALF",str(dist/2))
+                print x,".",
+                print option
+            print
+            try:
+                turnChoice=input("What is your choice?")
+            except SyntaxError:
+                print "Please enter your choice by number."
+                return 0 #repeats menu
+            except NameError:
+                print "Please enter your choice by number."
+                return 0
+            if turnChoice>len(legalOptions):
+                print "Please enter your choice by number."
+                return 0
+        turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
+        turnText=turnText.replace("OFFENSE",offense.name)
+        turnText=turnText.replace("DEFENSE",defense.name)
+        turnText=turnText.replace("DISTANCE",str(dist))
+        turnText=turnText.replace("HALF",str(dist/2))
+        print turnText
+        turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
+        if turnAction=="RUN":
+            offense.move(defense,8)
+            return 1
+        elif turnAction=="WALK":
+            offense.move(defense,4)
+            return 1
+        elif turnAction=="BACKAWAY": 
+            offense.move(defense,-2)
+        elif turnAction=="PUNCH":
+            offense.punch(defense)
+            offense.dig=0
+            return 1
+        elif turnAction=="GRAB":
+            offense.grab(defense)
+            offense.dig=0
+            return 1
+        elif turnAction=="RELOAD":
+            offense.weapon.bullets=offense.weapon.maxbullets
+            return 1
+        elif turnAction=="DRAWFIRE":
+            offense.draw=True
+            offense.drawdebuff=-10
+            offense.shoot(defense)
+            offense.dig=0
+            offense.weapon.bullets-=1
+            return 1
+        elif turnAction=="DRAWDIG":
+            offense.draw=True
+            offense.dig+=5
+            return 1
+        elif turnAction=="FIRE":
+            offense.shoot(defense)
+            offense.dig=0
+            offense.weapon.bullets-=1
+            return 1
+        elif turnAction=="SABER":
+            offense.punch(defense)
+            offense.dig=0
+        elif turnAction=="INTIM":
+            offense.intimidate(defense)
+            offense.dig=0
+            return 1
+        elif turnAction=="DIG":
+            offense.dig+=10
+            return 1
+        elif turnAction=="MENU":
+            print "A high Bravery means better punches, but you must up close."
+            print "If you Grab the banker, your punches are more likely to hit."
+            print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
+            print "Intimidation relies on your Grit and the banker's Grit. If you win the\n battle of wills you get a point,but losing subtracts a point. 3 points wins the game!"
+            print "Digging Deep improves any action on your next turn by 10%. You can skip up \n to two turns this way."
+            print "If you draw on the same turn you fire your gun, your are 10% less likely to hit."
+            print "If you draw and wait until your next turn, your shot is 5% more likely to hit."
+            print "Your accuracy with a gun relies on your Concentration."
+            print
+            print
+            time.sleep(2)
+            return 0
+        elif turnAction=="STATUS":
+            print
+            offense.showStatus()
+            print
+            defense.showStatus()
+            print
+            time.sleep(2)
+            return 0
+        elif turnAction=="QUIT":
+            self.quitChoice = True
+
+    def errorCatch(self,offense,defense): #TODO: integrate menuChoice into Scenario so this may be folded in/removed
+        successfulChoice=0
+        while successfulChoice==0: #errors return 0, successes return 1
+            successfulChoice=self.menuChoice(offense,defense) 
+                   
 
     def playGame(self):
         turnOrder = self.rollInitiative()
@@ -279,10 +279,10 @@ class Scenario:
                 time.sleep(1)
             if turnOrder[turnCount].isNPC:
                 self.npc.getWounds()
-                menuChoice(self.npc,self.player)
+                self.menuChoice(self.npc,self.player)
             else:
                 self.player.getWounds()
-                self.quitChoice=errorCatch(self.player,self.npc)
+                self.errorCatch(self.player,self.npc)
            
             print
             time.sleep(1)
