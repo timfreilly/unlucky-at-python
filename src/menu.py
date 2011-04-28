@@ -249,7 +249,7 @@ class Scenario:
         elif offense.wound<=-20:
             print "You have sustained serious wounds.  You lose!"
             return True
-        elif self.turnCount>10:
+        elif self.roundCount>10:
             print "You've waited too long and the sheriff walks in the door.  You lose!"
             return True
         elif self.quitChoice==True:
@@ -260,17 +260,17 @@ class Scenario:
     def playGame(self):
         
         self.quitChoice=False
-        self.turnCount=1
+        self.roundCount=1
         while self.gameEnd(self.player,self.npc)==False:
             print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
-            print "Beginning turn number ",self.turnCount,"."
+            print "Beginning round number ",self.roundCount,"."
             print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
             time.sleep(1)
             self.quitChoice=errorCatch(self.player,self.npc)  #player turn
          
             
             print
-            self.turnCount+=1
+            self.roundCount+=1
         
             self.npc.getWounds()
             if self.gameEnd(self.player,self.npc)==True:  #checks for game end before banker turn
