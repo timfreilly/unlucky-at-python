@@ -1,6 +1,7 @@
 import random
 #import time
 import math
+import copy
 
 #I like super testing
 
@@ -16,6 +17,7 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
                    ["Chest", 20, 70, 80, 200],
                    ["Head", 10, 40, 70, 100]]
     
+
 
 
 def reRoll():
@@ -106,16 +108,14 @@ class Actor:
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
 
-    def addWeapon(self):
+    def addWeapon(self,weaponList):
         if self.isNPC:
             weaponChoice=random.randint(1,4)
         else:
             weaponChoice = 0
             print "Choose your weapon:"
-            print "1. Six-shooter \tMedium range penalty\tSix bullets/ reload \tStandard damage"
-            print "2. Shotgun \tHigh range penalty \tThree bullets/ reload \tIncreased damage"
-            print "3. Rifle \tNo range penalty \tOne bullet/ reload \tMassive damage"
-            print "4. Saber \tUsable from 0 to 2 feet\tNo reload \tIncreased damage"
+            for x,weap in enumerate(weaponList):
+                print str(x+1)+'.',weap.name,'\t',weap.strRange(),'\t',weap.maxbullets,'bullets\t',weap.strDamage()
             while weaponChoice < 1 or weaponChoice > 4:
                 try:
                     weaponChoice=input("Which weapon will you use?")
@@ -123,19 +123,9 @@ class Actor:
                     print "Please enter your choice by number."
                 except NameError:
                     print "Please enter your choice by number."
-        
-        if weaponChoice==1:
-            self.weapon=class_weapon.Weapon(self.name,1,6,0,True)
-            print self.cap_name," chooses a six-shooter."
-        elif weaponChoice==2:
-            self.weapon=class_weapon.Weapon(self.name,2,3,10,True)
-            print self.cap_name," chooses a shotgun."
-        elif weaponChoice==3:
-            self.weapon=class_weapon.Weapon(self.name,0,1,30,True)
-            print self.cap_name," chooses a rifle."
-        elif weaponChoice==4:
-            self.weapon=class_weapon.Weapon(self.name,0,10,20,False)
-            print self.cap_name," chooses a saber."
+        self.weapon = copy.deepcopy(weaponList[weaponChoice-1])
+
+        print self.cap_name," chooses a",self.weapon.name+'.'
       
         
     def rangeChanceCalc(self,defense):

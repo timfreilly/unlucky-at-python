@@ -1,10 +1,5 @@
 #a class for weapons.  simple for now, but expandable.
 
-#allWeapons = [['Six-shooter',1,6,"standard",0,True],
-#              ['Shotgun',2,3,"standard",10,True],
-#              ['Rifle',0,1,"standard",30,True],
-#              ['Saber',0,10,"saber",20,False]]
-
 class Weapon:
     def __init__(self,name,range,maxbullets,sharp,isRange):
         self.name=name
@@ -19,3 +14,22 @@ class Weapon:
     
     def reload(self):
         self.bullets = self.maxbullets
+
+    def strRange(self):
+        if not self.isRange:
+            return 'Melee Range'
+        if self.range == 0:
+            return 'Short Range'
+        if self.range == 1:
+            return 'Medium Range'
+        if self.range == 2:
+            return 'Long Range'
+    def strDamage(self):
+        if self.sharp == 0:
+            return 'Normal Damage'
+        elif self.sharp <= 20:
+            return 'High Damage'
+        else:
+            return 'Massive Damage'
+        
+        

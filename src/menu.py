@@ -5,7 +5,7 @@ from operator import itemgetter
 
 
 import class_overall
-#import class_weapon
+import class_weapon
 
     
 
@@ -26,12 +26,18 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Swing with your blade.",                  "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
 
+allWeapons=[{'name':'Six-Shooter','range':1,'maxbullets':6,'sharp':0,'isRange':True},
+            {'name':'Shotgun','range':2,'maxbullets':3,'sharp':10,'isRange':True},
+            {'name':'Rifle','range':0,'maxbullets':1,'sharp':30,'isRange':True},
+            {'name':'Saber','range':0,'maxbullets':10,'sharp':20,'isRange':False}]
+
 
 
 class Scenario:
     def __init__(self):
         self.players = [] #all players are added here
         self.npcs = [] #all npcs are added here
+        self.weaponList = self.createWeaponList()
         self.createPlayer()
         self.createNPC('the banker')
     
@@ -41,6 +47,14 @@ class Scenario:
             allActors.remove(exclude)
         return allActors
     actors = property(getActors)
+        
+    def createWeaponList(self):
+        weaponList = []
+        for weaponArgs in allWeapons:
+            weapon=class_weapon.Weapon(**weaponArgs)
+            weaponList.append(weapon)
+        return weaponList
+                
         
     def createPlayer(self):
         print "Welcome to Unlucky at Python"
@@ -63,7 +77,7 @@ class Scenario:
         self.player.addRoots()
         print self.player
         print
-        self.player.addWeapon()
+        self.player.addWeapon(self.weaponList)
         
         
     def createNPC(self,name):
@@ -77,7 +91,7 @@ class Scenario:
         self.npc.addRoots()
         print self.npc
         print
-        self.npc.addWeapon()
+        self.npc.addWeapon(self.weaponList)
         time.sleep(1)
 
     def gameEnd(self):
