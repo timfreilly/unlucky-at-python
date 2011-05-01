@@ -115,7 +115,7 @@ class Actor:
             weaponChoice = 0
             print "Choose your weapon:"
             for x,weap in enumerate(weaponList):
-                print str(x+1)+'.',weap.name,'\t',weap.strRange(),'\t',weap.maxbullets,'bullets\t',weap.strDamage()
+                print str(x+1)+'.',weap.name.capitalize(),'\t',weap.strRange(),'\t',weap.maxbullets,'bullets\t',weap.strDamage()
             while weaponChoice < 1 or weaponChoice > 4:
                 try:
                     weaponChoice=input("Which weapon will you use?")
@@ -125,7 +125,7 @@ class Actor:
                     print "Please enter your choice by number."
         self.weapon = copy.deepcopy(weaponList[weaponChoice-1])
 
-        print self.cap_name," chooses a",self.weapon.name+'.'
+        print self.cap_name,"chooses a",self.weapon.name+'.'
       
         
     def rangeChanceCalc(self,defense):

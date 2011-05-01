@@ -13,23 +13,23 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Walk up to 4 feet toward DEFENSE.",       "OFFENSE walks toward DEFENSE.",                "WALK"],       
             ["Punch DEFENSE.",                          "OFFENSE attempts to punch DEFENSE.",           "PUNCH"],
             ["Grab DEFENSE.",                           "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
-            ["Draw your gun and fire.",                 "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
-            ["Draw your gun and prepare your next shot.","OFFENSE draws and prepares the next shot.",   "DRAWDIG"],
+            ["Draw your WEAPON and fire.",              "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
+            ["Draw your WEAPON and prepare your next shot.","OFFENSE draws and prepares a next shot.",  "DRAWDIG"],
             ["Fire your gun.",                          "OFFENSE attempts to shoot DEFENSE.",           "FIRE"] ,  
             ["Attempt to intimidate DEFENSE.",          "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
-            ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for the next move.","DIG"],
+            ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for action.",   "DIG"],
             ["Get help with the menu.",                 "",                                             "MENU"],
             ["Check the status of the fight.",          "",                                             "STATUS"],
             ["Quit.",                                   "",                                             "QUIT" ],
             ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
-            ["Reload your gun.",                        "OFFENSE reloads.",                             "RELOAD"],
-            ["Swing with your blade.",                  "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
+            ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "RELOAD"],
+            ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
 
-allWeapons=[{'name':'Six-Shooter','range':1,'maxbullets':6,'sharp':0,'isRange':True},
-            {'name':'Shotgun','range':2,'maxbullets':3,'sharp':10,'isRange':True},
-            {'name':'Rifle','range':0,'maxbullets':1,'sharp':30,'isRange':True},
-            {'name':'Saber','range':0,'maxbullets':10,'sharp':20,'isRange':False}]
+allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    'isRange':True},
+            {'name':'shotgun',      'range':2,  'maxbullets':3,   'sharp':10,   'isRange':True},
+            {'name':'rifle',        'range':0,  'maxbullets':1,   'sharp':30,   'isRange':True},
+            {'name':'saber',        'range':0,  'maxbullets':10,  'sharp':20,   'isRange':False}]
 
 
 
@@ -162,6 +162,7 @@ class Scenario:
         return legalOptions
     
     def takeTurn(self): 
+        #these two lines are placeholders until currentActor trickles through and there is a target system
         offense = self.currentActor
         defense = self.getActors(exclude=self.currentActor)[0]
         
@@ -189,6 +190,7 @@ class Scenario:
                     option=option.replace("DEFENSE",defense.name)
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
+                    option=option.replace("WEAPON",offense.weapon.name)
                     print x,".",
                     print option
                 print
@@ -206,6 +208,7 @@ class Scenario:
             turnText=turnText.replace("DEFENSE",defense.name)
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
+            turnText=turnText.replace("WEAPON",offense.weapon.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
