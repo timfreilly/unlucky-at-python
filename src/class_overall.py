@@ -2,6 +2,7 @@ import random
 #import time
 import math
 
+#I like super testing
 
 import class_weapon
 
