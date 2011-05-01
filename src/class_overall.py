@@ -129,12 +129,13 @@ class Actor:
       
         
     def rangeChanceCalc(self,defense):
-        rangeChance=(50+self.getBonus(self.conc)+self.drawdebuff+self.movedebuff+self.dig+self.wound
-                     +self.concuss+self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y))+
+        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.dig + self.wound
+                     +self.concuss + self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y)) +
                      defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense):
-        meleeChance=50+self.getBonus(self.brav)+self.dig+self.wound+self.concuss+defense.grapple+defense.movedebuff
+        meleeChance=(50 + self.getBonus(self.brav) + self.dig + self.wound + self.concuss + defense.grapple +
+                     defense.movedebuff)
         return meleeChance
     def getLocation(self):
         

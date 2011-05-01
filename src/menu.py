@@ -162,7 +162,7 @@ class Scenario:
         return legalOptions
     
     def takeTurn(self): 
-        #these two lines are placeholders until currentActor trickles through and there is a target system
+        #this line is a holdover is a target system/3+ actor support
         defense = self.getActors(exclude=self.currentActor)[0]
         
         turnOver = False
