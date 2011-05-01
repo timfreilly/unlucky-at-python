@@ -6,14 +6,13 @@
 #              ['Saber',0,10,"saber",20,False]]
 
 class Weapon:
-    def __init__(self,ownerName,range,maxbullets,c,d,isRange):
-        self.owner=ownerName
+    def __init__(self,name,range,maxbullets,sharp,isRange):
+        self.name=name
         self.range=range #multiply this number by range addition in hit
         self.maxbullets=maxbullets
         self.bullets=maxbullets
-        self.special=c #for special styles
-        self.sharp=d #add to damage calculation
+        self.sharp=sharp #add to damage calculation
         self.isRange=isRange
      
     def __str__(self):
-        return self.owner+"'s weapon: Range penalty x"+str(self.range)+"Max bullets:"+str(self.maxbullets)+"Extra damage"+str(self.sharp)
+        return "Range penalty x"+str(self.range)+"Max bullets:"+str(self.maxbullets)+"Extra damage"+str(self.sharp)

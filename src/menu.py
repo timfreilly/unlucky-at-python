@@ -23,7 +23,8 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Quit.",                                   "",                                             "QUIT" ],
             ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
             ["Reload your gun.",                        "OFFENSE reloads.",                             "RELOAD"],
-            ["Slash at the banker with your saber.",    "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
+            ["Swing with your blade.",                  "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
+
 
 
 
@@ -135,7 +136,7 @@ class Scenario:
                 legalOptions.append(allOptions[5]) #draw and dig
             else:
                 legalOptions.append(allOptions[6]) #fire
-        if dist<=2 and offense.weapon.special=="saber": #dist 2 probably ok?
+        if dist<=2 and not offense.weapon.isRange: #dist 2 probably ok?
             legalOptions.append(allOptions[14]) #saberize   
         legalOptions.append(allOptions[7]) #intimidate
         if offense.dig<=10:

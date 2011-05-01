@@ -125,16 +125,16 @@ class Actor:
                     print "Please enter your choice by number."
         
         if weaponChoice==1:
-            self.weapon=class_weapon.Weapon(self.name,1,6,"standard",0,True)
+            self.weapon=class_weapon.Weapon(self.name,1,6,0,True)
             print self.cap_name," chooses a six-shooter."
         elif weaponChoice==2:
-            self.weapon=class_weapon.Weapon(self.name,2,3,"standard",10,True)
+            self.weapon=class_weapon.Weapon(self.name,2,3,10,True)
             print self.cap_name," chooses a shotgun."
         elif weaponChoice==3:
-            self.weapon=class_weapon.Weapon(self.name,0,1,"standard",30,True)
+            self.weapon=class_weapon.Weapon(self.name,0,1,30,True)
             print self.cap_name," chooses a rifle."
         elif weaponChoice==4:
-            self.weapon=class_weapon.Weapon(self.name,0,10,"saber",20,False)
+            self.weapon=class_weapon.Weapon(self.name,0,10,20,False)
             print self.cap_name," chooses a saber."
       
         
