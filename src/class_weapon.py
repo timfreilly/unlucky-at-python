@@ -16,3 +16,6 @@ class Weapon:
      
     def __str__(self):
         return "Range penalty x"+str(self.range)+"Max bullets:"+str(self.maxbullets)+"Extra damage"+str(self.sharp)
+    
+    def reload(self):
+        self.bullets = self.maxbullets

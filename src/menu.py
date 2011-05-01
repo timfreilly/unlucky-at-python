@@ -207,7 +207,7 @@ class Scenario:
                 offense.grab(defense)
                 offense.dig=0
             elif turnAction=="RELOAD":
-                offense.weapon.bullets=offense.weapon.maxbullets
+                offense.weapon.reload
             elif turnAction=="DRAWFIRE":
                 offense.draw=True
                 offense.drawdebuff=-10
