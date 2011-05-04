@@ -33,12 +33,16 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
     def __init__(self):
-        self.playersList = [{'x':16,'y':16}]
-        self.npcsList = [{'name':'the banker','x':0,'y':0}]
+        self.playerCount = 1
+        self.playerLocations = [[16,16]]
+        self.npcCount = 1
+        self.npcNames = ['the banker']
+        self.npcLocations = [[0,0]]
         
     
     def introduction(self):
         print "Welcome to Unlucky at Python"
+        print
         print "You have 10 turns to rob a bank."
         print "You will succeed if you:"
         print " - Intimidate him more than he intimidates you,"
@@ -59,10 +63,10 @@ class Game:
         
         self.scenario = Scenario()
         self.scenario.introduction()
-        for player in self.scenario.playersList:
-            self.createPlayer(player)
-        for npc in self.scenario.npcsList:
-            self.createNPC(npc)
+        for x in range(self.scenario.playerCount):
+            self.createPlayer()
+        for x in range(self.scenario.npcCount):
+            self.createNPC()
     
     def getActors(self,exclude=None):
         allActors = self.players+self.npcs
@@ -79,13 +83,12 @@ class Game:
         return weaponList
                 
         
-    def createPlayer(self,player):
+    def createPlayer(self):
 
         print
         self.player=class_overall.Actor(raw_input("What is your character's name?"))
         self.players.append(self.player)
-        self.player.x = player['x']
-        self.player.y = player['y']
+        self.player.x,self.player.y = self.scenario.playerLocations.pop()
         print self.player
         print
         self.player.addRoots()
@@ -94,14 +97,14 @@ class Game:
         self.player.addWeapon(self.weaponList)
         
         
-    def createNPC(self,npc):
+    def createNPC(self):
+        npcName = self.scenario.npcNames.pop()
         print
-        print "Creating stats for",npc['name']
+        print "Creating stats for",npcName
         time.sleep(1)
-        self.npc=class_overall.Actor(npc['name'], isNPC=True)
+        self.npc=class_overall.Actor(npcName, isNPC=True)
         self.npcs.append(self.npc)
-        self.npc.x = npc['x']
-        self.npc.y = npc['y']
+        self.npc.x,self.npc.y = self.scenario.npcLocations.pop()
         self.npc.addRoots()
         print self.npc
         print
@@ -232,31 +235,25 @@ class Game:
                 self.currentActor.moveTowards(defense,-2)
             elif turnAction=="PUNCH":
                 self.currentActor.punch(defense)
-                self.currentActor.dig=0
             elif turnAction=="GRAB":
                 self.currentActor.grab(defense)
-                self.currentActor.dig=0
             elif turnAction=="RELOAD":
                 self.currentActor.weapon.reload
             elif turnAction=="DRAWFIRE":
                 self.currentActor.draw=True
                 self.currentActor.drawdebuff=-10
                 self.currentActor.shoot(defense)
-                self.currentActor.dig=0
                 self.currentActor.weapon.bullets-=1
             elif turnAction=="DRAWDIG":
                 self.currentActor.draw=True
                 self.currentActor.dig+=5
             elif turnAction=="FIRE":
                 self.currentActor.shoot(defense)
-                self.currentActor.dig=0
                 self.currentActor.weapon.bullets-=1
             elif turnAction=="SABER":
                 self.currentActor.punch(defense)
-                self.currentActor.dig=0
             elif turnAction=="INTIM":
                 self.currentActor.intimidate(defense)
-                self.currentActor.dig=0
             elif turnAction=="DIG":
                 self.currentActor.dig+=10
             elif turnAction=="MENU":
@@ -295,8 +292,6 @@ class Game:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
-            
-            
             
             self.currentActor = turnQueue.pop()
 
