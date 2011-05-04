@@ -243,13 +243,11 @@ class Game:
                 self.currentActor.draw=True
                 self.currentActor.drawdebuff=-10
                 self.currentActor.shoot(defense)
-                self.currentActor.weapon.bullets-=1
             elif turnAction=="DRAWDIG":
                 self.currentActor.draw=True
                 self.currentActor.dig+=5
             elif turnAction=="FIRE":
                 self.currentActor.shoot(defense)
-                self.currentActor.weapon.bullets-=1
             elif turnAction=="SABER":
                 self.currentActor.punch(defense)
             elif turnAction=="INTIM":

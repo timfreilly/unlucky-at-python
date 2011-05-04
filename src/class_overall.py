@@ -180,6 +180,7 @@ class Actor:
         else:
             print "Shot missed!"
     def punch(self,defense):
+        self.weapon.bullets -= 1
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(defense):
             damage=self.getDamage(self.getLocation())
