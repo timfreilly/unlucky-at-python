@@ -174,6 +174,9 @@ class Actor:
 
     def shoot(self,defense):
         roll=self.rollDice()
+        if not self.draw:
+            self.draw = True
+            self.drawdebuff = -10
         if roll<=self.rangeChanceCalc(defense):
             damage=self.getDamage(self.getLocation())
             defense.losthp+=damage

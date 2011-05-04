@@ -240,8 +240,6 @@ class Game:
             elif turnAction=="RELOAD":
                 self.currentActor.weapon.reload
             elif turnAction=="DRAWFIRE":
-                self.currentActor.draw=True
-                self.currentActor.drawdebuff=-10
                 self.currentActor.shoot(defense)
             elif turnAction=="DRAWDIG":
                 self.currentActor.draw=True
