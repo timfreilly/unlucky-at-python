@@ -179,6 +179,7 @@ class Actor:
             defense.losthp+=damage
         else:
             print "Shot missed!"
+        self.drawdebuff = 0
     def punch(self,defense):
         self.weapon.bullets -= 1
         roll=self.rollDice()
