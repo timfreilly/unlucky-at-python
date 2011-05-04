@@ -20,10 +20,6 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
 
 
 
-def reRoll():
-    return random.randint(1,100)
-
-
 class Actor:
     def __init__(self, chosenName, isNPC=False):
         self._name=chosenName
@@ -71,6 +67,16 @@ class Actor:
     def getMaxHP(self):
         return (30+self.getBonus(self.grit))
     hp = property(getMaxHP)
+    
+    def getBonus(self,stat):
+        return 3*math.floor((stat-40)/10)
+    
+    def rollDice(self,useDig=True):
+        roll = random.randint(1,100)
+        if useDig:
+            roll += self.dig
+            self.dig = 0
+        return roll
 
     def addRoots(self):
         if not self.isNPC:
@@ -105,9 +111,6 @@ class Actor:
             elif root==3:
                 self.grit+=10
 
-    def getBonus(self,stat):
-        return 3*math.floor((stat-40)/10)
-
     def addWeapon(self,weaponList):
         if self.isNPC:
             weaponChoice=random.randint(1,4)
@@ -129,17 +132,17 @@ class Actor:
       
         
     def rangeChanceCalc(self,defense):
-        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.dig + self.wound
+        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wound
                      +self.concuss + self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y)) +
                      defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense):
-        meleeChance=(50 + self.getBonus(self.brav) + self.dig + self.wound + self.concuss + defense.grapple +
+        meleeChance=(50 + self.getBonus(self.brav) + self.wound + self.concuss + defense.grapple +
                      defense.movedebuff)
         return meleeChance
     def getLocation(self):
         
-        roll=reRoll()
+        roll=self.rollDice()
         if roll<=15:
             location=locationAndDamage[0]
         elif roll <=30:
@@ -148,7 +151,7 @@ class Actor:
             location=locationAndDamage[(roll-20)/10]
         return location
     def getDamage(self,location): #Concussion(melee) is true, range false
-        roll=reRoll()+self.weapon.sharp
+        roll=self.rollDice()+self.weapon.sharp
         if roll <=location[1]:
             damage=2
             depth="Scratch damage "
@@ -170,14 +173,14 @@ class Actor:
         return damage
 
     def shoot(self,defense):
-        roll=reRoll()
+        roll=self.rollDice()
         if roll<=self.rangeChanceCalc(defense):
             damage=self.getDamage(self.getLocation())
             defense.losthp+=damage
         else:
             print "Shot missed!"
     def punch(self,defense):
-        roll=reRoll()
+        roll=self.rollDice()
         if roll<=self.meleeChanceCalc(defense):
             damage=self.getDamage(self.getLocation())
             defense.losthp+=damage
@@ -185,14 +188,14 @@ class Actor:
         else:
             print "Missed!"
     def grab(self,defense):
-        roll=reRoll()
+        roll=self.rollDice()
         if roll<=self.meleeChanceCalc(defense):
             print "Grab succeeds! Future punches are more likely to hit."
             defense.grapple=15
         else:
             print "Grab missed!"
     def intimidate(self,defense):
-        if self.getBonus(self.grit)+random.randint(1,10)+self.dig>self.getBonus(defense.grit)+random.randint(1,10):
+        if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(defense.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."
             self.intimcount+=1
         else:
