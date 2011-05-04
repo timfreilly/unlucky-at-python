@@ -31,15 +31,37 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    
             {'name':'rifle',        'range':0,  'maxbullets':1,   'sharp':30,   'isRange':True},
             {'name':'saber',        'range':0,  'maxbullets':10,  'sharp':20,   'isRange':False}]
 
-
-
 class Scenario:
+    def __init__(self):
+        self.playerCount = 1
+        self.npcNames = ['the banker']
+    
+    def introduction(self):
+        print "Welcome to Unlucky at Python"
+        print "You have 10 turns to rob a bank."
+        print "You will succeed if you:"
+        print "Intimidate him more than he intimidates you,"
+        print "Hit him until he sustains a concussion,"
+        print "or Inflict massive damage."
+        print
+        print "If he out-intimidates you or you sustain"
+        print "massive wounds, you will be weak enough "
+        print "to be captured.  Good luck, partner!"
+        
+        
+
+class Game:
     def __init__(self):
         self.players = [] #all players are added here
         self.npcs = [] #all npcs are added here
         self.weaponList = self.createWeaponList()
-        self.createPlayer()
-        self.createNPC('the banker')
+        
+        self.scenario = Scenario()
+        self.scenario.introduction()
+        for x in range(self.scenario.playerCount):
+            self.createPlayer()
+        for npcName in self.scenario.npcNames:
+            self.createNPC(npcName)
     
     def getActors(self,exclude=None):
         allActors = self.players+self.npcs
@@ -57,16 +79,7 @@ class Scenario:
                 
         
     def createPlayer(self):
-        print "Welcome to Unlucky at Python"
-        print "You have 10 turns to rob a bank."
-        print "You will succeed if you:"
-        print "Intimidate him more than he intimidates you,"
-        print "Hit him until he sustains a concussion,"
-        print "or Inflict massive damage."
-        print
-        print "If he out-intimidates you or you sustain"
-        print "massive wounds, you will be weak enough "
-        print "to be captured.  Good luck, partner!"
+
         print
         self.player=class_overall.Actor(raw_input("What is your character's name?"))
         self.players.append(self.player)
@@ -300,6 +313,6 @@ class Scenario:
         print
         print 'Goodbye!'
         
-game = Scenario()
+game = Game()
 
 game.playGame()
