@@ -131,7 +131,7 @@ class Scenario:
 
     def getLegalOptions(self,defense):  #builds a list of the possible options
         legalOptions=[]
-        dist=currentActor.distanceTo(defense)
+        dist=self.currentActor.distanceTo(defense)
         if dist>4:
             legalOptions=[allOptions[0]] #run    
         if dist>1: 
@@ -140,22 +140,22 @@ class Scenario:
             legalOptions=[allOptions[2]] #punch
         if dist==1 and defense.grapple==0: 
             legalOptions.append(allOptions[3]) #grab
-        if defense.grapple==0 and currentActor.grapple==0:
+        if defense.grapple==0 and self.currentActor.grapple==0:
             legalOptions.append(allOptions[12]) #back away
-        if currentActor.weapon.isRange==True:
-            if currentActor.weapon.bullets==0:
+        if self.currentActor.weapon.isRange==True:
+            if self.currentActor.weapon.bullets==0:
                 legalOptions.append(allOptions[13]) #reload
-            elif currentActor.draw==False:
+            elif self.currentActor.draw==False:
                 legalOptions.append(allOptions[4]) #draw and fire
                 legalOptions.append(allOptions[5]) #draw and dig
             else:
                 legalOptions.append(allOptions[6]) #fire
-        if dist<=2 and not currentActor.weapon.isRange: #dist 2 probably ok?
+        if dist<=2 and not self.currentActor.weapon.isRange: #dist 2 probably ok?
             legalOptions.append(allOptions[14]) #saberize   
         legalOptions.append(allOptions[7]) #intimidate
-        if currentActor.dig<=10:
+        if self.currentActor.dig<=10:
             legalOptions.append(allOptions[8]) #dig deep
-        if not currentActor.isNPC:
+        if not self.currentActor.isNPC:
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
             legalOptions.append(allOptions[11]) #quit
@@ -169,10 +169,10 @@ class Scenario:
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
             self.currentActor.getWounds()
-            dist=currentActor.distanceTo(defense) 
+            dist=self.currentActor.distanceTo(defense) 
             legalOptions=self.getLegalOptions(defense)
-            if currentActor.isNPC:
-                print currentActor.cap_name,"takes a turn.",
+            if self.currentActor.isNPC:
+                print self.currentActor.cap_name,"takes a turn.",
                 count=0
                 while count<=3:
                     print ".",
@@ -185,11 +185,11 @@ class Scenario:
                 print "You are ",dist," feet from",defense.name+"."
                 for x in range(1,len(legalOptions)+1):
                     option=legalOptions[x-1][0]
-                    option=option.replace("OFFENSE",currentActor.name)
+                    option=option.replace("OFFENSE",self.currentActor.name)
                     option=option.replace("DEFENSE",defense.name)
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
-                    option=option.replace("WEAPON",currentActor.weapon.name)
+                    option=option.replace("WEAPON",self.currentActor.weapon.name)
                     print x,".",
                     print option
                 print
@@ -203,48 +203,48 @@ class Scenario:
                         print "Please enter your choice by number."
             
             turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
-            turnText=turnText.replace("OFFENSE",currentActor.name)
+            turnText=turnText.replace("OFFENSE",self.currentActor.name)
             turnText=turnText.replace("DEFENSE",defense.name)
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
-            turnText=turnText.replace("WEAPON",currentActor.weapon.name)
+            turnText=turnText.replace("WEAPON",self.currentActor.weapon.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
-                currentActor.moveTowards(defense,8)
+                self.currentActor.moveTowards(defense,8)
             elif turnAction=="WALK":
-                currentActor.moveTowards(defense,4)
+                self.currentActor.moveTowards(defense,4)
             elif turnAction=="BACKAWAY": 
-                currentActor.moveTowards(defense,-2)
+                self.currentActor.moveTowards(defense,-2)
             elif turnAction=="PUNCH":
-                currentActor.punch(defense)
-                currentActor.dig=0
+                self.currentActor.punch(defense)
+                self.currentActor.dig=0
             elif turnAction=="GRAB":
-                currentActor.grab(defense)
-                currentActor.dig=0
+                self.currentActor.grab(defense)
+                self.currentActor.dig=0
             elif turnAction=="RELOAD":
-                currentActor.weapon.reload
+                self.currentActor.weapon.reload
             elif turnAction=="DRAWFIRE":
-                currentActor.draw=True
-                currentActor.drawdebuff=-10
-                currentActor.shoot(defense)
-                currentActor.dig=0
-                currentActor.weapon.bullets-=1
+                self.currentActor.draw=True
+                self.currentActor.drawdebuff=-10
+                self.currentActor.shoot(defense)
+                self.currentActor.dig=0
+                self.currentActor.weapon.bullets-=1
             elif turnAction=="DRAWDIG":
-                currentActor.draw=True
-                currentActor.dig+=5
+                self.currentActor.draw=True
+                self.currentActor.dig+=5
             elif turnAction=="FIRE":
-                currentActor.shoot(defense)
-                currentActor.dig=0
-                currentActor.weapon.bullets-=1
+                self.currentActor.shoot(defense)
+                self.currentActor.dig=0
+                self.currentActor.weapon.bullets-=1
             elif turnAction=="SABER":
-                currentActor.punch(defense)
-                currentActor.dig=0
+                self.currentActor.punch(defense)
+                self.currentActor.dig=0
             elif turnAction=="INTIM":
-                currentActor.intimidate(defense)
-                currentActor.dig=0
+                self.currentActor.intimidate(defense)
+                self.currentActor.dig=0
             elif turnAction=="DIG":
-                currentActor.dig+=10
+                self.currentActor.dig+=10
             elif turnAction=="MENU":
                 print "A high Bravery means better punches, but you must up close."
                 print "If you Grab the banker, your punches are more likely to hit."
@@ -260,7 +260,7 @@ class Scenario:
                 turnOver = False
             elif turnAction=="STATUS":
                 print
-                currentActor.showStatus()
+                self.currentActor.showStatus()
                 print
                 defense.showStatus()
                 print
