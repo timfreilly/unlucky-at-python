@@ -31,18 +31,19 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    
             {'name':'rifle',        'range':0,  'maxbullets':1,   'sharp':30,   'isRange':True},
             {'name':'saber',        'range':0,  'maxbullets':10,  'sharp':20,   'isRange':False}]
 
-class Scenario:
+class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
     def __init__(self):
-        self.playerCount = 1
-        self.npcNames = ['the banker']
+        self.playersList = [{'x':16,'y':16}]
+        self.npcsList = [{'name':'the banker','x':0,'y':0}]
+        
     
     def introduction(self):
         print "Welcome to Unlucky at Python"
         print "You have 10 turns to rob a bank."
         print "You will succeed if you:"
-        print "Intimidate him more than he intimidates you,"
-        print "Hit him until he sustains a concussion,"
-        print "or Inflict massive damage."
+        print " - Intimidate him more than he intimidates you,"
+        print " - Hit him until he sustains a concussion,"
+        print " - or Inflict massive damage."
         print
         print "If he out-intimidates you or you sustain"
         print "massive wounds, you will be weak enough "
@@ -58,10 +59,10 @@ class Game:
         
         self.scenario = Scenario()
         self.scenario.introduction()
-        for x in range(self.scenario.playerCount):
-            self.createPlayer()
-        for npcName in self.scenario.npcNames:
-            self.createNPC(npcName)
+        for player in self.scenario.playersList:
+            self.createPlayer(player)
+        for npc in self.scenario.npcsList:
+            self.createNPC(npc)
     
     def getActors(self,exclude=None):
         allActors = self.players+self.npcs
@@ -78,13 +79,13 @@ class Game:
         return weaponList
                 
         
-    def createPlayer(self):
+    def createPlayer(self,player):
 
         print
         self.player=class_overall.Actor(raw_input("What is your character's name?"))
         self.players.append(self.player)
-        self.player.x = 16
-        self.player.y = 16
+        self.player.x = player['x']
+        self.player.y = player['y']
         print self.player
         print
         self.player.addRoots()
@@ -93,14 +94,14 @@ class Game:
         self.player.addWeapon(self.weaponList)
         
         
-    def createNPC(self,name):
+    def createNPC(self,npc):
         print
-        print "Creating stats for",name
+        print "Creating stats for",npc['name']
         time.sleep(1)
-        self.npc=class_overall.Actor(name, isNPC=True)
+        self.npc=class_overall.Actor(npc['name'], isNPC=True)
         self.npcs.append(self.npc)
-        self.npc.x = 0
-        self.npc.y = 0
+        self.npc.x = npc['x']
+        self.npc.y = npc['y']
         self.npc.addRoots()
         print self.npc
         print
