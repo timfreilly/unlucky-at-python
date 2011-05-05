@@ -42,7 +42,7 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
     def introduction(self):
         print "Welcome to Unlucky at Python"
         print
-        print "You have 10 turns to rob a bank."
+        print "You have 15 turns to rob a bank."
         print "You will succeed if you:"
         print " - Intimidate him more than he intimidates you,"
         print " - Hit him until he sustains a concussion,"
@@ -137,7 +137,7 @@ class Game:
             print 'Your opposition is too strong. You can not complete your task!'
             return True
 
-        if self.roundCount > 10:
+        if self.roundCount > 15:
             print 'You\'ve waited too long and the sheriff walks in the door.'
             print 'You lose!'
             return True
