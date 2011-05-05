@@ -145,11 +145,9 @@ class Actor:
 
         print self.cap_name,"chooses a",self.weapon.name+'.'
       
-        
     def rangeChanceCalc(self,defense):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
-                     +self.concuss + self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y)) +
-                     defense.movedebuff)
+                     +self.concuss + self.weapon.range*self.distanceTo(defense) + defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + defense.grapple +
