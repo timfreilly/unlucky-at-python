@@ -6,6 +6,7 @@ from operator import itemgetter
 
 import class_overall
 import class_weapon
+import data
 
     
 
@@ -25,33 +26,17 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "RELOAD"],
             ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
 
-
-allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    'isRange':True},
-            {'name':'shotgun',      'range':2,  'maxbullets':3,   'sharp':10,   'isRange':True},
-            {'name':'rifle',        'range':0,  'maxbullets':1,   'sharp':30,   'isRange':True},
-            {'name':'saber',        'range':0,  'maxbullets':10,  'sharp':20,   'isRange':False}]
-
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self):
-        self.playerCount = 1
-        self.playerLocations = [[16,16]]
-        self.npcCount = 2
-        self.npcNames = ['the banker','the guard']
-        self.npcLocations = [[0,0],[0,16]]
+    def __init__(self, title, playerCount, playerLocations, npcCount, npcNames, npcLocations, duration, introduction):
+        self.title = title
+        self.playerCount = playerCount
+        self.playerLocations = playerLocations
+        self.npcCount = npcCount
+        self.npcNames = npcNames
+        self.npcLocations = npcLocations
+        self.duration = duration
+        self.introduction = introduction
    
-    def introduction(self):
-        print "Welcome to Unlucky at Python"
-        print
-        print "You have 15 turns to rob a bank."
-        print "You will succeed if you:"
-        print " - Intimidate him more than he intimidates you,"
-        print " - Hit him until he sustains a concussion,"
-        print " - or Inflict massive damage."
-        print
-        print "If he out-intimidates you or you sustain"
-        print "massive wounds, you will be weak enough "
-        print "to be captured.  Good luck, partner!"
-        
         
 
 class Game:
@@ -60,8 +45,8 @@ class Game:
         self.npcs = [] #all npcs are added here
         self.weaponList = self.createWeaponList()
         
-        self.scenario = Scenario()
-        self.scenario.introduction()
+        self.scenario = Scenario(**data.allScenarios[0])
+        print self.scenario.introduction
         for x in range(self.scenario.playerCount):
             self.createPlayer()
         for x in range(self.scenario.npcCount):
@@ -82,7 +67,7 @@ class Game:
         
     def createWeaponList(self):
         weaponList = []
-        for weaponArgs in allWeapons:
+        for weaponArgs in data.allWeapons:
             weapon=class_weapon.Weapon(**weaponArgs)
             weaponList.append(weapon)
         return weaponList
