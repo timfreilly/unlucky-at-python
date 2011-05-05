@@ -305,7 +305,7 @@ class Game:
             elif turnAction=="STATUS":
                 print
                 for actor in self.actors:
-                    actor.showStats()
+                    actor.showStatus()
                     print
                     print
                 time.sleep(2)
