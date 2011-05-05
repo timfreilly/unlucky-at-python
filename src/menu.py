@@ -166,7 +166,7 @@ class Game:
         if dist<=2 and not self.currentActor.weapon.isRange: #dist 2 probably ok?
             legalOptions.append(allOptions[14]) #saberize   
         legalOptions.append(allOptions[7]) #intimidate
-        if self.currentActor.dig<=10:
+        if self.currentActor.dig<=20:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
             legalOptions.append(allOptions[9]) #menu help
