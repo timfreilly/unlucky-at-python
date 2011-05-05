@@ -39,6 +39,11 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
         self.npcNames = ['the banker']
         self.npcLocations = [[0,0]]
         
+        self.endconditions = ['SERIOUSWOUNDWIN','INTIMIDATEWIN','CONCUSSIONWIN','SERIOUSWOUNDLOSS','INTIMIDATELOSS','TENROUNDLOSS']
+        
+    def isEndCondition(self,condition):
+        return True if condition in self.endconditions else False
+
     
     def introduction(self):
         print "Welcome to Unlucky at Python"
@@ -111,20 +116,22 @@ class Game:
         self.npc.addWeapon(self.weaponList)
         time.sleep(1)
 
-    def gameEnd(self):
+    def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
         print
         print
-        if self.npc.wound<=-20:
+        #for actor in self.getActors(exclude = activePlayer):
+            
+        if self.npc.wound<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDWIN'):
             print self.npc.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
-        elif self.player.intimcount==3:
+        elif self.player.intimcount==3 and self.scenario.isEndCondition('INTIMIDATEWIN'):
             print "You've intimidated",self.npc.name,"into submission and make off with the cash!"
-        elif self.npc.concuss<=-15:
+        elif self.npc.concuss<=-15 and self.scenario.isEndCondition('CONCUSSIONWIN'):
             print self.npc.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
-        elif self.npc.intimcount==3:
+        elif self.npc.intimcount==3 and self.scenario.isEndCondition('INTIMIDATELOSS'):
             print self.npc.cap_name,"is far too intimidating and will never back down.  You lose!"
-        elif self.player.wound<=-20:
+        elif self.player.wound<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDLOSS'):
             print "You have sustained serious wounds.  You lose!"
-        elif self.roundCount>10:
+        elif self.roundCount>10 and self.scenario.isEndCondition('TENROUNDLOSS'):
             print "You've waited too long and the sheriff walks in the door.  You lose!"
         else: #if it doesn't match any of the possible game ending conditions, the game has not ended
             return False
@@ -253,8 +260,7 @@ class Game:
             elif turnAction=="DIG":
                 self.currentActor.dig+=10
             elif turnAction=="MENU":
-                print "A high Bravery means better punches, but you must up close."
-                print "If you Grab the banker, your punches are more likely to hit."
+                print "A high Bravery means better punches, and grabbing helps."
                 print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
                 print "Intimidation relies on your Grit and the banker's Grit. If you win the\n battle of wills you get a point,but losing subtracts a point. 3 points wins the game!"
                 print "Digging Deep improves any action on your next turn by 10%. You can skip up \n to two turns this way."
