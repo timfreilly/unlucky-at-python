@@ -128,13 +128,13 @@ class Actor:
 
     def addWeapon(self,weaponList):
         if self.isNPC:
-            weaponChoice=random.randint(1,4)
+            weaponChoice=random.randint(1,len(weaponList))
         else:
             weaponChoice = 0
             print "Choose your weapon:"
             for x,weap in enumerate(weaponList):
                 print str(x+1)+'.',weap.name.capitalize(),'\t',weap.strRange(),'\t',weap.maxbullets,'bullets\t',weap.strDamage()
-            while weaponChoice < 1 or weaponChoice > 4:
+            while weaponChoice < 1 or weaponChoice > len(weaponList):
                 try:
                     weaponChoice=input("Which weapon will you use?")
                 except SyntaxError:
