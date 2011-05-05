@@ -217,12 +217,12 @@ class Actor:
     def intimidate(self,defense):
         if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(defense.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."
-            self.intimcount+=1
+            defense.intimcount+=1
         else:
             print "Intimidate fails."
-            self.intimcount-=1
+            defense.intimcount-=1
         print "Overall intimidation score:"
-        print self.cap_name,": ",self.intimcount,"\t\t",defense.cap_name,": ",defense.intimcount
+        print self.cap_name,": ",self.descIntimidation(),"\t\t",defense.cap_name,": ",defense.descIntimidation()
     def descWounds(self):
         if self.wounddebuff <= -10:
             print self.cap_name," has lost ",self.losthp," points of health and is at "
@@ -239,6 +239,15 @@ class Actor:
             return 'scared into submission'
         elif self.concuss > .4 * self.hp:
             return 'dizzy and slumped over'
+    def descIntimidation(self):
+        if self.intimcount < 1:
+            return 'Unafraid'
+        elif self.intimcount < 2:
+            return 'Flinching'
+        elif self.intimcount < 3:
+            return 'Shaky'
+        else:
+            return 'Afraid'
 
     def moveTowards(self,defense,speed):
         self.movedebuff = int(-speed *2.5) #will charge as much for a 6 move as an 8

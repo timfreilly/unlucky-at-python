@@ -113,22 +113,19 @@ class Game:
     def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
         print
         print
-        if self.npc.wounddebuff<=-20:
-            print self.npc.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
-        elif self.player.intimcount==3:
-            print "You've intimidated",self.npc.name,"into submission and make off with the cash!"
-        elif self.npc.concuss<=-15:
-            print self.npc.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
-        elif self.npc.intimcount==3:
-            print self.npc.cap_name,"is far too intimidating and will never back down.  You lose!"
-        elif self.player.wounddebuff<=-20:
-            print "You have sustained serious wounds.  You lose!"
-        elif self.roundCount>10:
-            print "You've waited too long and the sheriff walks in the door.  You lose!"
-        else: #if it doesn't match any of the possible game ending conditions, the game has not ended
-            return False
-        #if any of the above was true, return that the game is over
-        return True 
+        if self.npc.isDisabled:
+            print self.npc.cap_name,'is',self.npc.descDisabled(),'and can\'t stop you from grabbing the cash!'
+            print 'You win!'
+            return True
+        if self.player.isDisabled:
+            print 'You are',self.player.descDisabled(),'and can\'t complete your task!'
+            print 'You lose!'
+            return True
+        if self.roundCount > 10:
+            print 'You\'ve waited too long and the sheriff walks in the door.'
+            print 'You lose!'
+            return True
+        return False
 
     def rollInitiative(self):
         #does not handle if people roll the an identical place
