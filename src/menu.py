@@ -38,13 +38,7 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
         self.npcCount = 1
         self.npcNames = ['the banker']
         self.npcLocations = [[0,0]]
-        
-        self.endconditions = ['SERIOUSWOUNDWIN','INTIMIDATEWIN','CONCUSSIONWIN','SERIOUSWOUNDLOSS','INTIMIDATELOSS','TENROUNDLOSS']
-        
-    def isEndCondition(self,condition):
-        return True if condition in self.endconditions else False
-
-    
+   
     def introduction(self):
         print "Welcome to Unlucky at Python"
         print
@@ -119,17 +113,17 @@ class Game:
     def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
         print
         print
-        if self.npc.wounddebuff<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDWIN'):
+        if self.npc.wounddebuff<=-20:
             print self.npc.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
-        elif self.player.intimcount==3 and self.scenario.isEndCondition('INTIMIDATEWIN'):
+        elif self.player.intimcount==3:
             print "You've intimidated",self.npc.name,"into submission and make off with the cash!"
-        elif self.npc.concuss<=-15 and self.scenario.isEndCondition('CONCUSSIONWIN'):
+        elif self.npc.concuss<=-15:
             print self.npc.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
-        elif self.npc.intimcount==3 and self.scenario.isEndCondition('INTIMIDATELOSS'):
+        elif self.npc.intimcount==3:
             print self.npc.cap_name,"is far too intimidating and will never back down.  You lose!"
-        elif self.player.wounddebuff<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDLOSS'):
+        elif self.player.wounddebuff<=-20:
             print "You have sustained serious wounds.  You lose!"
-        elif self.roundCount>10 and self.scenario.isEndCondition('TENROUNDLOSS'):
+        elif self.roundCount>10:
             print "You've waited too long and the sheriff walks in the door.  You lose!"
         else: #if it doesn't match any of the possible game ending conditions, the game has not ended
             return False
