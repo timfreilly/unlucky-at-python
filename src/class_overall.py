@@ -147,13 +147,13 @@ class Actor:
 
         print self.cap_name,"chooses a",self.weapon.name+'.'
       
-    def rangeChanceCalc(self,defense):
+    def rangeChanceCalc(self,target):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
-                     +self.concuss + self.weapon.range*self.distanceTo(defense) + defense.movedebuff)
+                     +self.concuss + self.weapon.range*self.distanceTo(target) + target.movedebuff)
         return rangeChance
-    def meleeChanceCalc(self,defense):
-        meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + defense.grapple +
-                     defense.movedebuff)
+    def meleeChanceCalc(self,target):
+        meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + target.grapple +
+                     target.movedebuff)
         return meleeChance
 
     def getDamage(self): #Concussion(melee) is true, range false
@@ -186,42 +186,42 @@ class Actor:
             print damage,"damage and",damage,"concussion."
         return damage
 
-    def shoot(self,defense):
+    def shoot(self,target):
         self.weapon.bullets -= 1
         roll=self.rollDice()
         if not self.draw:
             self.draw = True
             self.drawdebuff = -10
-        if roll<=self.rangeChanceCalc(defense):
+        if roll<=self.rangeChanceCalc(target):
             damage=self.getDamage()
-            defense.losthp+=damage
+            target.losthp+=damage
         else:
             print "Shot missed!"
         self.drawdebuff = 0
-    def punch(self,defense):
+    def punch(self,target):
         roll=self.rollDice()
-        if roll<=self.meleeChanceCalc(defense):
+        if roll<=self.meleeChanceCalc(target):
             damage=self.getDamage()
-            defense.losthp+=damage
-            defense.concuss-=damage
+            target.losthp+=damage
+            target.concuss-=damage
         else:
             print "Missed!"
-    def grab(self,defense):
+    def grab(self,target):
         roll=self.rollDice()
-        if roll<=self.meleeChanceCalc(defense):
+        if roll<=self.meleeChanceCalc(target):
             print "Grab succeeds! Future punches are more likely to hit."
-            defense.grapple=15
+            target.grapple=15
         else:
             print "Grab missed!"
-    def intimidate(self,defense):
-        if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(defense.grit)+random.randint(1,10):
+    def intimidate(self,target):
+        if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."
-            defense.intimcount+=1
+            target.intimcount+=1
         else:
             print "Intimidate fails."
-            defense.intimcount-=1
+            target.intimcount-=1
         print "Overall intimidation score:"
-        print self.cap_name,": ",self.descIntimidation(),"\t\t",defense.cap_name,": ",defense.descIntimidation()
+        print self.cap_name,": ",self.descIntimidation(),"\t\t",target.cap_name,": ",target.descIntimidation()
     def descWounds(self):
         if self.wounddebuff <= -10:
             print self.cap_name," has lost ",self.losthp," points of health and is at "
@@ -248,21 +248,21 @@ class Actor:
         else:
             return 'Afraid'
 
-    def moveTowards(self,defense,speed):
+    def moveTowards(self,target,speed):
         self.movedebuff = int(-speed *2.5) #will charge as much for a 6 move as an 8
         if speed < 1: #moving backwards
-            self.x += speed if self.x < defense.x else -speed
-            self.y += speed if self.y < defense.y else -speed
+            self.x += speed if self.x < target.x else -speed
+            self.y += speed if self.y < target.y else -speed
             return
-        if abs(self.x-defense.x) <=speed: #run will bring them to the closest spot
-            self.x = defense.x + (1 if self.x > defense.x else -1)
+        if abs(self.x-target.x) <=speed: #run will bring them to the closest spot
+            self.x = target.x + (1 if self.x > target.x else -1)
         else:
-            self.x += speed if self.x < defense.x else -speed
+            self.x += speed if self.x < target.x else -speed
                 
-        if abs(self.y-defense.y) <=speed: #run will bring them to the closest spot
-            self.y = defense.y + (1 if self.y > defense.y else -1)
+        if abs(self.y-target.y) <=speed: #run will bring them to the closest spot
+            self.y = target.y + (1 if self.y > target.y else -1)
         else:
-            self.y += speed if self.y < defense.y else -speed
+            self.y += speed if self.y < target.y else -speed
     def distanceTo(self,target): #D&D 4E geometry
         return max(abs(self.x-target.y),abs(self.x-target.y))
         
