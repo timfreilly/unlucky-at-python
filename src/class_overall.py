@@ -264,5 +264,5 @@ class Actor:
         else:
             self.y += speed if self.y < target.y else -speed
     def distanceTo(self,target): #D&D 4E geometry
-        return max(abs(self.x-target.y),abs(self.x-target.y))
+        return max(abs(self.x-target.x),abs(self.y-target.y))
         
