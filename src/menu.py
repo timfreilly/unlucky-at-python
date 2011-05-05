@@ -210,6 +210,7 @@ class Game:
                 except NameError:
                     print "Please enter your choice by number."
             self.currentActor.focus = self.otherActors[choice-1]
+            print
             
             
     
@@ -303,10 +304,10 @@ class Game:
                 turnOver = False
             elif turnAction=="STATUS":
                 print
-                self.currentActor.showStatus()
-                print
-                self.currentActor.focus.showStatus()
-                print
+                for actor in self.actors:
+                    actor.showStats()
+                    print
+                    print
                 time.sleep(2)
                 turnOver = False
             elif turnAction=="QUIT":
