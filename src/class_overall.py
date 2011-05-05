@@ -33,10 +33,12 @@ class Actor:
         self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
         self.concuss=0      #negative up to 15
-        self.intimcount=0
+        self.intimcount=0   #if intimcount increases to 3, the actor is disabled
         self.x=0
         self.y=0
         self.isNPC=isNPC
+        self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
+                            #It is meant to be used to get early 3+ support in, and may disappear after
         
         
     def __str__(self):

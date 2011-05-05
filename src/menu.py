@@ -73,6 +73,12 @@ class Game:
             allActors.remove(exclude)
         return allActors
     actors = property(getActors)
+    
+    def getOtherActors(self):
+        allActors = self.players+self.npcs
+        allActors.remove(self.currentActor)
+        return allActors
+    otherActors = property(getOtherActors)
         
     def createWeaponList(self):
         weaponList = []
@@ -174,9 +180,34 @@ class Game:
             legalOptions.append(allOptions[11]) #quit
         return legalOptions
     
+    def setFocus(self):
+        if not self.currentActor.focus: #if there is already a focus, skip the rest
+            return
+        if len(self.otherActors) == 1:
+            self.currentActor.focus = self.otherActors[0]
+            return
+        if self.currentActor.isNPC:
+            self.currentActor.focus = random.choice(self.otherActors)
+        else:
+            print 
+            print 'Please pick a target to focus on:'
+            for x,actor in self.otherActors:
+                print x,'-',actor
+            choice = 0
+            while choice not in (1,2,3):
+                try:
+                    root=input("Choose your focus: ")
+                except SyntaxError:
+                    print "Please enter your choice by number."
+                except NameError:
+                    print "Please enter your choice by number."
+            self.currentActor.focus = self.otherActors[choice]
+            
+            
+    
     def takeTurn(self): 
         #this line is a holdover until a target system or 3+ actor support
-        defense = self.getActors(exclude=self.currentActor)[0]
+        defense = self.otherActors[0]
         
         turnOver = False
         while not turnOver:
