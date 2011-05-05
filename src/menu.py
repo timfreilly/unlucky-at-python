@@ -148,18 +148,18 @@ class Game:
         #print 'TESTING: sorted turns list',turns
         return turns
 
-    def getLegalOptions(self,defense):  #builds a list of the possible options
+    def getLegalOptions(self):  #builds a list of the possible options
         legalOptions=[]
-        dist=self.currentActor.distanceTo(defense)
+        dist=self.currentActor.distanceTo(self.currentActor.focus)
         if dist>4:
             legalOptions=[allOptions[0]] #run    
         if dist>1: 
             legalOptions.append(allOptions[1]) #walk
         if dist==1: 
             legalOptions=[allOptions[2]] #punch
-        if dist==1 and defense.grapple==0: 
+        if dist==1 and self.currentActor.focus.grapple==0: 
             legalOptions.append(allOptions[3]) #grab
-        if defense.grapple==0 and self.currentActor.grapple==0:
+        if self.currentActor.focus.grapple==0 and self.currentActor.grapple==0:
             legalOptions.append(allOptions[12]) #back away
         if self.currentActor.weapon.isRange==True:
             if self.currentActor.weapon.bullets==0:
@@ -181,8 +181,6 @@ class Game:
         return legalOptions
     
     def setFocus(self):
-        if not self.currentActor.focus: #if there is already a focus, skip the rest
-            return
         if len(self.otherActors) == 1:
             self.currentActor.focus = self.otherActors[0]
             return
@@ -207,14 +205,16 @@ class Game:
     
     def takeTurn(self): 
         #this line is a holdover until a target system or 3+ actor support
+        if not self.currentActor.focus:
+            self.setFocus()
         defense = self.otherActors[0]
         
         turnOver = False
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
             self.currentActor.descWounds()
-            dist=self.currentActor.distanceTo(defense) 
-            legalOptions=self.getLegalOptions(defense)
+            dist=self.currentActor.distanceTo(self.currentActor.focus) 
+            legalOptions=self.getLegalOptions()
             if self.currentActor.isNPC:
                 print self.currentActor.cap_name,"takes a turn.",
                 count=0
@@ -226,11 +226,11 @@ class Game:
                 turnChoice=random.randint(1,len(legalOptions))
                 print 
             else: # Prints a menu of legal options on the player's turn
-                print "You are ",dist," feet from",defense.name+"."
+                print "You are ",dist," feet from",self.currentActor.focus.name+"."
                 for x in range(1,len(legalOptions)+1):
                     option=legalOptions[x-1][0]
                     option=option.replace("OFFENSE",self.currentActor.name)
-                    option=option.replace("DEFENSE",defense.name)
+                    option=option.replace("DEFENSE",self.currentActor.focus.name)
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
                     option=option.replace("WEAPON",self.currentActor.weapon.name)
@@ -248,35 +248,35 @@ class Game:
             
             turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
             turnText=turnText.replace("OFFENSE",self.currentActor.name)
-            turnText=turnText.replace("DEFENSE",defense.name)
+            turnText=turnText.replace("DEFENSE",self.currentActor.focus.name)
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
             turnText=turnText.replace("WEAPON",self.currentActor.weapon.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
-                self.currentActor.moveTowards(defense,8)
+                self.currentActor.moveTowards(self.currentActor.focus,8)
             elif turnAction=="WALK":
-                self.currentActor.moveTowards(defense,4)
+                self.currentActor.moveTowards(self.currentActor.focus,4)
             elif turnAction=="BACKAWAY": 
-                self.currentActor.moveTowards(defense,-2)
+                self.currentActor.moveTowards(self.currentActor.focus,-2)
             elif turnAction=="PUNCH":
-                self.currentActor.punch(defense)
+                self.currentActor.punch(self.currentActor.focus)
             elif turnAction=="GRAB":
-                self.currentActor.grab(defense)
+                self.currentActor.grab(self.currentActor.focus)
             elif turnAction=="RELOAD":
                 self.currentActor.weapon.reload()
             elif turnAction=="DRAWFIRE":
-                self.currentActor.shoot(defense)
+                self.currentActor.shoot(self.currentActor.focus)
             elif turnAction=="DRAWDIG":
                 self.currentActor.draw=True
                 self.currentActor.dig+=5
             elif turnAction=="FIRE":
-                self.currentActor.shoot(defense)
+                self.currentActor.shoot(self.currentActor.focus)
             elif turnAction=="SABER":
-                self.currentActor.punch(defense)
+                self.currentActor.punch(self.currentActor.focus)
             elif turnAction=="INTIM":
-                self.currentActor.intimidate(defense)
+                self.currentActor.intimidate(self.currentActor.focus)
             elif turnAction=="DIG":
                 self.currentActor.dig+=10
             elif turnAction=="MENU":
@@ -295,7 +295,7 @@ class Game:
                 print
                 self.currentActor.showStatus()
                 print
-                defense.showStatus()
+                self.currentActor.focus.showStatus()
                 print
                 time.sleep(2)
                 turnOver = False
