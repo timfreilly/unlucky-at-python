@@ -234,7 +234,7 @@ class Game:
             elif turnAction=="GRAB":
                 self.currentActor.grab(defense)
             elif turnAction=="RELOAD":
-                self.currentActor.weapon.reload
+                self.currentActor.weapon.reload()
             elif turnAction=="DRAWFIRE":
                 self.currentActor.shoot(defense)
             elif turnAction=="DRAWDIG":
