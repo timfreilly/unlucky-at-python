@@ -153,17 +153,16 @@ class Actor:
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + defense.grapple +
                      defense.movedebuff)
         return meleeChance
-    def getLocation(self):
-        
-        roll=self.rollDice()
-        if roll<=15:
+
+    def getDamage(self): #Concussion(melee) is true, range false
+        locRoll=self.rollDice()
+        if locRoll<=15:
             location=locationAndDamage[0]
-        elif roll <=30:
+        elif locRoll <=30:
             location=locationAndDamage[1]
         else :
-            location=locationAndDamage[(roll-20)/10]
-        return location
-    def getDamage(self,location): #Concussion(melee) is true, range false
+            location=locationAndDamage[(locRoll-20)/10]
+        
         roll=self.rollDice()+self.weapon.sharp
         if roll <=location[1]:
             damage=2
@@ -186,21 +185,21 @@ class Actor:
         return damage
 
     def shoot(self,defense):
+        self.weapon.bullets -= 1
         roll=self.rollDice()
         if not self.draw:
             self.draw = True
             self.drawdebuff = -10
         if roll<=self.rangeChanceCalc(defense):
-            damage=self.getDamage(self.getLocation())
+            damage=self.getDamage()
             defense.losthp+=damage
         else:
             print "Shot missed!"
         self.drawdebuff = 0
     def punch(self,defense):
-        self.weapon.bullets -= 1
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(defense):
-            damage=self.getDamage(self.getLocation())
+            damage=self.getDamage()
             defense.losthp+=damage
             defense.concuss-=damage
         else:
