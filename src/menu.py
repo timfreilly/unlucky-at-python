@@ -35,9 +35,9 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
     def __init__(self):
         self.playerCount = 1
         self.playerLocations = [[16,16]]
-        self.npcCount = 1
-        self.npcNames = ['the banker']
-        self.npcLocations = [[0,0]]
+        self.npcCount = 2
+        self.npcNames = ['the banker','the guard']
+        self.npcLocations = [[0,0],[0,16]]
    
     def introduction(self):
         print "Welcome to Unlucky at Python"
@@ -195,21 +195,21 @@ class Game:
             self.currentActor.focus = self.otherActors[0]
             return
         if self.currentActor.isNPC:
-            self.currentActor.focus = random.choice(self.otherActors)
+            self.currentActor.focus = random.choice(self.players)
         else:
             print 
             print 'Please pick a target to focus on:'
-            for x,actor in self.otherActors:
-                print x,'-',actor
+            for x,actor in enumerate(self.otherActors):
+                print x+1,'-',actor.cap_name
             choice = 0
-            while choice not in (1,2,3):
+            while choice not in range(1,len(self.otherActors)+1):
                 try:
-                    root=input("Choose your focus: ")
+                    choice=input("Choose your focus: ")
                 except SyntaxError:
                     print "Please enter your choice by number."
                 except NameError:
                     print "Please enter your choice by number."
-            self.currentActor.focus = self.otherActors[choice]
+            self.currentActor.focus = self.otherActors[choice-1]
             
             
     
