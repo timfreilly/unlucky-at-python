@@ -308,14 +308,19 @@ class Game:
         self.roundCount=1
         turnQueue = turnOrder[:] #makes a copy instead of only referencing
         while not self.gameEnd() and not self.shouldQuit: 
-            if turnQueue == turnOrder:
+            if turnQueue == turnOrder: #it is the beginning of the round
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
             
-            self.currentActor = turnQueue.pop()
+            self.currentActor = None
+            while not self.currentActor:
+                self.currentActor = turnQueue.pop() #the lines surrounding this line skip all players who haven't gone
+                if self.currentActor.isDisabled:
+                    print self.currentActor.cap_name,'is',self.currentActor.descDisabled,'and can not act!'
+                    self.currentActor = False
 
             self.takeTurn()
           
