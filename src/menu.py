@@ -91,15 +91,15 @@ class Game:
     def createPlayer(self):
 
         print
-        self.player=class_overall.Actor(raw_input("What is your character's name?"))
-        self.players.append(self.player)
-        self.player.x,self.player.y = self.scenario.playerLocations.pop()
-        print self.player
+        player=class_overall.Actor(raw_input("What is your character's name?"))
+        self.players.append(player)
+        player.x,player.y = self.scenario.playerLocations.pop()
+        print player
         print
-        self.player.addRoots()
-        print self.player
+        player.addRoots()
+        print player
         print
-        self.player.addWeapon(self.weaponList)
+        player.addWeapon(self.weaponList)
         
         
     def createNPC(self):
@@ -107,26 +107,36 @@ class Game:
         print
         print "Creating stats for",npcName
         time.sleep(1)
-        self.npc=class_overall.Actor(npcName, isNPC=True)
-        self.npcs.append(self.npc)
-        self.npc.x,self.npc.y = self.scenario.npcLocations.pop()
-        self.npc.addRoots()
-        print self.npc
+        npc=class_overall.Actor(npcName, isNPC=True)
+        self.npcs.append(npc)
+        npc.x,npc.y = self.scenario.npcLocations.pop()
+        npc.addRoots()
+        print npc
         print
-        self.npc.addWeapon(self.weaponList)
+        npc.addWeapon(self.weaponList)
         time.sleep(1)
+
 
     def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
         print
         print
-        if self.npc.isDisabled:
-            print self.npc.cap_name,'is',self.npc.descDisabled(),'and can\'t stop you from grabbing the cash!'
-            print 'You win!'
+        
+        allNPCsDisabled = True
+        for npc in self.npcs:
+            if not npc.isDisabled:
+                allNPCsDisabled = False
+        if allNPCsDisabled:
+            print 'All resistance is disabled!  You make off with the cash!'
             return True
-        if self.player.isDisabled:
-            print 'You are',self.player.descDisabled(),'and can\'t complete your task!'
-            print 'You lose!'
+        
+        allPlayersDisabled = True
+        for player in self.players:
+            if not player.isDisabled:
+                allPlayersDisabled = False
+        if allPlayersDisabled:
+            print 'Your opposition is too strong. You can not complete your task!'
             return True
+
         if self.roundCount > 10:
             print 'You\'ve waited too long and the sheriff walks in the door.'
             print 'You lose!'
