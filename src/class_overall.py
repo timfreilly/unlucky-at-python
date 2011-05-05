@@ -32,7 +32,6 @@ class Actor:
         self.movedebuff=0   #negative number 
         self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
-        self.wound=0        #negative, based on lost/total hp
         self.concuss=0      #negative up to 15
         self.intimcount=0
         self.x=0
@@ -48,7 +47,7 @@ class Actor:
         print "Bravery: ",self.brav,"\t\tConcentration: ",self.conc,"\t\tGrit: ",self.grit
         print "Total Health Points: ",self.hp,"\t\tLost Health Points: ",self.losthp
         print "Buff from Dig Deep: ", self.dig,"\t\tIntimidation success: ",self.intimcount
-        print "Debuff from wounds: ",self.wound,"\t\tDebuff from concussion: ",self.concuss
+        print "Debuff from wounds: ",self.wounddebuff,"\t\tDebuff from concussion: ",self.concuss
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
@@ -67,6 +66,22 @@ class Actor:
     def getMaxHP(self):
         return (30+self.getBonus(self.grit))
     hp = property(getMaxHP)
+    
+    def getIsDisabled(self):
+        if self.losthp > .6 * self.hp:
+            return True
+        elif self.intimcount > 2:
+            return True
+        elif self.concuss > .4 * self.hp:
+            return True
+        else:
+            return False
+    isDisabled = property(getIsDisabled)
+    
+    def getWoundDebuff(self):
+        return -self.losthp/self.hp * 40 #debuff is from -1 to -39
+    wounddebuff = property(getWoundDebuff)
+
     
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
@@ -132,12 +147,12 @@ class Actor:
       
         
     def rangeChanceCalc(self,defense):
-        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wound
+        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
                      +self.concuss + self.weapon.range*max(abs(self.x-defense.y),abs(self.x-defense.y)) +
                      defense.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,defense):
-        meleeChance=(50 + self.getBonus(self.brav) + self.wound + self.concuss + defense.grapple +
+        meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + defense.grapple +
                      defense.movedebuff)
         return meleeChance
     def getLocation(self):
@@ -208,21 +223,23 @@ class Actor:
             self.intimcount-=1
         print "Overall intimidation score:"
         print self.cap_name,": ",self.intimcount,"\t\t",defense.cap_name,": ",defense.intimcount
-    def getWounds(self):
-        wounds=self.losthp/self.hp
-        if wounds >=.25:
+    def descWounds(self):
+        if self.wounddebuff <= -10:
             print self.cap_name," has lost ",self.losthp," points of health and is at "
-        if wounds >=.75:
+        if self.wounddebuff <= -30:
             print "a massive disadvantage due to wounds."
-            self.wound=-30
-        elif wounds >=.50:
-            print "a serious disadvantage due to wounds."
-            self.wound=-20
-        elif wounds>=.25:
+        elif self.wounddebuff <= -20:
+            print "a serious disadvantage due to wounds."  
+        elif self.wounddebuff <= -10:
             print "a slight disadvantage due to wounds."
-            self.wound=-10
-        else:
-            pass
+    def descDisabled(self):  #describes why a character is disabled
+        if self.losthp > .6 * self.hp:
+            return 'severely injured'
+        elif self.intimcount > 2:
+            return 'scared into submission'
+        elif self.concuss > .4 * self.hp:
+            return 'dizzy and slumped over'
+
     def moveTowards(self,defense,speed):
         self.movedebuff = int(-speed *2.5) #will charge as much for a 6 move as an 8
         if speed < 1: #moving backwards

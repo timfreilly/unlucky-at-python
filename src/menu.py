@@ -119,9 +119,7 @@ class Game:
     def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
         print
         print
-        #for actor in self.getActors(exclude = activePlayer):
-            
-        if self.npc.wound<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDWIN'):
+        if self.npc.wounddebuff<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDWIN'):
             print self.npc.cap_name, "has sustained serious wounds and can't stop you from \n grabbing the cash.  You win!"
         elif self.player.intimcount==3 and self.scenario.isEndCondition('INTIMIDATEWIN'):
             print "You've intimidated",self.npc.name,"into submission and make off with the cash!"
@@ -129,7 +127,7 @@ class Game:
             print self.npc.cap_name,"has sustained a concussion and sinks to the floor. You reach over him and grab the cash!"
         elif self.npc.intimcount==3 and self.scenario.isEndCondition('INTIMIDATELOSS'):
             print self.npc.cap_name,"is far too intimidating and will never back down.  You lose!"
-        elif self.player.wound<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDLOSS'):
+        elif self.player.wounddebuff<=-20 and self.scenario.isEndCondition('SERIOUSWOUNDLOSS'):
             print "You have sustained serious wounds.  You lose!"
         elif self.roundCount>10 and self.scenario.isEndCondition('TENROUNDLOSS'):
             print "You've waited too long and the sheriff walks in the door.  You lose!"
@@ -186,13 +184,13 @@ class Game:
         return legalOptions
     
     def takeTurn(self): 
-        #this line is a holdover is a target system/3+ actor support
+        #this line is a holdover until a target system or 3+ actor support
         defense = self.getActors(exclude=self.currentActor)[0]
         
         turnOver = False
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
-            self.currentActor.getWounds()
+            self.currentActor.descWounds()
             dist=self.currentActor.distanceTo(defense) 
             legalOptions=self.getLegalOptions(defense)
             if self.currentActor.isNPC:
