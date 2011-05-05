@@ -46,7 +46,7 @@ class Actor:
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\t\tConcentration: ",self.conc,"\t\tGrit: ",self.grit
         print "Total Health Points: ",self.hp,"\t\tLost Health Points: ",self.losthp
-        print "Buff from Dig Deep: ", self.dig,"\t\tIntimidation success: ",self.intimcount
+        print "Buff from Dig Deep: ", self.dig,"\t\t\tIntimidation level: ",self.descIntimidation()
         print "Debuff from wounds: ",self.wounddebuff,"\t\tDebuff from concussion: ",self.concuss
         print "Position X:",self.x,'Y:',self.y
     
