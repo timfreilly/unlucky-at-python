@@ -46,10 +46,10 @@ class Actor:
     
     def showStatus(self): #might make more sense in Scenario
         print "Current stats for",self.name,":"
-        print "Bravery: ",self.brav,"\t\tConcentration: ",self.conc,"\t\tGrit: ",self.grit
-        print "Total Health Points: ",self.hp,"\t\tLost Health Points: ",self.losthp
-        print "Buff from Dig Deep: ", self.dig,"\t\t\tIntimidation level: ",self.descIntimidation()
-        print "Debuff from wounds: ",self.wounddebuff,"\t\tDebuff from concussion: ",self.concuss
+        print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
+        print "Health Points: ",self.hp-self.losthp,"/",self.hp
+        print "Wounds/Concussion Penalty: -"+str(int(self.wounddebuff+self.concuss))+"%"
+        print "Intimidation level: ",self.descIntimidation()
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
@@ -66,7 +66,7 @@ class Actor:
     cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
     def getMaxHP(self):
-        return (30+self.getBonus(self.grit))
+        return int(30+self.getBonus(self.grit))
     hp = property(getMaxHP)
     
     def getIsDisabled(self):
@@ -97,7 +97,7 @@ class Actor:
 
     def addRoots(self):
         if not self.isNPC:
-            print "A Root improves one of your stats.  Bravery improves punches,"
+            print "Your Roots improve one of your stats.  Bravery improves punches,"
             print "Concentration improves shooting, and Grit improves intimidation."
             print
         roots = 1 if (self.brav+self.conc+self.grit)>120 else 2

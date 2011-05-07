@@ -24,7 +24,8 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Quit.",                                   "",                                             "QUIT" ],
             ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
             ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "RELOAD"],
-            ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"]]
+            ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"],
+            ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
     def __init__(self, title, playerCount, playerLocations, npcCount, npcNames, npcLocations, duration, introduction):
@@ -170,6 +171,8 @@ class Game:
         if self.currentActor.dig<=20:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
+            if len(self.npcs) > 1: #allow focus switching, this check does not check if npcs are disabled
+                legalOptions.append(allOptions[15])
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
             legalOptions.append(allOptions[11]) #quit
@@ -275,6 +278,8 @@ class Game:
                 self.currentActor.intimidate(self.currentActor.focus)
             elif turnAction=="DIG":
                 self.currentActor.dig+=10
+            elif turnAction=="REFOCUS":
+                self.setFocus()
             elif turnAction=="MENU":
                 print "A high Bravery means better punches, and grabbing helps."
                 print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
