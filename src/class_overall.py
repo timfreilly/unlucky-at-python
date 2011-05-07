@@ -198,6 +198,7 @@ class Actor:
         else:
             print "Shot missed!"
         self.drawdebuff = 0
+        self.movedebuff = 0#a somewhat inappropriate place to remove the move debuff
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
@@ -219,18 +220,18 @@ class Actor:
             target.intimcount+=1
         else:
             print "Intimidate fails."
-            target.intimcount-=1
+            target.intimcount-=1 if target.intimcount > 0 else 0
         print "Overall intimidation score:"
         print self.cap_name,": ",self.descIntimidation(),"\t\t",target.cap_name,": ",target.descIntimidation()
     def descWounds(self):
         if self.wounddebuff <= -10:
-            print self.cap_name," has lost ",self.losthp," points of health and is at "
+            print self.cap_name," has lost ",self.losthp," health and is",
         if self.wounddebuff <= -30:
-            print "a massive disadvantage due to wounds."
+            print "massively."
         elif self.wounddebuff <= -20:
-            print "a serious disadvantage due to wounds."  
+            print "seriously wounded."  
         elif self.wounddebuff <= -10:
-            print "a slight disadvantage due to wounds."
+            print "slightly wounded.."
     def descDisabled(self):  #describes why a character is disabled
         if self.losthp > .6 * self.hp:
             return 'severely injured'
