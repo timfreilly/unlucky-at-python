@@ -122,7 +122,7 @@ class Game:
             print 'Your opposition is too strong. You can not complete your task!'
             return True
 
-        if self.roundCount > 15:
+        if self.roundCount > self.scenario.duration:
             print 'You\'ve waited too long and the sheriff walks in the door.'
             print 'You lose!'
             return True

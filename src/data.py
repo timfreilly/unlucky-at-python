@@ -9,9 +9,9 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                'npcCount':1,
                'npcLocations':[(0,0)],
                'npcNames':['the banker'],
-               'duration':10,
+               'duration':15,
                'introduction':'''
-You have 10 turns to rob a bank.
+You have 15 turns to rob a bank.
 You will succeed if you:"
  - Intimidate him more than he intimidates you,
  - Hit him until he sustains a concussion,
@@ -28,10 +28,10 @@ to be captured.  Good luck, partner!
                 'npcCount':2,
                 'npcLocations':[(0,0),(0,0)],
                 'npcNames':['the banker','the guard'],
-                'duration':20,
+                'duration':25,
                 'introduction':'''
 You are desperate for cash and have no option
-but to break into a busy bank.  You have 20
+but to break into a busy bank.  You have 25
 turns to fend off both the banker and a guard.
 
 You will succeed if you disable both opponents
