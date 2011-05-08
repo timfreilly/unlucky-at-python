@@ -77,7 +77,7 @@ class Game:
     def createPlayer(self):
 
         print
-        player=class_overall.Actor(raw_input("What is your character's name?"))
+        player=class_overall.Actor(raw_input("What is your character's name? "))
         self.players.append(player)
         player.x,player.y = self.scenario.playerLocations.pop()
         print player
@@ -91,7 +91,7 @@ class Game:
     def createNPC(self):
         npcName = self.scenario.npcNames.pop()
         print
-        print "Creating stats for",npcName
+        print "Creating",npcName
         time.sleep(1)
         npc=class_overall.Actor(npcName, isNPC=True)
         self.npcs.append(npc)
