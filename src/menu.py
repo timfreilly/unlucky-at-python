@@ -28,7 +28,7 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, playerCount, playerLocations, npcCount, npcNames, npcLocations, duration, introduction):
+    def __init__(self, title, playerCount, playerLocations, npcCount, npcNames, npcLocations, duration, weaponList, introduction):
         self.title = title
         self.playerCount = playerCount
         self.playerLocations = playerLocations
@@ -36,6 +36,7 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
         self.npcNames = npcNames
         self.npcLocations = npcLocations
         self.duration = duration
+        self.weaponList = weaponList
         self.introduction = introduction
    
         
@@ -44,7 +45,6 @@ class Game:
     def __init__(self):
         self.players = [] #all players are added here
         self.npcs = [] #all npcs are added here
-        self.weaponList = self.createWeaponList()
         
         self.scenario = Scenario(**data.allScenarios[0])
         print self.scenario.introduction
@@ -66,14 +66,6 @@ class Game:
         return allActors
     otherActors = property(getOtherActors)
         
-    def createWeaponList(self):
-        weaponList = []
-        for weaponArgs in data.allWeapons:
-            weapon=class_weapon.Weapon(**weaponArgs)
-            weaponList.append(weapon)
-        return weaponList
-                
-        
     def createPlayer(self):
 
         print
@@ -85,7 +77,7 @@ class Game:
         player.addRoots()
         print player
         print
-        player.addWeapon(self.weaponList)
+        player.addWeapon(self.scenario.weaponList)
         
         
     def createNPC(self):
@@ -99,7 +91,7 @@ class Game:
         npc.addRoots()
         print npc
         print
-        npc.addWeapon(self.weaponList)
+        npc.addWeapon(self.scenario.weaponList)
         time.sleep(1)
 
 
@@ -157,7 +149,7 @@ class Game:
             legalOptions.append(allOptions[3]) #grab
         if self.currentActor.focus.grapple==0 and self.currentActor.grapple==0:
             legalOptions.append(allOptions[12]) #back away
-        if self.currentActor.weapon.isRange==True:
+        if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
                 legalOptions.append(allOptions[13]) #reload
             elif self.currentActor.draw==False:
@@ -165,7 +157,7 @@ class Game:
                 legalOptions.append(allOptions[5]) #draw and dig
             else:
                 legalOptions.append(allOptions[6]) #fire
-        if dist<=2 and not self.currentActor.weapon.isRange: #dist 2 probably ok?
+        if dist<=2 and not self.currentActor.weapon.type.isRange: #dist 2 probably ok?
             legalOptions.append(allOptions[14]) #saberize   
         legalOptions.append(allOptions[7]) #intimidate
         if self.currentActor.dig<=20:
@@ -232,7 +224,7 @@ class Game:
                     option=option.replace("DEFENSE",self.currentActor.focus.name)
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
-                    option=option.replace("WEAPON",self.currentActor.weapon.name)
+                    option=option.replace("WEAPON",self.currentActor.weapon.type.name)
                     print x,".",
                     print option
                 print
@@ -250,7 +242,7 @@ class Game:
             turnText=turnText.replace("DEFENSE",self.currentActor.focus.name)
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
-            turnText=turnText.replace("WEAPON",self.currentActor.weapon.name)
+            turnText=turnText.replace("WEAPON",self.currentActor.weapon.type.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":

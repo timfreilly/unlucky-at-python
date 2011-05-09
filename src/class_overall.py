@@ -130,12 +130,13 @@ class Actor:
 
     def addWeapon(self,weaponList):
         if self.isNPC:
-            weaponChoice=random.randint(1,len(weaponList))
+            weaponChoice=random.randint(0,len(weaponList))
         else:
             weaponChoice = 0
             print "Choose your weapon:"
             for x,weap in enumerate(weaponList):
-                print str(x+1)+'.',weap.name.capitalize(),'\t',weap.strRange(),'\t',weap.maxbullets,'bullets\t',weap.strDamage()
+                type = class_weapon.WeaponType.TypeFromName(weap)
+                print str(x+1)+'.',type.name.capitalize(),'\t',type.strRange(),'\t',type.maxBullets,'bullets'
             while weaponChoice < 1 or weaponChoice > len(weaponList):
                 try:
                     weaponChoice=input("Which weapon will you use?")
@@ -143,13 +144,13 @@ class Actor:
                     print "Please enter your choice by number."
                 except NameError:
                     print "Please enter your choice by number."
-        self.weapon = copy.deepcopy(weaponList[weaponChoice-1])
+        self.weapon = class_weapon.Weapon(weaponList[weaponChoice-1])
 
-        print self.cap_name,"chooses a",self.weapon.name+'.'
+        print self.cap_name,"chooses a",self.weapon.type.name+'.'
       
     def rangeChanceCalc(self,target):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
-                     +self.concuss + self.weapon.range*self.distanceTo(target) + target.movedebuff)
+                     +self.concuss + self.weapon.type.rangePenalty*self.distanceTo(target) + target.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,target):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + target.grapple +
@@ -165,7 +166,7 @@ class Actor:
         else :
             location=locationAndDamage[(locRoll-20)/10]
         
-        roll=self.rollDice()+self.weapon.sharp
+        roll=self.rollDice()
         if roll <=location[1]:
             damage=2
             depth="Scratch damage "
@@ -179,7 +180,7 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if self.weapon.isRange:
+        if self.weapon.type.isRange:
             print damage,"damage."
         else:
             damage=damage/2
@@ -227,11 +228,11 @@ class Actor:
         if self.wounddebuff <= -10:
             print self.cap_name," has lost ",self.losthp," health and is",
         if self.wounddebuff <= -30:
-            print "massively."
+            print "massively wounded."
         elif self.wounddebuff <= -20:
             print "seriously wounded."  
         elif self.wounddebuff <= -10:
-            print "slightly wounded.."
+            print "slightly wounded."
     def descDisabled(self):  #describes why a character is disabled
         if self.losthp > .6 * self.hp:
             return 'severely injured'

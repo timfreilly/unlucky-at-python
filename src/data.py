@@ -10,6 +10,7 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                'npcLocations':[(0,0)],
                'npcNames':['the banker'],
                'duration':15,
+               'weaponList':['six-shooter','shotgun','rifle','saber'],
                'introduction':'''
 You have 15 turns to rob a bank.
 You will succeed if you:"
@@ -29,6 +30,7 @@ to be captured.  Good luck, partner!
                 'npcLocations':[(0,0),(0,0)],
                 'npcNames':['the banker','the guard'],
                 'duration':25,
+                'weaponList':['six-shooter','shotgun','rifle','saber'],
                 'introduction':'''
 You are desperate for cash and have no option
 but to break into a busy bank.  You have 25
