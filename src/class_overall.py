@@ -29,7 +29,6 @@ class Actor:
         self.losthp=0
         self.draw=False
         self.drawdebuff=0   #negative on the turn you draw
-        self.movedebuff=0   #negative number 
         self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
         self.concuss=0      #negative up to 15
@@ -37,6 +36,7 @@ class Actor:
         self.x=0
         self.y=0
         self.isNPC=isNPC
+        self.state=''       #state is the actor's state in the Continuous Action Turn.  It is in experimental stage
         self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
                             #It is meant to be used to get early 3+ support in, and may disappear after
         
@@ -84,6 +84,14 @@ class Actor:
         return -float(self.losthp)/self.hp * 40 #debuff is from -1 to -39
     wounddebuff = property(getWoundDebuff)
 
+    def getMoveDebuff(self):
+        if self.state == 'MOVINGSLOW':
+            return -10
+        elif self.state == 'MOVEFAST':
+            return -15
+        else:
+            return 0
+    movedebuff = property(getMoveDebuff)
     
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
@@ -199,7 +207,6 @@ class Actor:
         else:
             print "Shot missed!"
         self.drawdebuff = 0
-        self.movedebuff = 0#a somewhat inappropriate place to remove the move debuff
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
@@ -251,7 +258,8 @@ class Actor:
             return 'Afraid'
 
     def moveTowards(self,target,speed):
-        self.movedebuff = int(-speed *2.5) #will charge as much for a 6 move as an 8
+        self.state = 'MOVINGSLOW' if speed <= 4 else 'MOVINGFAST'
+        
         if speed < 1: #moving backwards
             self.x += speed if self.x < target.x else -speed
             self.y += speed if self.y < target.y else -speed

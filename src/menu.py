@@ -204,6 +204,7 @@ class Game:
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
             self.currentActor.descWounds()
+            self.currentActor.state = '' #state keeps track of what the player was doing during other players' turns
             dist=self.currentActor.distanceTo(self.currentActor.focus) 
             legalOptions=self.getLegalOptions()
             if self.currentActor.isNPC:
