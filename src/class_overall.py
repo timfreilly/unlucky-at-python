@@ -27,8 +27,6 @@ class Actor:
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
         self.losthp=0
-        self.draw=False
-        self.drawdebuff=0   #negative on the turn you draw
         self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
         self.concuss=0      #negative up to 15
@@ -37,6 +35,8 @@ class Actor:
         self.y=0
         self.isNPC=isNPC
         self.state=''       #state is the actor's state in the Continuous Action Turn.  It is in experimental stage
+                            #and it may make sense to turn it into a list of states, though it might not be possible to benefit from
+                            #multiple states until half-moves are possible
         self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
                             #It is meant to be used to get early 3+ support in, and may disappear after
         
@@ -92,6 +92,13 @@ class Actor:
         else:
             return 0
     movedebuff = property(getMoveDebuff)
+    
+    def getDrawDebuff(self):
+        if self.state == 'DRAWING':
+            return -15
+        else:
+            return 0
+    drawdebuff = property(getDrawDebuff)
     
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
@@ -195,18 +202,19 @@ class Actor:
             print damage,"damage and",damage,"concussion."
         return damage
 
+    def draw(self):
+        self.weapon.drawn = True
+        self.state = 'DRAWING'
     def shoot(self,target):
         self.weapon.bullets -= 1
         roll=self.rollDice()
-        if not self.draw:
-            self.draw = True
-            self.drawdebuff = -10
+        if not self.weapon.drawn:
+            self.draw()
         if roll<=self.rangeChanceCalc(target):
             damage=self.getDamage()
             target.losthp+=damage
         else:
             print "Shot missed!"
-        self.drawdebuff = 0
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):

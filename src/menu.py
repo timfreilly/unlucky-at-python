@@ -152,7 +152,7 @@ class Game:
         if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
                 legalOptions.append(allOptions[13]) #reload
-            elif self.currentActor.draw==False:
+            elif self.currentActor.weapon.drawn==False:
                 legalOptions.append(allOptions[4]) #draw and fire
                 legalOptions.append(allOptions[5]) #draw and dig
             else:
@@ -261,8 +261,7 @@ class Game:
             elif turnAction=="DRAWFIRE":
                 self.currentActor.shoot(self.currentActor.focus)
             elif turnAction=="DRAWDIG":
-                self.currentActor.draw=True
-                self.currentActor.dig+=5
+                self.currentActor.draw()
             elif turnAction=="FIRE":
                 self.currentActor.shoot(self.currentActor.focus)
             elif turnAction=="SABER":

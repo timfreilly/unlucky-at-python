@@ -33,6 +33,7 @@ class Weapon:
     def __init__(self,name):
         self.type = WeaponType.TypeFromName(name)
         self.bullets = self.type.maxBullets  
+        self.drawn = False
         
     def reload(self):
         self.bullets = self.type.maxBullets
