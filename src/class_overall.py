@@ -48,7 +48,7 @@ class Actor:
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
         print "Health Points: ",self.hp-self.losthp,"/",self.hp
-        print "Wounds/Concussion Penalty: -"+str(int(self.wounddebuff+self.concuss))+"%"
+        print "Wounds/Concussion Penalty: "+str(int(self.wounddebuff+self.concuss))+"%"
         print "Intimidation level: ",self.descIntimidation()
         print "Position X:",self.x,'Y:',self.y
     
@@ -81,7 +81,7 @@ class Actor:
     isDisabled = property(getIsDisabled)
     
     def getWoundDebuff(self):
-        return -self.losthp/self.hp * 40 #debuff is from -1 to -39
+        return -float(self.losthp)/self.hp * 40 #debuff is from -1 to -39
     wounddebuff = property(getWoundDebuff)
 
     
@@ -180,7 +180,7 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if self.weapon.type.isRange:
+        if self.weapon.type.isRange:  #TODO: punches are dealing ranged-style damage
             print damage,"damage."
         else:
             damage=damage/2
