@@ -1,7 +1,8 @@
-allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,   'sharp':0,    'isRange':True},
-            {'name':'shotgun',      'range':2,  'maxbullets':3,   'sharp':10,   'isRange':True},
-            {'name':'rifle',        'range':0,  'maxbullets':1,   'sharp':30,   'isRange':True},
-            {'name':'saber',        'range':0,  'maxbullets':10,  'sharp':20,   'isRange':False}]
+allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bullets',  'isRange':True},
+            {'name':'shotgun',      'range':2,  'maxbullets':3,     'ammo':'shells',   'isRange':True},
+            {'name':'rifle',        'range':0,  'maxbullets':1,     'ammo':'bullets',  'isRange':True},
+            {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True},
+            {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False}]
 
 allScenarios=[{'title':'Lonely Day at the Bank',    
                'playerCount':1,

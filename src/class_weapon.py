@@ -11,12 +11,13 @@ class WeaponType:
             cls._Types[name] = cls(name)
         return cls._Types[name]
 
-    def __init__(self,name): #,name,range,maxbullets,damage,sharp,isRange
+    def __init__(self,name): #,name,range,maxbullets,damage,isRange
         for weapon in allWeapons:
             if weapon['name'] == name:
                 self.name=weapon['name']
                 self.rangePenalty=weapon['range'] #multiply this number by range addition in hit EX (shotgun) 2 * 12ft = -24
                 self.maxBullets=weapon['maxbullets']
+                self.ammoName=weapon['ammo']
                 self.isRange=weapon['isRange']
         
     def strRange(self):

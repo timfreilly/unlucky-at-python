@@ -151,9 +151,13 @@ class Actor:
             print "Choose your weapon:"
             for x,weap in enumerate(weaponList):
                 type = class_weapon.WeaponType.TypeFromName(weap)
-                print str(x+1)+'.',type.name.capitalize(),'\t',type.strRange(),'\t',type.maxBullets,'bullets'
+                if type.isRange:
+                    print str(x+1)+'.',type.name.capitalize(),'\t',type.strRange(),'\t',type.maxBullets,type.ammoName
+                else:
+                    print str(x+1)+'.',type.name.capitalize(),'\t',type.strRange()
             while weaponChoice < 1 or weaponChoice > len(weaponList):
                 try:
+                    print
                     weaponChoice=input("Which weapon will you use?")
                 except SyntaxError:
                     print "Please enter your choice by number."
