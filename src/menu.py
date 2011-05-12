@@ -16,7 +16,7 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Grab DEFENSE.",                           "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
             ["Draw your WEAPON and fire.",              "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
             ["Draw your WEAPON and prepare your next shot.","OFFENSE draws and prepares a next shot.",  "DRAWDIG"],
-            ["Fire your gun.",                          "OFFENSE attempts to shoot DEFENSE.",           "FIRE"] ,  
+            ["Fire your WEAPON.",                       "OFFENSE attempts to shoot DEFENSE.",           "FIRE"] ,  
             ["Attempt to intimidate DEFENSE.",          "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
             ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for action.",   "DIG"],
             ["Get help with the menu.",                 "",                                             "MENU"],
@@ -332,9 +332,9 @@ class Battle:
 
 class Game:
     def __init__(self):
-        print '^^^^^^^^^^^^^^^^^^^^^^^^^'
-        print '^^^^UNLUCKY AT CARDS^^^^^'
-        print '^^^^^^^^^^^^^^^^^^^^^^^^^'
+        print '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        print '^^^^  UNLUCKY AT CARDS  ^^^^^'
+        print '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
         print 
         scenarioChoice = self.pickScenario()
         print
