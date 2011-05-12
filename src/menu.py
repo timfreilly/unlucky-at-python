@@ -28,13 +28,10 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, playerCount, playerLocations, npcCount, npcNames, npcLocations, duration, weaponList, introduction):
+    def __init__(self, title, players, npcs, duration, weaponList, introduction):
         self.title = title
-        self.playerCount = playerCount
-        self.playerLocations = playerLocations
-        self.npcCount = npcCount
-        self.npcNames = npcNames
-        self.npcLocations = npcLocations
+        self.players = players
+        self.npcs = npcs
         self.duration = duration
         self.weaponList = weaponList
         self.introduction = introduction
@@ -43,22 +40,13 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
 
 class Battle:
     def __init__(self,scenarioChoice):
-        self.players = [] #all players are added here
-        self.npcs = [] #all npcs are added here
-        
+        self.actors = []
         self.scenario = Scenario(**data.allScenarios[scenarioChoice])
         print self.scenario.introduction
-        for x in range(self.scenario.playerCount):
-            self.createPlayer()
-        for x in range(self.scenario.npcCount):
-            self.createNPC()
-    
-    def getActors(self,exclude=None):
-        allActors = self.players+self.npcs
-        if exclude:
-            allActors.remove(exclude)
-        return allActors
-    actors = property(getActors)
+        for partialPlayer in self.scenario.players:
+            self.createPlayer(partialPlayer)
+        for npc in self.scenario.npcs:
+            self.createNPC(npc)
     
     def getOtherActors(self):
         allActors = self.players+self.npcs
@@ -66,12 +54,20 @@ class Battle:
         return allActors
     otherActors = property(getOtherActors)
         
-    def createPlayer(self):
+    def getMembersOfTeam(self,team):
+        members = self.actors[:]
+        for member in members:
+            if member.team != team:
+                members.remove(member)
+        return members
+    
+    def createPlayer(self,partialPlayer):
 
         print
         player=class_overall.Actor(raw_input("What is your character's name? "))
-        self.players.append(player)
-        player.x,player.y = self.scenario.playerLocations.pop()
+        self.actors.append(player)
+        player.x,player.y = partialPlayer['location']
+        player.team = partialPlayer['team']
         print player
         print
         player.addRoots()
@@ -80,14 +76,15 @@ class Battle:
         player.addWeapon(self.scenario.weaponList)
         
         
-    def createNPC(self):
-        npcName = self.scenario.npcNames.pop()
+    def createNPC(self,partialNPC):
+        npcName = partialNPC['name']
         print
         print "Creating",npcName
         time.sleep(1)
         npc=class_overall.Actor(npcName, isNPC=True)
-        self.npcs.append(npc)
-        npc.x,npc.y = self.scenario.npcLocations.pop()
+        self.actors.append(npc)
+        npc.x,npc.y = partialNPC['location']
+        npc.team = partialNPC['team']
         npc.addRoots()
         print npc
         print
@@ -99,19 +96,21 @@ class Battle:
         print
         print
         
-        allNPCsDisabled = True
-        for npc in self.npcs:
-            if not npc.isDisabled:
-                allNPCsDisabled = False
-        if allNPCsDisabled:
+        #TODO: take away the hardcoding of "bankers" and "robbers"
+        
+        allBankersDisabled = True
+        for actor in self.actors:
+            if not actor.isDisabled and actor.team=='bankers':
+                allBankersDisabled = False
+        if allBankersDisabled:
             print 'All resistance is disabled!  You make off with the cash!'
             return True
         
-        allPlayersDisabled = True
-        for player in self.players:
-            if not player.isDisabled:
-                allPlayersDisabled = False
-        if allPlayersDisabled:
+        allRobbersDisabled = True
+        for actor in self.actors:
+            if not actor.isDisabled and actor.team=='robbers':
+                allRobbersDisabled = False
+        if allRobbersDisabled:
             print 'Your opposition is too strong. You can not complete your task!'
             return True
 
@@ -163,7 +162,7 @@ class Battle:
         if self.currentActor.dig<=20:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
-            if len(self.npcs) > 1: #allow focus switching, this check does not check if npcs are disabled
+            if len(self.getMembersOfTeam('bankers')) > 1: #allow focus switching, this check does not check if npcs are disabled
                 legalOptions.append(allOptions[15])
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
@@ -171,26 +170,26 @@ class Battle:
         return legalOptions
     
     def setFocus(self):
-        if len(self.otherActors) == 1:
-            self.currentActor.focus = self.otherActors[0]
-            return
         if self.currentActor.isNPC:
-            self.currentActor.focus = random.choice(self.players)
+            self.currentActor.focus = random.choice(self.getMembersOfTeam('robbers'))
         else:
-            print 
-            print 'Please pick a target to focus on:'
-            for x,actor in enumerate(self.otherActors):
-                print x+1,'-',actor.cap_name
-            choice = 0
-            while choice not in range(1,len(self.otherActors)+1):
-                try:
-                    choice=input("Choose your focus: ")
-                except SyntaxError:
-                    print "Please enter your choice by number."
-                except NameError:
-                    print "Please enter your choice by number."
-            self.currentActor.focus = self.otherActors[choice-1]
-            print
+            if len(self.getMembersOfTeam('bankers'))==1:
+                self.currentActor.focus = self.getMembersOfTeam('bankers')[0]
+            else:
+                print 
+                print 'Please pick a target to focus on:'
+                for x,actor in enumerate(self.otherActors):
+                    print x+1,'-',actor.cap_name
+                choice = 0
+                while choice not in range(1,len(self.getMembersOfTeam('bankers'))+1):
+                    try:
+                        choice=input("Choose your focus: ")
+                    except SyntaxError:
+                        print "Please enter your choice by number."
+                    except NameError:
+                        print "Please enter your choice by number."
+                self.currentActor.focus = self.getMembersOfTeam('bankers')[choice-1]
+                print
             
             
     
@@ -198,7 +197,6 @@ class Battle:
         #this line is a holdover until a target system or 3+ actor support
         if not self.currentActor.focus:
             self.setFocus()
-        defense = self.otherActors[0]
         
         turnOver = False
         while not turnOver:

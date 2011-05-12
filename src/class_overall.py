@@ -33,6 +33,7 @@ class Actor:
         self.intimcount=0   #if intimcount increases to 3, the actor is disabled
         self.x=0
         self.y=0
+        self.team=''
         self.isNPC=isNPC
         self.state=''       #state is the actor's state in the Continuous Action Turn.  It is in experimental stage
                             #and it may make sense to turn it into a list of states, though it might not be possible to benefit from

@@ -4,12 +4,13 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bull
             {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True},
             {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False}]
 
-allScenarios=[{'title':'Lonely Day at the Bank',    
-               'playerCount':1,
-               'playerLocations':[(16,16)],
-               'npcCount':1,
-               'npcLocations':[(0,0)],
-               'npcNames':['the banker'],
+allScenarios=[{'title':'Lonely Day at the Bank',
+               'players':[
+                          {'location':(16,16),'team':'robbers'}
+                          ],    
+               'npcs':[
+                       {'name':'the banker','location':(0,0),'team':'bankers'}
+                       ],
                'duration':15,
                'weaponList':['six-shooter','shotgun','rifle','saber'],
                'introduction':'''
@@ -25,11 +26,13 @@ to be captured.  Good luck, partner!
                '''    },
                
                {'title':'Busy Bank',
-                'playerCount':1,
-                'playerLocations':[(16,16)],
-                'npcCount':2,
-                'npcLocations':[(0,0),(0,0)],
-                'npcNames':['the banker','the guard'],
+                'players':[
+                          {'location':(16,16),'team':'robbers'}
+                          ],    
+               'npcs':[
+                       {'name':'the banker','location':(0,0),'team':'bankers'},
+                       {'name':'the guard', 'location':(0,16),'team':'bankers'}
+                       ],
                 'duration':25,
                 'weaponList':['six-shooter','shotgun','rifle','saber'],
                 'introduction':'''
