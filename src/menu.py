@@ -122,7 +122,8 @@ class Battle:
             legalOptions.append(allOptions[12]) #back away
         if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
-                legalOptions.append(allOptions[13]) #reload
+                if self.currentActor.weapon.spareAmmo:
+                    legalOptions.append(allOptions[13]) #reload
             elif self.currentActor.weapon.drawn==False:
                 legalOptions.append(allOptions[4]) #draw and fire
                 legalOptions.append(allOptions[5]) #draw and dig
