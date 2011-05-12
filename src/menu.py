@@ -28,10 +28,9 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, players, npcs, duration, weaponList, introduction):
+    def __init__(self, title, actors, duration, weaponList, introduction):
         self.title = title
-        self.players = players
-        self.npcs = npcs
+        self.actors = actors
         self.duration = duration
         self.weaponList = weaponList
         self.introduction = introduction
@@ -43,10 +42,8 @@ class Battle:
         self.actors = []
         self.scenario = Scenario(**data.allScenarios[scenarioChoice])
         print self.scenario.introduction
-        for partialPlayer in self.scenario.players:
-            self.createPlayer(partialPlayer)
-        for npc in self.scenario.npcs:
-            self.createNPC(npc)
+        for partialActor in self.scenario.actors:
+            self.createActor(partialActor)
     
     def getMembersOfTeam(self,team):
         members = self.actors[:]
@@ -55,34 +52,23 @@ class Battle:
                 members.remove(member)
         return members
     
-    def createPlayer(self,partialPlayer):
-
+    def createActor(self,partialActor):
         print
-        player=class_overall.Actor(raw_input("What is your character's name? "))
-        self.actors.append(player)
-        player.x,player.y = partialPlayer['location']
-        player.team = partialPlayer['team']
-        print player
+        if partialActor['isNPC']:
+            name = partialActor['name']
+            print 'Creating',name
+            time.sleep(1)
+        else:
+            name = raw_input('What is your character\'s name?')
+        actor = class_overall.Actor(name,partialActor['isNPC'])
+        self.actors.append(actor)
+        actor.x, actor.y = partialActor['location']
+        actor.team = partialActor['team']
+        print actor
         print
-        player.addRoots()
-        print player
+        actor.addRoots()
         print
-        player.addWeapon(self.scenario.weaponList)
-        
-        
-    def createNPC(self,partialNPC):
-        npcName = partialNPC['name']
-        print
-        print "Creating",npcName
-        time.sleep(1)
-        npc=class_overall.Actor(npcName, isNPC=True)
-        self.actors.append(npc)
-        npc.x,npc.y = partialNPC['location']
-        npc.team = partialNPC['team']
-        npc.addRoots()
-        print npc
-        print
-        npc.addWeapon(self.scenario.weaponList)
+        actor.addWeapon(self.scenario.weaponList)
         time.sleep(1)
 
 
