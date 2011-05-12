@@ -10,8 +10,8 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                          {'name':'the banker','location':(0,0),'team':'bankers','isNPC':True}
                          ],    
                'teams':[
-                        {'name':'robbers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
-                        {'name':'bankers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
+                        {'name':'bankers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
+                        {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                'duration':15,
                'weaponList':['six-shooter','shotgun','rifle','saber'],
@@ -34,8 +34,8 @@ to be captured.  Good luck, partner!
                           {'name':'the guard', 'location':(0,16),'team':'bankers','isNPC':True}
                           ],
                 'teams':[
-                        {'name':'robbers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
-                        {'name':'bankers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
+                        {'name':'bankers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
+                        {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                 'duration':25,
                 'weaponList':['six-shooter','shotgun','rifle','saber'],

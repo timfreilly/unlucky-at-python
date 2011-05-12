@@ -76,24 +76,15 @@ class Battle:
     def gameEnd(self): 
         print
         print
-        
-        #TODO: take away the hardcoding of "bankers" and "robbers"
-        
-        allBankersDisabled = True
-        for actor in self.actors:
-            if not actor.isDisabled and actor.team=='bankers':
-                allBankersDisabled = False
-        if allBankersDisabled:
-            print 'All resistance is disabled!  You make off with the cash!'
-            return True
-        
-        allRobbersDisabled = True
-        for actor in self.actors:
-            if not actor.isDisabled and actor.team=='robbers':
-                allRobbersDisabled = False
-        if allRobbersDisabled:
-            print 'Your opposition is too strong. You can not complete your task!'
-            return True
+
+        for team in self.scenario.teams:
+            teamDisabled = True
+            for actor in self.getMembersOfTeam(team['name']):
+                if not actor.isDisabled:
+                    teamDisabled = False
+            if teamDisabled:
+                print team['defeatMessage']
+                return True
 
         if self.roundCount > self.scenario.duration:
             print 'You\'ve waited too long and the sheriff walks in the door.'
