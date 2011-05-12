@@ -14,7 +14,7 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                'weaponList':['six-shooter','shotgun','rifle','saber'],
                'introduction':'''
 You have 15 turns to rob a bank.
-You will succeed if you:"
+You will succeed if you:
  - Intimidate him more than he intimidates you,
  - Hit him until he sustains a concussion,
  - or Inflict massive damage.

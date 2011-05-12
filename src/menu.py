@@ -41,12 +41,12 @@ class Scenario:  #Scenario is in a very early state right now.  Eventually it wi
    
         
 
-class Game:
-    def __init__(self):
+class Battle:
+    def __init__(self,scenarioChoice):
         self.players = [] #all players are added here
         self.npcs = [] #all npcs are added here
         
-        self.scenario = Scenario(**data.allScenarios[0])
+        self.scenario = Scenario(**data.allScenarios[scenarioChoice])
         print self.scenario.introduction
         for x in range(self.scenario.playerCount):
             self.createPlayer()
@@ -295,7 +295,7 @@ class Game:
             elif turnAction=="QUIT":
                 self.shouldQuit = True
 
-    def playGame(self):
+    def startBattle(self):
         turnOrder = self.rollInitiative()
         self.shouldQuit=False
         self.roundCount=1
@@ -329,7 +329,33 @@ class Game:
         print
         print
         print 'Goodbye!'
-        
-game = Game()
 
-game.playGame()
+class Game:
+    def __init__(self):
+        print '^^^^^^^^^^^^^^^^^^^^^^^^^'
+        print '^^^^UNLUCKY AT CARDS^^^^^'
+        print '^^^^^^^^^^^^^^^^^^^^^^^^^'
+        print 
+        scenarioChoice = self.pickScenario()
+        print
+        battle = Battle(scenarioChoice)
+        battle.startBattle()
+        
+    def pickScenario(self):
+        scenarioChoice = 0
+        print
+        print 'Choose a scenario:'
+        for x,scene in enumerate(data.allScenarios):
+            print str(x+1)+'.',scene['title']
+        while scenarioChoice < 1 or scenarioChoice > len(data.allScenarios):
+            try:
+                print
+                scenarioChoice=input("Enter your choice ")
+            except SyntaxError:
+                print "Please enter your choice by number."
+            except NameError:
+                print "Please enter your choice by number."
+        return scenarioChoice - 1
+
+
+game = Game()
