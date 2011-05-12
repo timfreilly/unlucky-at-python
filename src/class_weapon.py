@@ -35,10 +35,7 @@ class Weapon:
         self.type = WeaponType.TypeFromName(name)
         self.bullets = self.type.maxBullets  
         self.drawn = False
-        if self.bullets:
-            self.spareAmmo = self.bullets * 3
-        else:
-            self.spareAmmo = None    
+        self.spareAmmo = self.bullets * 3 if self.bullets else None 
         
     def reload(self):
         if self.spareAmmo < self.type.maxBullets:
