@@ -28,9 +28,10 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, duration, weaponList, introduction):
+    def __init__(self, title, actors, teams, duration, weaponList, introduction):
         self.title = title
         self.actors = actors
+        self.teams = teams
         self.duration = duration
         self.weaponList = weaponList
         self.introduction = introduction
@@ -72,7 +73,7 @@ class Battle:
         time.sleep(1)
 
 
-    def gameEnd(self): #TODO: Transition use of "player" and "npc" over to something like a loop of the "other side"
+    def gameEnd(self): 
         print
         print
         
