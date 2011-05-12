@@ -48,12 +48,6 @@ class Battle:
         for npc in self.scenario.npcs:
             self.createNPC(npc)
     
-    def getOtherActors(self):
-        allActors = self.players+self.npcs
-        allActors.remove(self.currentActor)
-        return allActors
-    otherActors = property(getOtherActors)
-        
     def getMembersOfTeam(self,team):
         members = self.actors[:]
         for member in members:
@@ -178,7 +172,7 @@ class Battle:
             else:
                 print 
                 print 'Please pick a target to focus on:'
-                for x,actor in enumerate(self.otherActors):
+                for x,actor in enumerate(self.getMembersOfTeam('bankers')):
                     print x+1,'-',actor.cap_name
                 choice = 0
                 while choice not in range(1,len(self.getMembersOfTeam('bankers'))+1):
