@@ -60,7 +60,7 @@ class Actor:
     name = property(get_name,set_name) #use name for middle of a sentence
 
     def get_cap_name(self):
-        if self._name.find("the ")==0: #if the name starts with "the "
+        if self._name.find("the ")==0 or self._name.find("a ")==0 or self._name.find("an ")==0: #if the name starts with "the "
             return self._name.capitalize()
         else:
             return self._name
