@@ -63,7 +63,7 @@ Good luck, partner!
                           ],
                 'teams':[
                         {'name':'apache','defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
-                        {'name':'soldier','defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
+                        {'name':'soldiers','defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
                         ],
                 'duration':25,
                 'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!', 

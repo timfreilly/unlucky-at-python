@@ -48,17 +48,17 @@ class Battle:
             self.createActor(partialActor)
     
     def getMembersOfTeam(self,team):
-        members = self.actors[:]
-        for member in members:
-            if member.team != team:
-                members.remove(member)
+        members = []
+        for member in self.actors:
+            if member.team == team:
+                members.append(member)
         return members
     
     def getMembersNotInTeam(self,team):
-        members = self.actors[:]
-        for member in members:
-            if member.team == team:
-                members.remove(member)
+        members = []
+        for member in self.actors:
+            if member.team != team:
+                members.append(member)
         return members
     
     def createActor(self,partialActor):
@@ -152,24 +152,24 @@ class Battle:
     def setFocus(self):
         otherTeam = self.getMembersNotInTeam(self.currentActor.team)
         if self.currentActor.isNPC:
-            self.currentActor.focus = random.choice(self.getMembersOfTeam('robbers'))
+            self.currentActor.focus = random.choice(otherTeam)
         else:
-            if len(self.getMembersOfTeam('bankers'))==1:
-                self.currentActor.focus = self.getMembersOfTeam('bankers')[0]
+            if len(otherTeam)==1:
+                self.currentActor.focus = otherTeam[0]
             else:
                 print 
                 print 'Please pick a target to focus on:'
-                for x,actor in enumerate(self.getMembersOfTeam('bankers')):
+                for x,actor in enumerate(otherTeam):
                     print x+1,'-',actor.cap_name
                 choice = 0
-                while choice not in range(1,len(self.getMembersOfTeam('bankers'))+1):
+                while choice not in range(1,len(otherTeam)+1):
                     try:
                         choice=input("Choose your focus: ")
                     except SyntaxError:
                         print "Please enter your choice by number."
                     except NameError:
                         print "Please enter your choice by number."
-                self.currentActor.focus = self.getMembersOfTeam('bankers')[choice-1]
+                self.currentActor.focus = otherTeam[choice-1]
                 print
             
             
