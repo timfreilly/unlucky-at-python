@@ -51,4 +51,33 @@ by intimidating, shooting, or beating them to a pulp.
                 
 Good luck, partner!                
                 '''
+                },
+                
+                {'title':'Apache Pass',
+                'actors':[
+                          {'location':(16,16),'team':'soldiers','isNPC':False},
+                          {'name':'the captain','location':(8,15),'team':'soldiers','isNPC':True},
+                          {'name':'an apache warrior','location':(0,9),'team':'apache', 'isNPC':True},
+                          {'name':'an apache warrior','location':(0,12),'team':'apache', 'isNPC':True},
+                          {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True}
+                          ],
+                'teams':[
+                        {'name':'apache','defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
+                        {'name':'soldier','defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
+                        ],
+                'duration':25,
+                'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!', 
+                'weaponList':['six-shooter','rifle','saber','bow'],
+                'introduction':'''
+You and your captain have been ambushed while on 
+a scouting run.  You are staring down three apache
+warriors.  If you can just survive 25 rounds, help
+should arrive.  If both of you are disabled before
+then, you lose.
+
+Injuring opponents will make it harder for them to
+harm you, so aim true.
+                
+Good luck, partner!                
+                '''
                 }]
