@@ -1,6 +1,6 @@
 import random
 import time
-#import math
+import copy
 from operator import itemgetter
 
 
@@ -51,6 +51,13 @@ class Battle:
         members = self.actors[:]
         for member in members:
             if member.team != team:
+                members.remove(member)
+        return members
+    
+    def getMembersNotInTeam(self,team):
+        members = self.actors[:]
+        for member in members:
+            if member.team == team:
                 members.remove(member)
         return members
     
@@ -143,6 +150,7 @@ class Battle:
         return legalOptions
     
     def setFocus(self):
+        otherTeam = self.getMembersNotInTeam(self.currentActor.team)
         if self.currentActor.isNPC:
             self.currentActor.focus = random.choice(self.getMembersOfTeam('robbers'))
         else:
