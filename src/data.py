@@ -14,6 +14,7 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                         {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                'duration':15,
+               'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!',
                'weaponList':['six-shooter','shotgun','rifle','saber'],
                'introduction':'''
 You have 15 turns to rob a bank.
@@ -38,6 +39,7 @@ to be captured.  Good luck, partner!
                         {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                 'duration':25,
+                'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!', 
                 'weaponList':['six-shooter','shotgun','rifle','saber'],
                 'introduction':'''
 You are desperate for cash and have no option

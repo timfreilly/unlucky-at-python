@@ -28,11 +28,12 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, teams, duration, weaponList, introduction):
+    def __init__(self, title, actors, teams, duration, timeOverMessage, weaponList, introduction):
         self.title = title
         self.actors = actors
         self.teams = teams
         self.duration = duration
+        self.timeOverMessage= timeOverMessage
         self.weaponList = weaponList
         self.introduction = introduction
    
@@ -87,8 +88,7 @@ class Battle:
                 return True
 
         if self.roundCount > self.scenario.duration:
-            print 'You\'ve waited too long and the sheriff walks in the door.'
-            print 'You lose!'
+            print self.scenario.timeOverMessage
             return True
         return False
 
