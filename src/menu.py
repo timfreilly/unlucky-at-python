@@ -28,13 +28,12 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, teams, duration, timeOverMessage, weaponList, introduction):
+    def __init__(self, title, actors, teams, duration, timeOverMessage, introduction):
         self.title = title
         self.actors = actors
         self.teams = teams
         self.duration = duration
         self.timeOverMessage= timeOverMessage
-        self.weaponList = weaponList
         self.introduction = introduction
    
         
@@ -77,7 +76,9 @@ class Battle:
         print
         actor.addRoots()
         print
-        actor.addWeapon(self.scenario.weaponList)
+        for team in self.scenario.teams:        #Not totally satisfied with this code, which looks through the teams to get to the weaponList
+            if team['name'] == actor.team:
+                actor.addWeapon(team['weaponList'])
         time.sleep(1)
 
 

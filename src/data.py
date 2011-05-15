@@ -10,12 +10,11 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                          {'name':'the banker','location':(0,0),'team':'bankers','isNPC':True}
                          ],    
                'teams':[
-                        {'name':'bankers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
-                        {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
+                        {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
+                        {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                'duration':15,
                'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!',
-               'weaponList':['six-shooter','shotgun','rifle','saber'],
                'introduction':'''
 You have 15 turns to rob a bank.
 You will succeed if you:
@@ -35,12 +34,11 @@ to be captured.  Good luck, partner!
                           {'name':'the guard', 'location':(0,16),'team':'bankers','isNPC':True}
                           ],
                 'teams':[
-                        {'name':'bankers','defeatMessage':'All resistance is disabled!  You make off with the cash!'},
-                        {'name':'robbers','defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
+                        {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
+                        {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                 'duration':25,
                 'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!', 
-                'weaponList':['six-shooter','shotgun','rifle','saber'],
                 'introduction':'''
 You are desperate for cash and have no option
 but to break into a busy bank.  You have 25
@@ -62,12 +60,11 @@ Good luck, partner!
                           {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True}
                           ],
                 'teams':[
-                        {'name':'apache','defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
-                        {'name':'soldiers','defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
+                        {'name':'apache','weaponlist':['bow','saber'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
+                        {'name':'soldiers','weaponList':['six-shooter','rifle','saber'],'defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
                         ],
                 'duration':25,
                 'timeOverMessage':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!', 
-                'weaponList':['six-shooter','rifle','saber','bow'],
                 'introduction':'''
 You and your captain have been ambushed while on 
 a scouting run.  You are staring down three apache
