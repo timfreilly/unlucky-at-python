@@ -27,7 +27,6 @@ class Actor:
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
         self.losthp=0
-        self.grapple=0      #positive 15 on the one that's grappled
         self.concuss=0      #negative up to 15
         self.intimcount=0   #if intimcount increases to 3, the actor is disabled
         self.x=0
@@ -35,7 +34,7 @@ class Actor:
         self.team=''
         self.isNPC=isNPC
         self.flags=[]       #flags are temporary status effects that modify rolls
-                            #current flags: MOVINGFAST, MOVINGSLOW, DRAWING
+                            #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
         self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
                             #It is meant to be used to get early 3+ support in, and may disappear after
         
@@ -99,11 +98,21 @@ class Actor:
             return 0
     drawdebuff = property(getDrawDebuff)
     
+    def getGrapplingBonus(self):
+        if 'GRABBING' in self.flags:
+            return 15
+        else:
+            return 0
+    grapplingbonus = property(getGrapplingBonus)
+    
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
     
     def clearBasicFlags(self):  #clears temporarily flags
         self.flags = [i for i in self.flags if i not in ('MOVINGFAST','MOVINGSLOW','DRAWING')] #uses list comprehension to remove the basic flags
+        
+    def clearFlag(self,flag):
+        self.flags = [i for i in self.flags if i != flag]
     
     def rollDice(self,useDig=True):
         roll = random.randint(1,100)
@@ -177,7 +186,7 @@ class Actor:
                      +self.concuss + self.weapon.type.rangePenalty*self.distanceTo(target) + target.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,target):
-        meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + target.grapple +
+        meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + self.grapplingbonus +
                      target.movedebuff)
         return meleeChance
 
@@ -236,7 +245,8 @@ class Actor:
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
             print "Grab succeeds! Future punches are more likely to hit."
-            target.grapple=15
+            self.flags.append('GRABBING')
+            target.flags.append('GRABBED')
         else:
             print "Grab missed!"
     def intimidate(self,target):

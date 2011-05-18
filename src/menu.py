@@ -118,16 +118,18 @@ class Battle:
     def getLegalOptions(self):  #builds a list of the possible options
         legalOptions=[]
         dist=self.currentActor.distanceTo(self.currentActor.focus)
-        if dist>4:
-            legalOptions=[allOptions[0]] #run    
-        if dist>1: 
-            legalOptions.append(allOptions[1]) #walk
+        if 'GRABBED' not in self.currentActor.flags:
+            if dist>4:
+                legalOptions=[allOptions[0]] #run    
+            if dist>1: 
+                legalOptions.append(allOptions[1]) #walk
+            legalOptions.append(allOptions[12]) #back away
+        else:
+            pass #TODO: Add breakaway action
         if dist==1: 
             legalOptions=[allOptions[2]] #punch
-        if dist==1 and self.currentActor.focus.grapple==0: 
+        if dist==1 and 'GRABBED' not in self.currentActor.focus.flags: 
             legalOptions.append(allOptions[3]) #grab
-        if self.currentActor.focus.grapple==0 and self.currentActor.grapple==0:
-            legalOptions.append(allOptions[12]) #back away
         if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
                 if self.currentActor.weapon.spareAmmo:
