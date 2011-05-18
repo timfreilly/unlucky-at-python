@@ -2,7 +2,8 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bull
             {'name':'shotgun',      'range':2,  'maxbullets':3,     'ammo':'shells',   'isRange':True},
             {'name':'rifle',        'range':0,  'maxbullets':1,     'ammo':'bullets',  'isRange':True},
             {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True},
-            {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False}]
+            {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False},
+            {'name':'tomahawk',     'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False}]
 
 allScenarios=[{'title':'Lonely Day at the Bank',
                'actors':[
@@ -60,7 +61,7 @@ Good luck, partner!
                           {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True}
                           ],
                 'teams':[
-                        {'name':'apache','weaponlist':['bow','saber'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
+                        {'name':'apache','weaponlist':['bow','tomahawk'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
                         {'name':'soldiers','weaponList':['six-shooter','rifle','saber'],'defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
                         ],
                 'duration':25,
