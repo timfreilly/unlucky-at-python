@@ -160,6 +160,25 @@ class Battle:
             if len(otherTeam)==1:
                 self.currentActor.focus = otherTeam[0]
             else:
+                if self.currentActor.focus and 'GRABBING' in self.currentActor.flags:
+                    print
+                    print 'Changing focus will release your grab.  Continue?'
+                    print '1 - Yes'
+                    print '2 - No'
+                    choice = 0
+                    while choice not in (1,2):
+                        try:
+                            choice = input("Enter your choice ")
+                        except SyntaxError:
+                            print "Please enter your choice by number."
+                        except NameError:
+                            print "Please enter your choice by number."
+                    if choice == 1:
+                        self.currentActor.clearFlag('GRABBING')
+                        self.currentActor.focus.clearFlag('GRABBED')
+                    else:
+                        print
+                        return
                 print 
                 print 'Please pick a target to focus on:'
                 for x,actor in enumerate(otherTeam):
@@ -254,6 +273,7 @@ class Battle:
                 self.currentActor.flags.append('DIGGING')
             elif turnAction=="REFOCUS":
                 self.setFocus()
+                turnOver = False
             elif turnAction=="MENU":
                 print "A high Bravery means better punches, and grabbing helps."
                 print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
