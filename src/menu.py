@@ -140,7 +140,7 @@ class Battle:
         if dist<=2 and not self.currentActor.weapon.type.isRange: #dist 2 probably ok?
             legalOptions.append(allOptions[14]) #saberize   
         legalOptions.append(allOptions[7]) #intimidate
-        if self.currentActor.dig<=20:
+        if 'DIGGING' not in self.currentActor.flags:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
             if len(self.getMembersNotInTeam(self.currentActor.team)) > 1: #allow focus switching, this check does not check if npcs are disabled
@@ -184,7 +184,7 @@ class Battle:
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
             self.currentActor.descWounds()
-            self.currentActor.state = '' #state keeps track of what the player was doing during other players' turns
+            self.currentActor.clearBasicFlags() #basic flags are one-turn flags: MOVINGSLOW, MOVINGFAST, DRAWING
             dist=self.currentActor.distanceTo(self.currentActor.focus) 
             legalOptions=self.getLegalOptions()
             if self.currentActor.isNPC:
@@ -249,7 +249,7 @@ class Battle:
             elif turnAction=="INTIM":
                 self.currentActor.intimidate(self.currentActor.focus)
             elif turnAction=="DIG":
-                self.currentActor.dig+=10
+                self.currentActor.flags.append('DIGGING')
             elif turnAction=="REFOCUS":
                 self.setFocus()
             elif turnAction=="MENU":

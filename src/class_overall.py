@@ -1,5 +1,5 @@
 import random
-#import time
+import time
 import math
 import copy
 
@@ -27,7 +27,6 @@ class Actor:
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
         self.losthp=0
-        self.dig=0          #dig deep up to 20
         self.grapple=0      #positive 15 on the one that's grappled
         self.concuss=0      #negative up to 15
         self.intimcount=0   #if intimcount increases to 3, the actor is disabled
@@ -35,9 +34,8 @@ class Actor:
         self.y=0
         self.team=''
         self.isNPC=isNPC
-        self.state=''       #state is the actor's state in the Continuous Action Turn.  It is in experimental stage
-                            #and it may make sense to turn it into a list of states, though it might not be possible to benefit from
-                            #multiple states until half-moves are possible
+        self.flags=[]       #flags are temporary status effects that modify rolls
+                            #current flags: MOVINGFAST, MOVINGSLOW, DRAWING
         self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
                             #It is meant to be used to get early 3+ support in, and may disappear after
         
@@ -86,16 +84,16 @@ class Actor:
     wounddebuff = property(getWoundDebuff)
 
     def getMoveDebuff(self):
-        if self.state == 'MOVINGSLOW':
+        if 'MOVINGSLOW' in self.flags:
             return -10
-        elif self.state == 'MOVINGFAST':
+        elif 'MOVINGFAST' in self.flags:
             return -15
         else:
             return 0
     movedebuff = property(getMoveDebuff)
     
     def getDrawDebuff(self):
-        if self.state == 'DRAWING':
+        if 'DRAWING' in self.flags:
             return -15
         else:
             return 0
@@ -104,11 +102,17 @@ class Actor:
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
     
+    def clearBasicFlags(self):  #clears temporarily flags
+        self.flags = [i for i in self.flags if i not in ('MOVINGFAST','MOVINGSLOW','DRAWING')] #uses list comprehension to remove the basic flags
+    
     def rollDice(self,useDig=True):
         roll = random.randint(1,100)
-        if useDig:
-            roll += self.dig
-            self.dig = 0
+        if useDig and 'DIGGING' in self.flags:
+            print
+            print self.cap_name,'summons extra strength...'
+            time.sleep(2)
+            roll += 20
+            self.flags.remove('DIGGING')
         return roll
 
     def addRoots(self):
@@ -209,7 +213,7 @@ class Actor:
 
     def draw(self):
         self.weapon.drawn = True
-        self.state = 'DRAWING'
+        self.flags.append('DRAWING')
     def shoot(self,target):
         self.weapon.bullets -= 1
         roll=self.rollDice()
@@ -271,7 +275,7 @@ class Actor:
             return 'Afraid'
 
     def moveTowards(self,target,speed):
-        self.state = 'MOVINGSLOW' if speed <= 4 else 'MOVINGFAST'
+        self.flags.append('MOVINGSLOW' if speed <= 4 else 'MOVINGFAST')
         
         if speed < 1: #moving backwards
             self.x += speed if self.x < target.x else -speed
