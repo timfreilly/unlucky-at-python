@@ -27,17 +27,19 @@ class Actor:
         self.conc=random.randint(1,100)
         self.grit=random.randint(1,100)
         self.losthp=0
-        self.concuss=0      #negative up to 15
-        self.intimcount=0   #if intimcount increases to 3, the actor is disabled
+        self.concuss=0         #negative up to 15
+        self.intimcount=0      #if intimcount increases to 3, the actor is disabled
+        self.healthRoot=0      #set to 7 if player picks that root
+        self.concussionRoot=0  #set to 1 if player picks that root
         self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
         self.x=0
         self.y=0
         self.team=''
         self.isNPC=isNPC
-        self.flags=[]       #flags are temporary status effects that modify rolls
-                            #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
-        self.focus=None     #focus is the actor whom this actor is currently "Locked On" to.
-                            #It is meant to be used to get early 3+ support in, and may disappear after
+        self.flags=[]          #flags are temporary status effects that modify rolls
+                               #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
+        self.focus=None        #focus is the actor whom this actor is currently "Locked On" to.
+                               #It is meant to be used to get early 3+ support in, and may disappear after
         
         
     def __str__(self):
@@ -65,7 +67,7 @@ class Actor:
     cap_name = property(get_cap_name) #use cap_name for the start of a sentence
     
     def getMaxHP(self):
-        return int(30+self.getBonus(self.grit))
+        return int(30+self.getBonus(self.grit)+self.healthRoot)
     hp = property(getMaxHP)
     
     def getIsDisabled(self):
@@ -130,8 +132,7 @@ class Actor:
 
     def addRoots(self):
         if not self.isNPC:
-            print "Your Roots improve one of your stats.  Bravery improves punches,"
-            print "Concentration improves shooting, and Grit improves intimidation."
+            print "Select your Roots"
             print
         roots = 1 if (self.brav+self.conc+self.grit)>120 else 2
         if not self.isNPC and roots == 2:
@@ -140,13 +141,16 @@ class Actor:
         while roots:
             roots -= 1
             if self.isNPC:
-                root = random.randint(1,3)
+                root = random.randint(1,6)
             else:
-                print "(1) Troublemaker: +10 bravery"
-                print "(2) Wary eye: +10 concentration"
-                print "(3) Tanned hide: +10 grit"
+                print "1. Troublemaker    +10 bravery        (connecting punches, grabs)"
+                print "2. Wary eye        +10 concentration  (aiming guns)"
+                print "3. Trail worn      +10 grit           (health, intimidation)"
+                print "4. Lucky           +7  health         (lots of stamina)"
+                print "5. Jack of spades  +20 lowest trait"
+                print "6. Knuckles        +1  concussion     (harder punches)"
                 root = 0
-                while root != 1 and root != 2 and root != 3:
+                while root not in range(1,7):
                     try:
                         root=input("Choose the number of your Root: ")
                     except SyntaxError:
@@ -160,6 +164,18 @@ class Actor:
                 self.conc+=10
             elif root==3:
                 self.grit+=10
+            elif root==4:
+                self.healthRoot=7
+            elif root==5:
+                lowest = min(self.brav,self.conc,self.grit)
+                if lowest == self.brav:
+                    self.brav += 20
+                elif lowest == self.conc:
+                    self.conc += 20
+                else:
+                    self.grit += 20
+            elif root==6:
+                self.concussionRoot=1
 
     def addWeapon(self,weaponList):
         if self.isNPC:
@@ -194,7 +210,7 @@ class Actor:
                      target.movedebuff)
         return meleeChance
 
-    def getDamage(self): #Concussion(melee) is true, range false
+    def getDamage(self):
         locRoll=self.rollDice()
         if locRoll<=15:
             location=locationAndDamage[0]
@@ -217,11 +233,6 @@ class Actor:
             damage=12
             depth="Massive wound "
         print "Hit!   "+ depth+"to the "+location[0]+":",
-        if self.weapon.type.isRange:  #TODO: punches are dealing ranged-style damage
-            print damage,"damage."
-        else:
-            damage=damage/2
-            print damage,"damage and",damage,"concussion."
         return damage
 
     def draw(self):
@@ -234,6 +245,7 @@ class Actor:
             self.draw()
         if roll<=self.rangeChanceCalc(target):
             damage=self.getDamage()
+            print damage,'damage.'
             target.losthp+=damage
         else:
             print "Shot missed!"
@@ -241,8 +253,9 @@ class Actor:
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
             damage=self.getDamage()
-            target.losthp+=damage
-            target.concuss-=damage
+            print damage/2,'damage and',(damage/2)+self.concussionRoot,'concussion.'
+            target.losthp+=damage/2
+            target.concuss-=(damage/2)+self.concussionRoot
         else:
             print "Missed!"
     def grab(self,target):
