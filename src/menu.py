@@ -292,7 +292,7 @@ class Battle:
             while not self.currentActor:
                 self.currentActor = turnQueue.pop() #the lines surrounding this line skip all players who haven't gone
                 if self.currentActor.isDisabled:
-                    print self.currentActor.cap_name,'is',self.currentActor.descDisabled,'and can not act!'
+                    print self.currentActor.cap_name,'is',self.currentActor.descDisabled(),'and can not act!'
                     print
                     self.currentActor = False
 
