@@ -143,7 +143,7 @@ class Battle:
         if self.currentActor.dig<=20:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
-            if len(self.getMembersOfTeam('bankers')) > 1: #allow focus switching, this check does not check if npcs are disabled
+            if len(self.getMembersNotInTeam(self.currentActor.team)) > 1: #allow focus switching, this check does not check if npcs are disabled
                 legalOptions.append(allOptions[15])
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
