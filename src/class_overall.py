@@ -88,7 +88,7 @@ class Actor:
     def getMoveDebuff(self):
         if self.state == 'MOVINGSLOW':
             return -10
-        elif self.state == 'MOVEFAST':
+        elif self.state == 'MOVINGFAST':
             return -15
         else:
             return 0
