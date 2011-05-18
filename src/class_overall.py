@@ -255,6 +255,34 @@ class Actor:
             target.grappleActor = self
         else:
             print "Grab missed!"
+    def escape(self): 
+        grabber = self.grappleActor
+        best = max(self.brav,self.conc,self.grit)
+        escapeChance = (50 + self.getBonus(best) + self.wounddebuff + self.concuss)
+        roll=self.rollDice()
+        if roll <= escapeChance:
+            print self.cap_name,'breaks from',grabber.name+'\'s grab',
+            self.breakGrapple()
+        else:
+            print self.cap_name,'fails to break free from',grabber.name+'\'s grab!'
+        if roll <= escapeChance - 30: #extra high success
+            if self.brav == best:
+                print 'and takes a swing at',grabber.name+'\'s face!'
+                time.sleep(2)
+                print
+                self.punch(grabber)
+            elif self.conc == best:
+                print 'and takes a step back!'
+                time.sleep(2)
+                print
+                self.moveTowards(grabber,-2)
+            else:
+                print 'and goes for a reversal grab!'
+                self.grab(grabber)
+                time.sleep(2)
+                print
+        else:
+            print
     def intimidate(self,target):
         if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."

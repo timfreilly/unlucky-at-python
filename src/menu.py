@@ -25,7 +25,8 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
             ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "RELOAD"],
             ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"],
-            ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"]]
+            ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"],
+            ["Escape from GRABBER's hold",              "OFFENSE struggles against GRABBER's hold.",    "ESCAPE"]]
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
     def __init__(self, title, actors, teams, duration, timeOverMessage, introduction):
@@ -120,14 +121,14 @@ class Battle:
         dist=self.currentActor.distanceTo(self.currentActor.focus)
         if 'GRABBED' not in self.currentActor.flags:
             if dist>4:
-                legalOptions=[allOptions[0]] #run    
+                legalOptions.append(allOptions[0]) #run    
             if dist>1: 
                 legalOptions.append(allOptions[1]) #walk
             legalOptions.append(allOptions[12]) #back away
         else:
-            pass #TODO: Add breakaway action
+            legalOptions.append(allOptions[16]) #escape grapple
         if dist==1: 
-            legalOptions=[allOptions[2]] #punch
+            legalOptions.append(allOptions[2]) #punch
         if dist==1 and 'GRABBED' not in self.currentActor.flags + self.currentActor.focus.flags: 
             legalOptions.append(allOptions[3]) #grab
         if self.currentActor.weapon.type.isRange==True:
@@ -231,6 +232,8 @@ class Battle:
                     option=option.replace("DISTANCE",str(dist))
                     option=option.replace("HALF",str(dist/2))
                     option=option.replace("WEAPON",self.currentActor.weapon.type.name)
+                    if 'GRABBED' in self.currentActor.flags:
+                        option=option.replace("GRABBER",self.currentActor.grappleActor.name)
                     print x,".",
                     print option
                 print
@@ -249,6 +252,8 @@ class Battle:
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
             turnText=turnText.replace("WEAPON",self.currentActor.weapon.type.name)
+            if 'GRABBED' in self.currentActor.flags:
+                turnText=turnText.replace("GRABBER",self.currentActor.grappleActor.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             if turnAction=="RUN":
@@ -257,6 +262,8 @@ class Battle:
                 self.currentActor.moveTowards(self.currentActor.focus,4)
             elif turnAction=="BACKAWAY": 
                 self.currentActor.moveTowards(self.currentActor.focus,-2)
+            elif turnAction=="ESCAPE":
+                self.currentActor.escape()
             elif turnAction=="PUNCH":
                 self.currentActor.punch(self.currentActor.focus)
             elif turnAction=="GRAB":
