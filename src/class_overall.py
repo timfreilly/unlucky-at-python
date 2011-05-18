@@ -29,6 +29,7 @@ class Actor:
         self.losthp=0
         self.concuss=0      #negative up to 15
         self.intimcount=0   #if intimcount increases to 3, the actor is disabled
+        self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
         self.x=0
         self.y=0
         self.team=''
@@ -111,8 +112,11 @@ class Actor:
     def clearBasicFlags(self):  #clears temporarily flags
         self.flags = [i for i in self.flags if i not in ('MOVINGFAST','MOVINGSLOW','DRAWING')] #uses list comprehension to remove the basic flags
         
-    def clearFlag(self,flag):
-        self.flags = [i for i in self.flags if i != flag]
+    def breakGrapple(self):
+        self.grappleActor.flags = [i for i in self.flags if i not in ('GRABBED','GRABBING')]
+        self.grappleActor.grappleActor = None
+        self.grappleActor = None
+        self.flags = [i for i in self.flags if i not in ('GRABBED','GRABBING')]
     
     def rollDice(self,useDig=True):
         roll = random.randint(1,100)
@@ -247,6 +251,8 @@ class Actor:
             print "Grab succeeds! Future punches are more likely to hit."
             self.flags.append('GRABBING')
             target.flags.append('GRABBED')
+            self.grappleActor = target
+            target.grappleActor = self
         else:
             print "Grab missed!"
     def intimidate(self,target):

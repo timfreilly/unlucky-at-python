@@ -128,7 +128,7 @@ class Battle:
             pass #TODO: Add breakaway action
         if dist==1: 
             legalOptions=[allOptions[2]] #punch
-        if dist==1 and 'GRABBED' not in self.currentActor.focus.flags: 
+        if dist==1 and 'GRABBED' not in self.currentActor.flags + self.currentActor.focus.flags: 
             legalOptions.append(allOptions[3]) #grab
         if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
@@ -174,8 +174,7 @@ class Battle:
                         except NameError:
                             print "Please enter your choice by number."
                     if choice == 1:
-                        self.currentActor.clearFlag('GRABBING')
-                        self.currentActor.focus.clearFlag('GRABBED')
+                        self.currentActor.breakGrapple()
                     else:
                         print
                         return
@@ -219,7 +218,12 @@ class Battle:
                 turnChoice=random.randint(1,len(legalOptions))
                 print 
             else: # Prints a menu of legal options on the player's turn
-                print "You are ",dist," feet from",self.currentActor.focus.name+"."
+                if 'GRABBING' in self.currentActor.flags:
+                    print 'You are grabbing',self.currentActor.grappleActor.name
+                elif 'GRABBED' in self.currentActor.flags:
+                    print 'You are grabbed by',self.currentActor.grappleActor.name
+                else:
+                    print "You are ",dist," feet from",self.currentActor.focus.name+"."
                 for x in range(1,len(legalOptions)+1):
                     option=legalOptions[x-1][0]
                     option=option.replace("OFFENSE",self.currentActor.name)
