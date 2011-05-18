@@ -200,6 +200,9 @@ class Battle:
         #this line is a holdover until a target system or 3+ actor support
         if not self.currentActor.focus:
             self.setFocus()
+        if self.currentActor.focus.isDisabled:
+            self.currentActor.breakGrapple()
+            self.setFocus()
         
         turnOver = False
         while not turnOver:
