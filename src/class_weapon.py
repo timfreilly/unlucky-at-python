@@ -48,3 +48,21 @@ class Weapon:
             print
             print '**** LAST RELOAD ****'
             print
+            
+class Gear:
+    def __init__(self):
+        self.weapons = []
+        self.ammos = []
+        
+    def addAmmo(self,type,quantity):
+        for ammo in ammos:
+            if ammo[0] == type:
+                ammo[1] += quantity
+                return
+        ammos.append([type,quantity])
+        
+    def ammoCount(self,type):
+        for ammo in ammos:
+            if ammo[0] == type:
+                return ammo[1]
+        return 0
