@@ -35,34 +35,27 @@ class Weapon:
         self.type = WeaponType.TypeFromName(name)
         self.bullets = self.type.maxBullets  
         self.drawn = False
-        self.spareAmmo = self.bullets * 3 if self.bullets else None 
-        
-    def reload(self):
-        if self.spareAmmo < self.type.maxBullets:
-            self.bullets += self.spareAmmo
-            self.spareAmmo = 0
-        else:
-            self.bullets = self.type.maxBullets
-            self.spareAmmo -= self.type.maxBullets
-        if self.spareAmmo == 0:
-            print
-            print '**** LAST RELOAD ****'
-            print
-            
+              
 class Gear:
     def __init__(self):
         self.weapons = []
         self.ammos = []
         
     def addAmmo(self,type,quantity):
-        for ammo in ammos:
+        for ammo in self.ammos:
             if ammo[0] == type:
                 ammo[1] += quantity
                 return
-        ammos.append([type,quantity])
+        self.ammos.append([type,quantity])
         
     def ammoCount(self,type):
-        for ammo in ammos:
+        for ammo in self.ammos:
             if ammo[0] == type:
                 return ammo[1]
         return 0
+    
+    def useAmmo(self,type,quantity):
+        for ammo in self.ammos:
+            if ammo[0] == type:
+                ammo[1] -= quantity if ammo[1] >= quantity else 0
+                

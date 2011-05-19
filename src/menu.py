@@ -133,7 +133,7 @@ class Battle:
             legalOptions.append(allOptions[3]) #grab
         if self.currentActor.weapon.type.isRange==True:
             if self.currentActor.weapon.bullets==0:
-                if self.currentActor.weapon.spareAmmo:
+                if self.currentActor.gear.ammoCount(self.currentActor.weapon.type):
                     legalOptions.append(allOptions[13]) #reload
             elif self.currentActor.weapon.drawn==False:
                 legalOptions.append(allOptions[4]) #draw and fire
@@ -272,7 +272,7 @@ class Battle:
             elif turnAction=="GRAB":
                 self.currentActor.grab(self.currentActor.focus)
             elif turnAction=="RELOAD":
-                self.currentActor.weapon.reload()
+                self.currentActor.reload()
             elif turnAction=="DRAWFIRE":
                 self.currentActor.shoot(self.currentActor.focus)
             elif turnAction=="SABER":

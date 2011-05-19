@@ -40,6 +40,7 @@ class Actor:
                                #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
         self.focus=None        #focus is the actor whom this actor is currently "Locked On" to.
                                #It is meant to be used to get early 3+ support in, and may disappear after
+        self.gear=class_weapon.Gear()
         
         
     def __str__(self):
@@ -198,7 +199,8 @@ class Actor:
                 except NameError:
                     print "Please enter your choice by number."
         self.weapon = class_weapon.Weapon(weaponList[weaponChoice-1])
-
+        self.gear.weapons.append(self.weapon)
+        self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3) #TODO: revert after debugging
         print self.cap_name,"chooses a",self.weapon.type.name+'.'
       
     def rangeChanceCalc(self,target):
@@ -249,6 +251,17 @@ class Actor:
             target.losthp+=damage
         else:
             print "Shot missed!"
+    def reload(self):
+        if self.gear.ammoCount(self.weapon.type) < self.weapon.type.maxBullets:
+            self.weapon.bullets += self.gear.ammoCount(self.weapon.type)
+            self.gear.useAmmo(self.weapon.type, self.weapon.type.maxBullets)
+        else:
+            self.weapon.bullets = self.weapon.type.maxBullets
+            self.gear.useAmmo(self.weapon.type, self.weapon.type.maxBullets)
+        if self.gear.ammoCount(self.weapon.type) == 0:
+            print
+            print '**** LAST RELOAD ****'
+            print
     def swing(self,target):
         roll=self.rollDice()
         if not self.weapon.drawn:
