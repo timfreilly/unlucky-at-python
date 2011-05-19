@@ -207,7 +207,7 @@ class Actor:
         return rangeChance
     def meleeChanceCalc(self,target):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + self.grapplingbonus +
-                     target.movedebuff)
+                     target.movedebuff) + self.drawdebuff
         return meleeChance
 
     def getDamage(self):
@@ -249,6 +249,16 @@ class Actor:
             target.losthp+=damage
         else:
             print "Shot missed!"
+    def swing(self,target):
+        roll=self.rollDice()
+        if not self.weapon.drawn:
+            self.draw()
+        if roll<=self.meleeChanceCalc(target):
+            damage=self.getDamage()
+            print damage,'damage.'
+            target.losthp+=damage
+        else:
+            print "Swing missed!"
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):

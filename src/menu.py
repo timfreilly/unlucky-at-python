@@ -275,12 +275,12 @@ class Battle:
                 self.currentActor.weapon.reload()
             elif turnAction=="DRAWFIRE":
                 self.currentActor.shoot(self.currentActor.focus)
+            elif turnAction=="SABER":
+                self.currentActor.swing(self.currentActor.focus)
             elif turnAction=="DRAWDIG":
                 self.currentActor.draw()
             elif turnAction=="FIRE":
                 self.currentActor.shoot(self.currentActor.focus)
-            elif turnAction=="SABER":
-                self.currentActor.punch(self.currentActor.focus)
             elif turnAction=="INTIM":
                 self.currentActor.intimidate(self.currentActor.focus)
             elif turnAction=="DIG":
