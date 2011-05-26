@@ -62,6 +62,7 @@ class Battle:
         return members
     
     def showActors(self):
+        self.turnOver = False
         print
         for actor in self.actors:
             actor.showStatus()
@@ -70,6 +71,7 @@ class Battle:
         time.sleep(2)
         
     def showGuide(self):
+        self.turnOver = False
         print "A high Bravery means better punches.  Grabbing also helps melee strikes land."
         print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
         print "Intimidation relies on your Grit. If you win the battle of wills you push your opponent closer to cowering in fear."
@@ -174,6 +176,7 @@ class Battle:
         return legalOptions
     
     def setFocus(self):
+        self.turnOver = False
         otherTeam = self.getMembersNotInTeam(self.currentActor.team)
         if self.currentActor.isNPC:
             self.currentActor.focus = random.choice(otherTeam)
@@ -224,9 +227,9 @@ class Battle:
             self.currentActor.breakGrapple()
             self.setFocus()
         
-        turnOver = False
-        while not turnOver:
-            turnOver = True #only help and status options will cause the turn to not end.
+        self.turnOver = False
+        while not self.turnOver:
+            self.turnOver = True #only help and status options will cause the turn to not end.
             print self.currentActor.descState()+'.'
             self.currentActor.clearBasicFlags() #basic flags are one-turn flags: MOVINGSLOW, MOVINGFAST, DRAWING
             dist=self.currentActor.distanceTo(self.currentActor.focus) 
@@ -307,13 +310,10 @@ class Battle:
                 self.currentActor.dig()
             elif turnAction=="REFOCUS":
                 self.setFocus()
-                turnOver = False
             elif turnAction=="MENU":
                 self.showGuide()
-                turnOver = False
             elif turnAction=="STATUS":
                 self.showActors()
-                turnOver = False
             elif turnAction=="QUIT":
                 self.shouldQuit = True
 
