@@ -207,7 +207,7 @@ class Battle:
         turnOver = False
         while not turnOver:
             turnOver = True #only help and status options will cause the turn to not end.
-            self.currentActor.descWounds()
+            print self.currentActor.descState()+'.'
             self.currentActor.clearBasicFlags() #basic flags are one-turn flags: MOVINGSLOW, MOVINGFAST, DRAWING
             dist=self.currentActor.distanceTo(self.currentActor.focus) 
             legalOptions=self.getLegalOptions()
@@ -328,7 +328,7 @@ class Battle:
             while not self.currentActor:
                 self.currentActor = turnQueue.pop() #the lines surrounding this line skip all players who haven't gone
                 if self.currentActor.isDisabled:
-                    print self.currentActor.cap_name,'is',self.currentActor.descDisabled(),'and can not act!'
+                    print self.currentActor.descState(),'and can not act!'
                     print
                     self.currentActor = False
 

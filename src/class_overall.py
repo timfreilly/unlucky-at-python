@@ -49,9 +49,7 @@ class Actor:
     def showStatus(self): #might make more sense in Scenario
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
-        print "Health Points: ",self.hp-self.losthp,"/",self.hp
-        print "Wounds/Concussion Penalty: "+str(int(self.wounddebuff+self.concuss))+"%"
-        print "Intimidation level: ",self.descIntimidation()
+        print "State:",self.descState(),'(penalty of',+str(int(self.wounddebuff+self.concuss))+'%)'
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
@@ -200,7 +198,8 @@ class Actor:
                     print "Please enter your choice by number."
         self.weapon = class_weapon.Weapon(weaponList[weaponChoice-1])
         self.gear.weapons.append(self.weapon)
-        self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3) #TODO: revert after debugging
+        if self.weapon.type.isRange:
+            self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3)
         print self.cap_name,"chooses a",self.weapon.type.name+'.'
       
     def rangeChanceCalc(self,target):
@@ -325,34 +324,39 @@ class Actor:
             target.morale-=25
         else:
             print "Intimidate fails."
-            target.intimcount+=10 if target.morale < 90 else 0
-        print "Overall intimidation score:"
-        print self.cap_name,": ",self.descIntimidation(),"\t\t",target.cap_name,": ",target.descIntimidation()
-    def descWounds(self):
-        if self.wounddebuff <= -10:
-            print self.cap_name," has lost ",self.losthp," health and is",
+            target.morale+=10 if target.morale < 90 else 0
+    def descState(self):
+        adjectives = []
         if self.wounddebuff <= -30:
-            print "massively wounded."
+            adjectives.append("bloody")
         elif self.wounddebuff <= -20:
-            print "seriously wounded."  
+            adjectives.append("wounded")  
         elif self.wounddebuff <= -10:
-            print "slightly wounded."
-    def descDisabled(self):  #describes why a character is disabled
-        if self.losthp > .6 * self.hp:
-            return 'severely injured'
-        elif self.morale <= 25:
-            return 'scared into submission'
-        elif self.concuss > .4 * self.hp:
-            return 'dizzy and slumped over'
-    def descIntimidation(self):
-        if self.morale > 75:
-            return 'Unafraid'
-        elif self.morale > 50:
-            return 'Flinching'
-        elif self.morale > 25:
-            return 'Shaky'
-        else:
-            return 'Afraid'
+            adjectives.append("scratched")
+            
+        if self.concuss > 10:
+            adjectives.append("beaten")
+        elif self.concuss > 7:
+            adjectives.append("dizzy")
+        elif self.concuss > 2:
+            adjectives.append("woozy")
+            
+        if self.morale <= 25:
+            adjectives.append('afraid')
+        elif self.morale <= 50:
+            adjectives.append('shaky')
+        elif self.morale <= 75:
+            adjectives.append('flinching')
+
+        if len(adjectives) == 0:
+            return self.cap_name+' looks strong and ready to fight'
+        elif len(adjectives) == 1:
+            return self.cap_name + ' looks ' + adjectives[0]
+        elif len(adjectives) == 2:
+            return self.cap_name + ' looks ' + adjectives[0] + ' and ' + adjectives[1]
+        elif len(adjectives) == 2:
+            return self.cap_name + ' looks ' + adjectives[0] + ', ' + adjectives[1] + ' and ' + adjectives[2]
+            
 
     def moveTowards(self,target,speed):
         self.flags.append('MOVINGSLOW' if speed <= 4 else 'MOVINGFAST')
