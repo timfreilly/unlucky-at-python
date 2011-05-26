@@ -284,7 +284,7 @@ class Battle:
             elif turnAction=="INTIM":
                 self.currentActor.intimidate(self.currentActor.focus)
             elif turnAction=="DIG":
-                self.currentActor.flags.append('DIGGING')
+                self.currentActor.dig()
             elif turnAction=="REFOCUS":
                 self.setFocus()
                 turnOver = False

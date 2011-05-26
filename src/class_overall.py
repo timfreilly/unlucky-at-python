@@ -325,6 +325,8 @@ class Actor:
         else:
             print "Intimidate fails."
             target.morale+=10 if target.morale < 90 else 0
+    def dig(self):
+        self.flags.append('DIGGING')
     def descState(self):
         adjectives = []
         if self.wounddebuff <= -30:
