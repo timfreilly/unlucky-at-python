@@ -336,11 +336,11 @@ class Actor:
         elif self.wounddebuff <= -10:
             adjectives.append("scratched")
             
-        if self.concuss > 10:
+        if self.concuss < -10:
             adjectives.append("beaten")
-        elif self.concuss > 7:
+        elif self.concuss < -7:
             adjectives.append("dizzy")
-        elif self.concuss > 2:
+        elif self.concuss <- 2:
             adjectives.append("woozy")
             
         if self.morale <= 25:
