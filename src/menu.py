@@ -289,12 +289,12 @@ class Battle:
                 self.setFocus()
                 turnOver = False
             elif turnAction=="MENU":
-                print "A high Bravery means better punches, and grabbing helps."
+                print "A high Bravery means better punches.  Grabbing also helps melee strikes land."
                 print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
-                print "Intimidation relies on your Grit and the banker's Grit. If you win the\n battle of wills you get a point,but losing subtracts a point. 3 points wins the game!"
-                print "Digging Deep improves any action on your next turn by 10%. You can skip up \n to two turns this way."
-                print "If you draw on the same turn you fire your gun, your are 10% less likely to hit."
-                print "If you draw and wait until your next turn, your shot is 5% more likely to hit."
+                print "Intimidation relies on your Grit. If you win the battle of wills you push your opponent closer to cowering in fear."
+                print "Digging Deep improves any action on your next turn by 20%."
+                print "If you draw on the same turn you fire your gun, your are 15% less likely to hit."
+                print "If you draw and wait until your next turn, your shot is 20% more likely to hit."
                 print "Your accuracy with a gun relies on your Concentration."
                 print
                 print
