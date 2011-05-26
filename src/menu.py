@@ -61,6 +61,26 @@ class Battle:
                 members.append(member)
         return members
     
+    def showActors(self):
+        print
+        for actor in self.actors:
+            actor.showStatus()
+            print
+            print
+        time.sleep(2)
+        
+    def showGuide(self):
+        print "A high Bravery means better punches.  Grabbing also helps melee strikes land."
+        print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
+        print "Intimidation relies on your Grit. If you win the battle of wills you push your opponent closer to cowering in fear."
+        print "Digging Deep improves any action on your next turn by 20%."
+        print "If you draw on the same turn you fire your gun, your are 15% less likely to hit."
+        print "If you draw and wait until your next turn, your shot is 20% more likely to hit."
+        print "Your accuracy with a gun relies on your Concentration."
+        print
+        print
+        time.sleep(2)
+    
     def createActor(self,partialActor):
         print
         if partialActor['isNPC']:
@@ -289,24 +309,10 @@ class Battle:
                 self.setFocus()
                 turnOver = False
             elif turnAction=="MENU":
-                print "A high Bravery means better punches.  Grabbing also helps melee strikes land."
-                print "Melee hits cause concussion damage, and each point of concussion makes\n all actions 1% less likely to succeed."
-                print "Intimidation relies on your Grit. If you win the battle of wills you push your opponent closer to cowering in fear."
-                print "Digging Deep improves any action on your next turn by 20%."
-                print "If you draw on the same turn you fire your gun, your are 15% less likely to hit."
-                print "If you draw and wait until your next turn, your shot is 20% more likely to hit."
-                print "Your accuracy with a gun relies on your Concentration."
-                print
-                print
-                time.sleep(2)
+                self.showGuide()
                 turnOver = False
             elif turnAction=="STATUS":
-                print
-                for actor in self.actors:
-                    actor.showStatus()
-                    print
-                    print
-                time.sleep(2)
+                self.showActors()
                 turnOver = False
             elif turnAction=="QUIT":
                 self.shouldQuit = True
