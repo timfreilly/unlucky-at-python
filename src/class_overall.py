@@ -340,7 +340,7 @@ class Actor:
     def descDisabled(self):  #describes why a character is disabled
         if self.losthp > .6 * self.hp:
             return 'severely injured'
-        elif self.intimcount <= 25:
+        elif self.morale <= 25:
             return 'scared into submission'
         elif self.concuss > .4 * self.hp:
             return 'dizzy and slumped over'
