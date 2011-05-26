@@ -28,7 +28,7 @@ class Actor:
         self.grit=random.randint(1,100)
         self.losthp=0
         self.concuss=0         #negative up to 15
-        self.intimcount=0      #if intimcount increases to 3, the actor is disabled
+        self.morale=100
         self.healthRoot=0      #set to 7 if player picks that root
         self.concussionRoot=0  #set to 1 if player picks that root
         self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
@@ -74,7 +74,7 @@ class Actor:
     def getIsDisabled(self):
         if self.losthp > .6 * self.hp:
             return True
-        elif self.intimcount > 2:
+        elif self.morale <= 25:
             return True
         elif self.concuss > .4 * self.hp:
             return True
@@ -322,10 +322,10 @@ class Actor:
     def intimidate(self,target):
         if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
             print "Intimidate succeeds! 3 successes will win."
-            target.intimcount+=1
+            target.morale-=25
         else:
             print "Intimidate fails."
-            target.intimcount-=1 if target.intimcount > 0 else 0
+            target.intimcount+=10 if target.morale < 90 else 0
         print "Overall intimidation score:"
         print self.cap_name,": ",self.descIntimidation(),"\t\t",target.cap_name,": ",target.descIntimidation()
     def descWounds(self):
@@ -340,16 +340,16 @@ class Actor:
     def descDisabled(self):  #describes why a character is disabled
         if self.losthp > .6 * self.hp:
             return 'severely injured'
-        elif self.intimcount > 2:
+        elif self.intimcount <= 25:
             return 'scared into submission'
         elif self.concuss > .4 * self.hp:
             return 'dizzy and slumped over'
     def descIntimidation(self):
-        if self.intimcount < 1:
+        if self.morale > 75:
             return 'Unafraid'
-        elif self.intimcount < 2:
+        elif self.morale > 50:
             return 'Flinching'
-        elif self.intimcount < 3:
+        elif self.morale > 25:
             return 'Shaky'
         else:
             return 'Afraid'
