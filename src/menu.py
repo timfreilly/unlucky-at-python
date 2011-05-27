@@ -10,23 +10,24 @@ import data
 
     
 
-allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet toward DEFENSE.",          "RUN"],
-            ["Walk up to 4 feet toward DEFENSE.",       "OFFENSE walks toward DEFENSE.",                "WALK"],       
-            ["Punch DEFENSE.",                          "OFFENSE attempts to punch DEFENSE.",           "PUNCH"],
-            ["Grab DEFENSE.",                           "OFFENSE attempts to grab DEFENSE.",            "GRAB"],
-            ["Draw your WEAPON and fire.",              "OFFENSE draws and shoots at DEFENSE.",         "DRAWFIRE"] ,            
-            ["Draw your WEAPON and prepare your next shot.","OFFENSE draws and prepares a next shot.",  "DRAWDIG"],
-            ["Fire your WEAPON.",                       "OFFENSE attempts to shoot DEFENSE.",           "FIRE"] ,  
-            ["Attempt to intimidate DEFENSE.",          "OFFENSE attempts to intimidate DEFENSE.",      "INTIM"],
-            ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for action.",   "DIG"],
-            ["Get help with the menu.",                 "",                                             "MENU"],
-            ["Check the status of the fight.",          "",                                             "STATUS"],
-            ["Quit.",                                   "",                                             "QUIT" ],
-            ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "BACKAWAY"],
-            ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "RELOAD"],
-            ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "SABER"],
-            ["Switch focus away from DEFENSE.",         "",                                             "REFOCUS"],
-            ["Escape from GRABBER's hold",              "OFFENSE struggles against GRABBER's hold.",    "ESCAPE"]]
+allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet toward DEFENSE.",          "self.currentActor.moveTowards(self.currentActor.focus,8)"],
+            ["Walk up to 4 feet toward DEFENSE.",       "OFFENSE walks toward DEFENSE.",                "self.currentActor.moveTowards(self.currentActor.focus,4)"],       
+            ["Punch DEFENSE.",                          "OFFENSE attempts to punch DEFENSE.",           "self.currentActor.punch(self.currentActor.focus)"],
+            ["Grab DEFENSE.",                           "OFFENSE attempts to grab DEFENSE.",            "self.currentActor.grab(self.currentActor.focus)"],
+            ["Draw your WEAPON and fire.",              "OFFENSE draws and shoots at DEFENSE.",         "self.currentActor.shoot(self.currentActor.focus)"] ,            
+            ["Draw your WEAPON and prepare your next shot.","OFFENSE draws and prepares a next shot.",  "self.currentActor.draw()"],
+            ["Fire your WEAPON.",                       "OFFENSE attempts to shoot DEFENSE.",           "self.currentActor.shoot(self.currentActor.focus)"] ,  
+            ["Attempt to intimidate DEFENSE.",          "OFFENSE attempts to intimidate DEFENSE.",      "self.currentActor.intimidate(self.currentActor.focus)"],
+            ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for action.",   "self.currentActor.dig()"],
+            ["Get help with the menu.",                 "",                                             "self.showGuide()"],
+            ["Check the status of the fight.",          "",                                             "self.showActors()"],
+            ["Quit.",                                   "",                                             "self.shouldQuit = True" ],
+            ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "self.currentActor.moveTowards(self.currentActor.focus,-2)"],
+            ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "self.currentActor.reload()"],
+            ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "self.currentActor.swing(self.currentActor.focus)"],
+            ["Switch focus away from DEFENSE.",         "",                                             "self.setFocus()"],
+            ["Escape from GRABBER's hold",              "OFFENSE struggles against GRABBER's hold.",    "self.currentActor.escape()"]]
+
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
     def __init__(self, title, actors, teams, duration, timeOverMessage, introduction):
@@ -282,40 +283,8 @@ class Battle:
                 turnText=turnText.replace("GRABBER",self.currentActor.grappleActor.name)
             print turnText
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
-            if turnAction=="RUN":
-                self.currentActor.moveTowards(self.currentActor.focus,8)
-            elif turnAction=="WALK":
-                self.currentActor.moveTowards(self.currentActor.focus,4)
-            elif turnAction=="BACKAWAY": 
-                self.currentActor.moveTowards(self.currentActor.focus,-2)
-            elif turnAction=="ESCAPE":
-                self.currentActor.escape()
-            elif turnAction=="PUNCH":
-                self.currentActor.punch(self.currentActor.focus)
-            elif turnAction=="GRAB":
-                self.currentActor.grab(self.currentActor.focus)
-            elif turnAction=="RELOAD":
-                self.currentActor.reload()
-            elif turnAction=="DRAWFIRE":
-                self.currentActor.shoot(self.currentActor.focus)
-            elif turnAction=="SABER":
-                self.currentActor.swing(self.currentActor.focus)
-            elif turnAction=="DRAWDIG":
-                self.currentActor.draw()
-            elif turnAction=="FIRE":
-                self.currentActor.shoot(self.currentActor.focus)
-            elif turnAction=="INTIM":
-                self.currentActor.intimidate(self.currentActor.focus)
-            elif turnAction=="DIG":
-                self.currentActor.dig()
-            elif turnAction=="REFOCUS":
-                self.setFocus()
-            elif turnAction=="MENU":
-                self.showGuide()
-            elif turnAction=="STATUS":
-                self.showActors()
-            elif turnAction=="QUIT":
-                self.shouldQuit = True
+            exec turnAction
+
 
     def startBattle(self):
         turnOrder = self.rollInitiative()
