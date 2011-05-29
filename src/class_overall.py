@@ -100,6 +100,10 @@ class Actor:
             return 0
     drawdebuff = property(getDrawDebuff)
     
+    def getRangeDebuff(self):
+        return self.weapon.type.rangePenalty*self.distanceTo(target)
+    rangeDebuff = property(getRangePenalty)
+    
     def getGrapplingBonus(self):
         if 'GRABBING' in self.flags:
             return 15
@@ -204,7 +208,7 @@ class Actor:
       
     def rangeChanceCalc(self,target):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
-                     +self.concuss + self.weapon.type.rangePenalty*self.distanceTo(target) + target.movedebuff)
+                     +self.concuss + self.rangeDebuff + target.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,target):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + self.grapplingbonus +
@@ -346,9 +350,9 @@ class Actor:
         if self.morale <= 25:
             adjectives.append('afraid')
         elif self.morale <= 50:
-            adjectives.append('shaky')
+            adjectives.append('frightened')
         elif self.morale <= 75:
-            adjectives.append('flinching')
+            adjectives.append('shaky')
 
         if len(adjectives) == 0:
             return self.cap_name+' looks strong and ready to fight'
