@@ -19,6 +19,7 @@ class WeaponType:
                 self.maxBullets=weapon['maxbullets']
                 self.ammoName=weapon['ammo']
                 self.isRange=weapon['isRange']
+                self.flags=weapon['flags']
         
     def strRange(self):
         if not self.isRange:

@@ -102,7 +102,7 @@ class Actor:
     
     def getRangeDebuff(self):
         return self.weapon.type.rangePenalty*self.distanceTo(target)
-    rangeDebuff = property(getRangePenalty)
+    rangeDebuff = property(getRangeDebuff)
     
     def getGrapplingBonus(self):
         if 'GRABBING' in self.flags:

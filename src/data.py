@@ -1,9 +1,9 @@
-allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bullets',  'isRange':True},
-            {'name':'shotgun',      'range':2,  'maxbullets':3,     'ammo':'shells',   'isRange':True},
-            {'name':'rifle',        'range':0,  'maxbullets':1,     'ammo':'bullets',  'isRange':True},
-            {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True},
-            {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False},
-            {'name':'tomahawk',     'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False}]
+allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bullets',  'isRange':True,  'flags':['fast fire']},
+            {'name':'shotgun',      'range':2,  'maxbullets':3,     'ammo':'shells',   'isRange':True,  'flags':['cone fire']},
+            {'name':'rifle',        'range':0,  'maxbullets':1,     'ammo':'bullets',  'isRange':True,  'flags':[]},
+            {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True,  'flags':['instant reload']}, #instant reload not yet implemented
+            {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False, 'flags':[]},
+            {'name':'tomahawk',     'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False, 'flags':['throwable']}]
 
 allScenarios=[{'title':'Lonely Day at the Bank',
                'actors':[
