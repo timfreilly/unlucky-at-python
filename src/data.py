@@ -1,6 +1,6 @@
 allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bullets',  'isRange':True,  'flags':['fast fire']},
             {'name':'shotgun',      'range':2,  'maxbullets':2,     'ammo':'shells',   'isRange':True,  'flags':['double fire']},
-            {'name':'rifle',        'range':0,  'maxbullets':1,     'ammo':'bullets',  'isRange':True,  'flags':[]},
+            {'name':'rifle',        'range':0,  'maxbullets':4,     'ammo':'bullets',  'isRange':True,  'flags':[]},
             {'name':'bow',          'range':0,  'maxbullets':1,     'ammo':'arrows',   'isRange':True,  'flags':['instant reload']}, #instant reload not yet implemented
             {'name':'saber',        'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False, 'flags':[]},
             {'name':'tomahawk',     'range':0,  'maxbullets':None,  'ammo':None,       'isRange':False, 'flags':['throwable']}]

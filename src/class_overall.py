@@ -263,6 +263,9 @@ class Actor:
                 target.losthp+=damage
             else:
                 print "Shot missed!"
+        if 'instant reload' in self.weapon.type.flags and self.gear.ammoCount(self.weapon.type):
+            print 'Another one of the',self.weapon.type.ammoName,'is readied.'
+            self.reload()
     def reload(self):
         if self.gear.ammoCount(self.weapon.type) < self.weapon.type.maxBullets:
             self.weapon.bullets += self.gear.ammoCount(self.weapon.type)
