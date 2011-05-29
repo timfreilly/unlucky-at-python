@@ -99,11 +99,7 @@ class Actor:
         else:
             return 0
     drawdebuff = property(getDrawDebuff)
-    
-    def getRangeDebuff(self):
-        return self.weapon.type.rangePenalty*self.distanceTo(target)
-    rangeDebuff = property(getRangeDebuff)
-    
+
     def getGrapplingBonus(self):
         if 'GRABBING' in self.flags:
             return 15
@@ -206,11 +202,11 @@ class Actor:
             self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3)
         print self.cap_name,"chooses a",self.weapon.type.name+'.'
       
-    def rangeChanceCalc(self,target):
+    def rangeChanceCalc(self,target,extradebuff=0):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
-                     +self.concuss + self.rangeDebuff + target.movedebuff)
+                     +self.concuss + self.weapon.type.rangePenalty*self.distanceTo(target) + target.movedebuff)
         return rangeChance
-    def meleeChanceCalc(self,target):
+    def meleeChanceCalc(self,target,extradebuff=0):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + self.grapplingbonus +
                      target.movedebuff) + self.drawdebuff
         return meleeChance
@@ -244,16 +240,29 @@ class Actor:
         self.weapon.drawn = True
         self.flags.append('DRAWING')
     def shoot(self,target):
-        self.weapon.bullets -= 1
-        roll=self.rollDice()
         if not self.weapon.drawn:
             self.draw()
-        if roll<=self.rangeChanceCalc(target):
-            damage=self.getDamage()
-            print damage,'damage.'
-            target.losthp+=damage
+        if 'double fire' in self.weapon.type.flags:
+            shots=2
+            step=0
+        elif 'fast fire' in self.weapon.type.flags and self.weapon.bullets > 1:
+            shots=2
+            step=-20
         else:
-            print "Shot missed!"
+            shots=1
+            step=0
+        for x in range(shots):
+            if shots > 1:
+                print 'Shot',x+1,'...  ',
+            self.weapon.bullets -= 1
+            roll=self.rollDice()
+    
+            if roll<=self.rangeChanceCalc(target,step*x):
+                damage=self.getDamage()
+                print damage,'damage.'
+                target.losthp+=damage
+            else:
+                print "Shot missed!"
     def reload(self):
         if self.gear.ammoCount(self.weapon.type) < self.weapon.type.maxBullets:
             self.weapon.bullets += self.gear.ammoCount(self.weapon.type)
