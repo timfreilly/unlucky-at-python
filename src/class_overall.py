@@ -353,10 +353,10 @@ class Actor:
             print
     def intimidate(self,target):
         if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
-            print "Intimidate succeeds! You feel empowered and your target shrinks."
+            print 'Intimidate succeeds!',self.cap_name,'feels empowered and',target.name, 'shrinks.'
             self.affectMorale(10, target)
         else:
-            print "Intimidate fails. You embarass yourself."
+            print "Intimidate fails. ",self.name,"cowers."
             self.affectMorale(-5, target)
     def dig(self):
         self.flags.append('DIGGING')
