@@ -50,7 +50,6 @@ class Actor:
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
         print self.descState(),'(penalty of',str(int(self.wounddebuff+self.concuss))+'%)'
-        print 'Morale:',self.morale #TODO: Remove testing statement
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
