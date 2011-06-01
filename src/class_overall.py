@@ -211,7 +211,7 @@ class Actor:
                      target.movedebuff) + self.drawdebuff
         return meleeChance
 
-    def getDamage(self):
+    def dealDamage(self,target,isBlunt=False):
         locRoll=self.rollDice()
         if locRoll<=15:
             location=locationAndDamage[0]
@@ -233,8 +233,16 @@ class Actor:
         else:
             damage=12
             depth="Massive wound "
-        print "Hit!   "+ depth+"to the "+location[0]+":",
-        return damage
+        
+        if isBlunt:
+            print "Hit!   "+ depth+"to the "+location[0]+":",
+            print damage/2,'damage and',(damage/2)+self.concussionRoot,'concussion.'
+            target.losthp+=damage/2
+            target.concuss-=(damage/2)+self.concussionRoot
+        else:
+            print "Hit!   "+ depth+"to the "+location[0]+":",damage,"damage."
+            target.losthp+=damage
+        target.morale-=damage/2
 
     def draw(self):
         self.weapon.drawn = True
@@ -258,9 +266,7 @@ class Actor:
             roll=self.rollDice()
     
             if roll<=self.rangeChanceCalc(target,step*x):
-                damage=self.getDamage()
-                print damage,'damage.'
-                target.losthp+=damage
+                self.dealDamage(target)
             else:
                 print "Shot missed!"
         if 'instant reload' in self.weapon.type.flags and self.gear.ammoCount(self.weapon.type):
@@ -282,18 +288,13 @@ class Actor:
         if not self.weapon.drawn:
             self.draw()
         if roll<=self.meleeChanceCalc(target):
-            damage=self.getDamage()
-            print damage,'damage.'
-            target.losthp+=damage
+            self.dealDamage(target)
         else:
             print "Swing missed!"
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
-            damage=self.getDamage()
-            print damage/2,'damage and',(damage/2)+self.concussionRoot,'concussion.'
-            target.losthp+=damage/2
-            target.concuss-=(damage/2)+self.concussionRoot
+            self.dealDamage(target,isBlunt=True)
         else:
             print "Missed!"
     def grab(self,target):
@@ -372,7 +373,7 @@ class Actor:
             return self.cap_name + ' looks ' + adjectives[0]
         elif len(adjectives) == 2:
             return self.cap_name + ' looks ' + adjectives[0] + ' and ' + adjectives[1]
-        elif len(adjectives) == 2:
+        elif len(adjectives) == 3:
             return self.cap_name + ' looks ' + adjectives[0] + ', ' + adjectives[1] + ' and ' + adjectives[2]
             
 
