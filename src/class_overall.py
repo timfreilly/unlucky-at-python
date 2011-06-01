@@ -50,6 +50,7 @@ class Actor:
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
         print self.descState(),'(penalty of',str(int(self.wounddebuff+self.concuss))+'%)'
+        print 'Morale:',self.morale #TODO: Remove testing statement
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
@@ -242,8 +243,17 @@ class Actor:
         else:
             print "Hit!   "+ depth+"to the "+location[0]+":",damage,"damage."
             target.losthp+=damage
-        target.morale-=damage/2
-
+        self.affectMorale(damage/2, target)
+    
+    def affectMorale(self,value,target=None):
+        self.morale+=value
+        if target:
+            target.morale-=value
+        if self.morale>100:
+            self.morale=100
+        if target.morale>100:
+            target.morale=100
+            
     def draw(self):
         self.weapon.drawn = True
         self.flags.append('DRAWING')
@@ -337,11 +347,11 @@ class Actor:
             print
     def intimidate(self,target):
         if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
-            print "Intimidate succeeds! 3 successes will win."
-            target.morale-=25
+            print "Intimidate succeeds! You feel empowered and your target shrinks."
+            self.affectMorale(10, target)
         else:
-            print "Intimidate fails."
-            target.morale+=10 if target.morale < 90 else 0
+            print "Intimidate fails. You embarass yourself."
+            self.affectMorale(-5, target)
     def dig(self):
         self.flags.append('DIGGING')
     def descState(self):
