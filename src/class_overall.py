@@ -108,6 +108,13 @@ class Actor:
             return 0
     grapplingbonus = property(getGrapplingBonus)
     
+    def getMoraleBonus(self):
+        return math.floor((self.morale-70)/10)
+    moralebonus = property(getMoraleBonus)
+    
+    def getCombinedMorale(self,target):
+        return self.moralebonus - target.moralebonus
+    
     def getBonus(self,stat):
         return 3*math.floor((stat-40)/10)
     
@@ -204,12 +211,13 @@ class Actor:
         print self.cap_name,"chooses a",self.weapon.type.name+'.'
       
     def rangeChanceCalc(self,target,extradebuff=0):
-        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff
+        rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff + 
+                     self.getCombinedMorale(target) + 
                      +self.concuss + self.weapon.type.rangePenalty*self.distanceTo(target) + target.movedebuff)
         return rangeChance
     def meleeChanceCalc(self,target,extradebuff=0):
         meleeChance=(50 + self.getBonus(self.brav) + self.wounddebuff + self.concuss + self.grapplingbonus +
-                     target.movedebuff) + self.drawdebuff
+                     self.getCombinedMorale(target) + target.movedebuff + self.drawdebuff)
         return meleeChance
 
     def dealDamage(self,target,isBlunt=False):
@@ -323,7 +331,7 @@ class Actor:
     def escape(self): 
         grabber = self.grappleActor
         best = max(self.brav,self.conc,self.grit)
-        escapeChance = (50 + self.getBonus(best) + self.wounddebuff + self.concuss)
+        escapeChance = (50 + self.getBonus(best) + self.wounddebuff + self.concuss + getCombinedMorale(grabber))
         roll=self.rollDice()
         if roll <= escapeChance:
             print self.cap_name,'breaks from',grabber.name+'\'s grab',
