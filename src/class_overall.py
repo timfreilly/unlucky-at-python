@@ -136,6 +136,7 @@ class Actor:
             print
         roots = 1 if (self.brav+self.conc+self.grit)>120 else 2
         if not self.isNPC and roots == 2:
+            print
             print "Due to your tough upbringing, pick two Roots."
             print
         while roots:
@@ -143,12 +144,12 @@ class Actor:
             if self.isNPC:
                 root = random.randint(1,6)
             else:
-                print "1. Troublemaker    +10 bravery        (connecting punches, grabs)"
-                print "2. Wary eye        +10 concentration  (aiming guns)"
-                print "3. Trail worn      +10 grit           (health, intimidation)"
-                print "4. Lucky           +7  health         (lots of stamina)"
-                print "5. Jack of spades  +20 to traits below 30"
-                print "6. Knuckles        +1  concussion     (harder punches)"
+                print "1. Troublemaker    +10 bravery              (connecting punches, grabs)"
+                print "2. Wary eye        +10 concentration        (aiming guns)"
+                print "3. Trail worn      +10 grit                 (health, intimidation)"
+                print "4. Lucky           +7  health               (lots of health)"
+                print "5. Jack of spades  +15 to traits under 30"
+                print "6. Knuckles        +1  concussion           (harder punches)"
                 root = 0
                 while root not in range(1,7):
                     try:
@@ -168,11 +169,11 @@ class Actor:
                 self.healthRoot=7
             elif root==5:
                 if self.brav < 30:
-                    self.brav += 20
+                    self.brav += 15
                 if self.conc < 30:
-                    self.conc += 20
+                    self.conc += 15
                 if self.grit < 30:
-                    self.grit += 20
+                    self.grit += 15
             elif root==6:
                 self.concussionRoot=1
 
