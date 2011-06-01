@@ -280,7 +280,7 @@ class Actor:
             self.weapon.bullets -= 1
             roll=self.rollDice()
     
-            if roll<=self.rangeChanceCalc(target,step*x):
+            if roll<=self.rangeChanceCalc(target,step*x): #step penalty -0 for the first shot in the round, -20 for the second, etc
                 self.dealDamage(target)
             else:
                 print "Shot missed!"
@@ -389,6 +389,12 @@ class Actor:
             adjectives.append('frightened')
         elif self.morale <= 75:
             adjectives.append('shaky')
+        elif self.morale >= 175:
+            adjectives.append('triumphant')        
+        elif self.morale >= 150:
+            adjectives.append('gloating')        
+        elif self.morale >= 125:
+            adjectives.append('proud')
 
         if len(adjectives) == 0:
             return self.cap_name+' looks strong and ready to fight'
