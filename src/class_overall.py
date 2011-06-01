@@ -249,10 +249,6 @@ class Actor:
         self.morale+=value
         if target:
             target.morale-=value
-        if self.morale>100:
-            self.morale=100
-        if target.morale>100:
-            target.morale=100
             
     def draw(self):
         self.weapon.drawn = True
