@@ -279,6 +279,7 @@ class Actor:
                 self.dealDamage(target)
             else:
                 print "Shot missed!"
+                self.affectMorale(-1)
         if 'instant reload' in self.weapon.type.flags and self.gear.ammoCount(self.weapon.type):
             print 'Another one of the',self.weapon.type.ammoName,'is readied.'
             self.reload()
@@ -301,22 +302,26 @@ class Actor:
             self.dealDamage(target)
         else:
             print "Swing missed!"
+            self.affectMorale(-1)
     def punch(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
             self.dealDamage(target,isBlunt=True)
         else:
             print "Missed!"
+            self.affectMorale(-1)
     def grab(self,target):
         roll=self.rollDice()
         if roll<=self.meleeChanceCalc(target):
             print "Grab succeeds! Future punches are more likely to hit."
+            self.affectMorale(3, target)
             self.flags.append('GRABBING')
             target.flags.append('GRABBED')
             self.grappleActor = target
             target.grappleActor = self
         else:
             print "Grab missed!"
+            self.affectMorale(-1)
     def escape(self): 
         grabber = self.grappleActor
         best = max(self.brav,self.conc,self.grit)
@@ -325,6 +330,7 @@ class Actor:
         if roll <= escapeChance:
             print self.cap_name,'breaks from',grabber.name+'\'s grab',
             self.breakGrapple()
+            self.affectMorale(3,grabber)
         else:
             print self.cap_name,'fails to break free from',grabber.name+'\'s grab!'
         if roll <= escapeChance - 30: #extra high success
@@ -354,6 +360,7 @@ class Actor:
             self.affectMorale(-5, target)
     def dig(self):
         self.flags.append('DIGGING')
+        self.affectMorale(10)
     def descState(self):
         adjectives = []
         if self.wounddebuff <= -30:
