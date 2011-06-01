@@ -28,7 +28,7 @@ class Actor:
         self.grit=random.randint(1,100)
         self.losthp=0
         self.concuss=0         #negative up to 15
-        self.morale=100
+        self.morale=100+self.getBonus(self.grit)
         self.healthRoot=0      #set to 7 if player picks that root
         self.concussionRoot=0  #set to 1 if player picks that root
         self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
@@ -147,7 +147,7 @@ class Actor:
                 print "2. Wary eye        +10 concentration  (aiming guns)"
                 print "3. Trail worn      +10 grit           (health, intimidation)"
                 print "4. Lucky           +7  health         (lots of stamina)"
-                print "5. Jack of spades  +20 lowest trait"
+                print "5. Jack of spades  +20 to traits below 30"
                 print "6. Knuckles        +1  concussion     (harder punches)"
                 root = 0
                 while root not in range(1,7):
@@ -167,12 +167,11 @@ class Actor:
             elif root==4:
                 self.healthRoot=7
             elif root==5:
-                lowest = min(self.brav,self.conc,self.grit)
-                if lowest == self.brav:
+                if self.brav < 30:
                     self.brav += 20
-                elif lowest == self.conc:
+                if self.conc < 30:
                     self.conc += 20
-                else:
+                if self.grit < 30:
                     self.grit += 20
             elif root==6:
                 self.concussionRoot=1
@@ -246,9 +245,13 @@ class Actor:
         self.affectMorale(damage/2, target)
     
     def affectMorale(self,value,target=None):
-        self.morale+=value
+        bravMultiplier = 1 + self.getBonus(self.brav)/100.0 #high bravery slightly increases morale gains
+        print 'TESTING',bravMultiplier
+        self.morale+=value * bravMultiplier
         if target:
-            target.morale-=value
+            concMultiplier = 1 - target.getBonus(self.conc)/100.0 #high concentration slightly decreases morale losses
+            print 'TESTING',concMultiplier
+            target.morale-=value * concMultiplier
             
     def draw(self):
         self.weapon.drawn = True
