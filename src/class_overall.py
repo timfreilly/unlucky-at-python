@@ -351,7 +351,6 @@ class Actor:
             print
     def intimidate(self,target):
         result = self.getBonus(self.grit) + random.randint(1,10) - self.getBonus(target.grit) - random.randint(1,10)
-        print 'TESTING result',result
         if result > 0:
             print 'Intimidate succeeds!',self.cap_name,'feels empowered and',target.name, 'shrinks.'
             self.affectMorale(10+result/2, target)
