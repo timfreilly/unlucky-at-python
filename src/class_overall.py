@@ -247,11 +247,9 @@ class Actor:
     
     def affectMorale(self,value,target=None):
         bravMultiplier = 1 + self.getBonus(self.brav)/100.0 #high bravery slightly increases morale gains
-        print 'TESTING',bravMultiplier
         self.morale+=value * bravMultiplier
         if target:
             concMultiplier = 1 - target.getBonus(self.conc)/100.0 #high concentration slightly decreases morale losses
-            print 'TESTING',concMultiplier
             target.morale-=value * concMultiplier
             
     def draw(self):
@@ -352,12 +350,14 @@ class Actor:
         else:
             print
     def intimidate(self,target):
-        if self.getBonus(self.grit)+random.randint(1,10)>self.getBonus(target.grit)+random.randint(1,10):
+        result = self.getBonus(self.grit) + random.randint(1,10) - self.getBonus(target.grit) - random.randint(1,10)
+        print 'TESTING result',result
+        if result > 0:
             print 'Intimidate succeeds!',self.cap_name,'feels empowered and',target.name, 'shrinks.'
-            self.affectMorale(10, target)
+            self.affectMorale(10+result/2, target)
         else:
             print "Intimidate fails. ",self.name,"cowers."
-            self.affectMorale(-5, target)
+            self.affectMorale(-5+result/2, target)
     def dig(self):
         self.flags.append('DIGGING')
         self.affectMorale(10)
