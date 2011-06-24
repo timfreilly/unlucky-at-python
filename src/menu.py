@@ -30,12 +30,11 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
 
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, teams, duration, timeOverMessage, introduction):
+    def __init__(self, title, actors, teams, endConditions, introduction):
         self.title = title
         self.actors = actors
         self.teams = teams
-        self.duration = duration
-        self.timeOverMessage= timeOverMessage
+        self.endConditions = endConditions
         self.introduction = introduction
    
         
@@ -118,10 +117,10 @@ class Battle:
             if teamDisabled:
                 print team['defeatMessage']
                 return True
-
-        if self.roundCount > self.scenario.duration:
-            print self.scenario.timeOverMessage
-            return True
+        for condition in self.scenario.endConditions:
+            if eval(condition):
+                print self.scenario.endConditions[condition]
+                return True
         return False
 
     def rollInitiative(self):
