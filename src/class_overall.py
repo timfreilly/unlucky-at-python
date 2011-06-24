@@ -397,7 +397,20 @@ class Actor:
             adjectives.append('proud')
 
         if len(adjectives) == 0:
-            return self.cap_name+' looks strong and ready to fight'
+            if self.brav > 85 and self.brav == max(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks brash and eager to brawl'
+            elif self.conc > 85 and self.conc == max(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks sharp and calculating'
+            elif self.grit > 85 and self.grit == max(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks tough and unflinching'
+            elif self.brav < 20 and self.brav == min(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks timid and unsure'
+            elif self.conc < 20 and self.conc == min(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks dull and distracted'
+            elif self.grit < 20 and self.grit == min(self.brav,self.conc,self.grit):
+                return self.cap_name+' looks green and nervous'
+            else:
+                return self.cap_name+' looks ready to fight'
         elif len(adjectives) == 1:
             return self.cap_name + ' looks ' + adjectives[0]
         elif len(adjectives) == 2:
