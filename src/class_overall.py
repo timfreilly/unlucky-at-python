@@ -49,7 +49,7 @@ class Actor:
     def showStatus(self): #might make more sense in Scenario
         print "Current stats for",self.name,":"
         print "Bravery: ",self.brav,"\tConcentration: ",self.conc,"\tGrit: ",self.grit
-        print self.descState(),'(penalty of',str(int(self.wounddebuff+self.concuss))+'%)'
+        print self.descState(),'(modifier:',str(int(self.wounddebuff+self.concuss+self.moralebonus))+'%)'
         print "Position X:",self.x,'Y:',self.y
     
     def get_name(self):
