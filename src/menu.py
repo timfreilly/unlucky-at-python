@@ -150,8 +150,7 @@ class Battle:
     
     def setFocus(self):
         self.turnOver = False
-        otherTeam = self.getMembersNotInTeam(self.currentActor.team)
-        otherTeam = [actor for actor in self.actors if actor.team != self.currentActor.team]
+        otherTeam = [actor for actor in self.actors if actor.team != self.currentActor.team] #TODO: only get the ones that aren't disabled
         if self.currentActor.isNPC:
             self.currentActor.focus = random.choice(otherTeam)
         else:
