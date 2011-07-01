@@ -69,7 +69,7 @@ Good luck, partner!
                           {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True}
                           ],
                 'teams':[
-                        {'name':'apache','weaponlist':['bow','tomahawk'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
+                        {'name':'apache','weaponList':['bow','tomahawk'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
                         {'name':'soldiers','weaponList':['six-shooter','rifle','saber'],'defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
                         ],
                 'endConditions':{

@@ -47,21 +47,7 @@ class Battle:
         print self.scenario.introduction
         for partialActor in self.scenario.actors:
             self.createActor(partialActor)
-    
-    def getMembersOfTeam(self,team):
-        members = []
-        for member in self.actors:
-            if member.team == team:
-                members.append(member)
-        return members
-    
-    def getMembersNotInTeam(self,team):
-        members = []
-        for member in self.actors:
-            if member.team != team:
-                members.append(member)
-        return members
-    
+        
     def showActors(self):
         self.turnOver = False
         print
@@ -114,11 +100,9 @@ class Battle:
                 del self.scenario.events[self.scenario.events.index(event)]
 
         for team in self.scenario.teams:
-            teamDisabled = True
-            for actor in self.getMembersOfTeam(team['name']):
-                if not actor.isDisabled:
-                    teamDisabled = False
-            if teamDisabled:
+            standing = len([actor for actor in self.actors if actor.team == team['name'] and not actor.isDisabled])  #list comprehension, heck yeah!
+            
+            if standing==0:
                 print team['defeatMessage']
                 return True
         for condition in self.scenario.endConditions:
@@ -157,7 +141,7 @@ class Battle:
         if 'DIGGING' not in self.currentActor.flags:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
-            if len(self.getMembersNotInTeam(self.currentActor.team)) > 1: #allow focus switching, this check does not check if npcs are disabled
+            if len([actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled]) > 1: 
                 legalOptions.append(allOptions[15])
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
@@ -167,6 +151,7 @@ class Battle:
     def setFocus(self):
         self.turnOver = False
         otherTeam = self.getMembersNotInTeam(self.currentActor.team)
+        otherTeam = [actor for actor in self.actors if actor.team != self.currentActor.team]
         if self.currentActor.isNPC:
             self.currentActor.focus = random.choice(otherTeam)
         else:
@@ -213,7 +198,8 @@ class Battle:
         if not self.currentActor.focus:
             self.setFocus()
         if self.currentActor.focus.isDisabled: #is your grab target disabled?
-            self.currentActor.breakGrapple()
+            if self.currentActor.grappleActor:
+                self.currentActor.breakGrapple()
             self.setFocus()
         
         self.turnOver = False
@@ -277,7 +263,7 @@ class Battle:
             actor.rollInitiative()
         self.shouldQuit=False
         self.roundCount=1
-        turn = 100
+        turn = 100 #The game "counts down" from 100 and each actor gets a turn whenever their number comes up
         while not self.gameEnd() and not self.shouldQuit: 
             if turn == 100:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
@@ -290,15 +276,12 @@ class Battle:
                 if actor.initiative == turn:
                     if actor.isDisabled:
                         print actor.descState(),'and can not act!'
-                        print
                     else:
                         self.currentActor = actor #TODO: Should this just be a parameter?
                         self.takeTurn()
-            
+                    print
                     print
                     time.sleep(1)
-                    print
-                    print
 
             turn -= 1
             if turn == -100:
