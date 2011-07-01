@@ -112,7 +112,8 @@ class Battle:
         #TODO: doesn't belong in "gameEnd" but good enough for now
         for event in self.scenario.events:
             if eval(event['condition']):
-                eval(event['action'])
+                for action in event['actions']:
+                    eval(action)
                 del self.scenario.events[self.scenario.events.index(event)]
 
         for team in self.scenario.teams:
@@ -229,12 +230,12 @@ class Battle:
         #this line is a holdover until a target system or 3+ actor support
         if not self.currentActor.focus:
             self.setFocus()
-        if self.currentActor.focus.isDisabled:
+        if self.currentActor.focus.isDisabled: #is your grab target disabled?
             self.currentActor.breakGrapple()
             self.setFocus()
         
         self.turnOver = False
-        while not self.turnOver:
+        while not self.turnOver: #some actions do not end the turn: changing focus, checking status, getting help
             self.turnOver = True #only help and status options will cause the turn to not end.
             print self.currentActor.descState()+'.'
             self.currentActor.clearBasicFlags() #basic flags are one-turn flags: MOVINGSLOW, MOVINGFAST, DRAWING
@@ -242,11 +243,9 @@ class Battle:
             legalOptions=self.getLegalOptions()
             if self.currentActor.isNPC:
                 print self.currentActor.cap_name,"takes a turn.",
-                count=0
-                while count<=3:
+                for x in range(3):
                     print ".",
                     time.sleep(.5)
-                    count+=1
                 print
                 turnChoice=random.randint(1,len(legalOptions))
                 print 

@@ -15,10 +15,12 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                'endConditions':{
-                                #'self.roundCount > 15':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
+                                'self.roundCount > 15':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
                                 },
                'events':[
-                         {'condition':'self.roundCount > 5','action':"self.createActor({'name':'the sherrif','location':(8,16),'team':'bankers','isNPC':True})"}
+                         #{'condition':'self.roundCount > 15','actions':[
+                          #                                             "self.createActor({'name':'the sherriff','location':(8,16),'team':'bankers','isNPC':True})"
+                           #                                            ]}
                         ],
                'introduction':'''
 You have 15 turns to rob a bank.
