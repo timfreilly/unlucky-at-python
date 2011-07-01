@@ -330,7 +330,7 @@ class Actor:
     def escape(self): 
         grabber = self.grappleActor
         best = max(self.brav,self.conc,self.grit)
-        escapeChance = (50 + self.getBonus(best) + self.wounddebuff + self.concuss + getCombinedMorale(grabber))
+        escapeChance = (50 + self.getBonus(best) + self.wounddebuff + self.concuss + self.getCombinedMorale(grabber))
         roll=self.rollDice()
         if roll <= escapeChance:
             print self.cap_name,'breaks from',grabber.name+'\'s grab',
