@@ -35,6 +35,7 @@ class Actor:
         self.x=0
         self.y=0
         self.team=''
+        self.initiative=0      #Place in the turn order.  Higher is earlier in the turn.
         self.isNPC=isNPC
         self.flags=[]          #flags are temporary status effects that modify rolls
                                #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
@@ -208,6 +209,9 @@ class Actor:
         if self.weapon.type.isRange:
             self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3)
         print self.cap_name,"chooses a",self.weapon.type.name+'.'
+        
+    def rollInitiative(self):
+        self.initiative = random.randint(1,10)+self.getBonus(self.grit)
       
     def rangeChanceCalc(self,target,extradebuff=0):
         rangeChance=(50 + self.getBonus(self.conc) + self.drawdebuff + self.movedebuff + self.wounddebuff + 

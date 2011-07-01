@@ -106,8 +106,6 @@ class Battle:
 
 
     def gameEnd(self): 
-        print
-        print
         #TODO: doesn't belong in "gameEnd" but good enough for now
         for event in self.scenario.events:
             if eval(event['condition']):
@@ -128,21 +126,6 @@ class Battle:
                 print self.scenario.endConditions[condition]
                 return True
         return False
-
-    def rollInitiative(self):
-        #does not handle if people roll the an identical place
-        #TODO: make this code less ugly
-        turnsLists = []
-        for actor in self.actors:
-            place = random.randint(1,10)+actor.getBonus(actor.grit)
-            turnsLists.append((place,actor))
-        turnsLists = sorted(turnsLists, key=itemgetter(0), reverse=True)
-        turns = []
-        for entry in turnsLists:
-            turns.append(entry[1])
-        #print 'TESTING: sorted turnsLists',turnsLists
-        #print 'TESTING: sorted turns list',turns
-        return turns
 
     def getLegalOptions(self):  #builds a list of the possible options
         legalOptions=[]
@@ -290,34 +273,38 @@ class Battle:
 
 
     def startBattle(self):
-        turnOrder = self.rollInitiative()
+        for actor in self.actors:
+            actor.rollInitiative()
         self.shouldQuit=False
         self.roundCount=1
-        turnQueue = turnOrder[:] #makes a copy instead of only referencing
+        turn = 100
         while not self.gameEnd() and not self.shouldQuit: 
-            if turnQueue == turnOrder: #it is the beginning of the round
+            if turn == 100:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
+
+            for actor in self.actors:
+                if actor.initiative == turn:
+                    if actor.isDisabled:
+                        print actor.descState(),'and can not act!'
+                        print
+                    else:
+                        self.currentActor = actor #TODO: Should this just be a parameter?
+                        self.takeTurn()
             
-            self.currentActor = None
-            while not self.currentActor:
-                self.currentActor = turnQueue.pop() #the lines surrounding this line skip all players who haven't gone
-                if self.currentActor.isDisabled:
-                    print self.currentActor.descState(),'and can not act!'
                     print
-                    self.currentActor = False
+                    time.sleep(1)
+                    print
+                    print
 
-            self.takeTurn()
-          
-            print
-            time.sleep(1)
-
-            if not turnQueue: #if the round is empty
+            turn -= 1
+            if turn == -100:
                 self.roundCount+=1
-                turnQueue = turnOrder[:]
+                turn = 100
+
                 
 
         print
