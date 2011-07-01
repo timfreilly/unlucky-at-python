@@ -15,8 +15,11 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
                'endConditions':{
-                                'self.roundCount > 15':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
+                                #'self.roundCount > 15':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
                                 },
+               'events':[
+                         {'condition':'self.roundCount > 5','action':"self.createActor({'name':'the sherrif','location':(8,16),'team':'bankers','isNPC':True})"}
+                        ],
                'introduction':'''
 You have 15 turns to rob a bank.
 You will succeed if you:
@@ -39,6 +42,7 @@ to be captured.  Good luck, partner!
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
+               'events':{},
                'endConditions':{
                                 'self.roundCount > 25':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
                                 },
@@ -69,6 +73,7 @@ Good luck, partner!
                 'endConditions':{
                                 'self.roundCount > 25':'You have lasted long enough for help to arrive.\nYou win!'
                                 },
+               'events':{},                                
                 'introduction':'''
 You and your captain have been ambushed while on 
 a scouting run.  You are staring down three apache

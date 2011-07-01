@@ -30,10 +30,11 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
 
 
 class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, teams, endConditions, introduction):
+    def __init__(self, title, actors, teams, events, endConditions, introduction):
         self.title = title
         self.actors = actors
         self.teams = teams
+        self.events = events
         self.endConditions = endConditions
         self.introduction = introduction
    
@@ -108,6 +109,11 @@ class Battle:
     def gameEnd(self): 
         print
         print
+        #TODO: doesn't belong in "gameEnd" but good enough for now
+        for event in self.scenario.events:
+            if eval(event['condition']):
+                eval(event['action'])
+                del self.scenario.events[self.scenario.events.index(event)]
 
         for team in self.scenario.teams:
             teamDisabled = True
