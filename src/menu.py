@@ -62,21 +62,16 @@ class Battle:
         print "High Bravery or a successful grab aids melee strikes."
         print "Melee hits aren't as sharp as bullets, but concussion does add up."
         print "Your accuracy with a gun relies on your Concentration."        
-        print "Intimidation relies on your Grit. If you win the battle of wills you push your opponent closer to cowering in fear."
-        print "Digging Deep improves any action on your next turn by 20%."
-        print "If you draw on the same turn you fire your gun, you are less likely to hit."
+        print "Intimidation relies on your Grit."
+        print "Winning a battle of wills may push your opponent to cower in fear."
+        print "Digging Deep improves your next action by 20%."
+        print "If you draw on the same turn you shoot, you are less likely to hit."
         print
         print
         time.sleep(2)
     
     def createActor(self,partialActor):
-        print
-        if partialActor['isNPC']:
-            name = partialActor['name']
-            print 'Creating',name
-            time.sleep(1)
-        else:
-            name = raw_input('What is your character\'s name?')
+        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name?')
         actor = class_overall.Actor(name,partialActor['isNPC'])
         self.actors.append(actor)
         actor.x, actor.y = partialActor['location']
