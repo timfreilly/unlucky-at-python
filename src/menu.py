@@ -29,29 +29,45 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Escape from GRABBER's hold",              "OFFENSE struggles against GRABBER's hold.",    "self.currentActor.escape()"]]
 
 
-class Scenario:  #Scenario is in a very early state right now.  Eventually it will represent the various scenarios, or maps, that are selectable.
-    def __init__(self, title, actors, teams, events, endConditions, introduction):
-        self.title = title
+class Scenario:  
+    def __init__(self, scenarioChoice):
+        self.scenarioData = data.allScenarios[scenarioChoice]
+        
+        self.actors = []
+        for partialActor in self.scenarioData['actors']:
+            self.createActor(partialActor)
+        self.teams = self.scenarioData['teams']
+        self.events = self.scenarioData['events']
+        self.endConditions = self.scenarioData['endConditions']
+        print self.scenarioData['introduction']
+        
+        battle = Battle(self.actors, self.teams, self.events, self.endConditions)
+        battle.startBattle()
+   
+    def createActor(self,partialActor): #TODO: Need to suppress this information for isHidden characters.  Could also just cut down the amount of info
+        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name?')
+        actor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
+        self.actors.append(actor)
+        actor.x, actor.y = partialActor['location']
+        actor.team = partialActor['team']
+        actor.addRoots()
+        print
+        for team in self.scenarioData['teams']:        #Not totally satisfied with this code, which looks through the teams to get to the weaponList
+            if team['name'] == actor.team:
+                actor.addWeapon(team['weaponList'])
+        time.sleep(1)     
+
+class Battle:
+    def __init__(self, actors, teams, events, endConditions):
         self.actors = actors
         self.teams = teams
         self.events = events
         self.endConditions = endConditions
-        self.introduction = introduction
-   
-        
-
-class Battle:
-    def __init__(self,scenarioChoice):
-        self.actors = []
-        self.scenario = Scenario(**data.allScenarios[scenarioChoice])
-        print self.scenario.introduction
-        for partialActor in self.scenario.actors:
-            self.createActor(partialActor)
         
     def showActors(self):
         self.turnOver = False
         print
-        for actor in self.actors:
+        for actor in [actor for actor in self.actors if not actor.isHidden]:
             actor.showStatus()
             print
             print
@@ -69,43 +85,35 @@ class Battle:
         print
         print
         time.sleep(2)
-    
-    def createActor(self,partialActor):
-        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name?')
-        actor = class_overall.Actor(name,partialActor['isNPC'])
-        self.actors.append(actor)
-        actor.x, actor.y = partialActor['location']
-        actor.team = partialActor['team']
-        print actor
-        print
-        actor.addRoots()
-        print
-        for team in self.scenario.teams:        #Not totally satisfied with this code, which looks through the teams to get to the weaponList
-            if team['name'] == actor.team:
-                actor.addWeapon(team['weaponList'])
-        time.sleep(1)
 
 
     def gameEnd(self): 
         #TODO: doesn't belong in "gameEnd" but good enough for now
-        for event in self.scenario.events:
+        for event in self.events:
             if eval(event['condition']):
                 for action in event['actions']:
                     eval(action)
-                del self.scenario.events[self.scenario.events.index(event)]
+                del self.events[self.events.index(event)]
 
-        for team in self.scenario.teams:
-            standing = len([actor for actor in self.actors if actor.team == team['name'] and not actor.isDisabled])  #list comprehension, heck yeah!
+        for team in self.teams:
+            standing = len([actor for actor in self.actors if actor.team == team['name'] and not actor.isDisabled and not actor.isHidden])  #list comprehension, heck yeah!
             
             if standing==0:
                 print team['defeatMessage']
                 return True
-        for condition in self.scenario.endConditions:
+        for condition in self.endConditions:
             if eval(condition):
-                print self.scenario.endConditions[condition]
+                print self.endConditions[condition]
                 return True
         return False
-
+    def showActor(self,actorName):
+        actor = [actor for actor in self.actors if actor.name==actorName][0]
+        print '---------------------'
+        print actor.cap_name,'has arrived!'
+        print '---------------------'
+        print
+        actor.isHidden=False
+        
     def getLegalOptions(self):  #builds a list of the possible options
         legalOptions=[]
         dist=self.currentActor.distanceTo(self.currentActor.focus)
@@ -136,7 +144,7 @@ class Battle:
         if 'DIGGING' not in self.currentActor.flags:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
-            if len([actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled]) > 1: 
+            if len([actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled and not actor.isHidden]) > 1: 
                 legalOptions.append(allOptions[15])
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
@@ -145,7 +153,7 @@ class Battle:
     
     def setFocus(self):
         self.turnOver = False
-        otherTeam = [actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled]
+        otherTeam = [actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled and not actor.isHidden]
         if self.currentActor.isNPC:
             self.currentActor.focus = random.choice(otherTeam)
         else:
@@ -188,7 +196,7 @@ class Battle:
             
     
     def takeTurn(self): 
-        #this line is a holdover until a target system or 3+ actor support
+        #I feel like this sort of check could be built into a getFocus method
         if not self.currentActor.focus:
             self.setFocus()
         if self.currentActor.focus.isDisabled: #is your grab target disabled?
@@ -270,7 +278,7 @@ class Battle:
                 if actor.initiative == turn:
                     if actor.isDisabled:
                         print actor.descState(),'and can not act!'
-                    else:
+                    elif not actor.isHidden:
                         self.currentActor = actor #TODO: Should this just be a parameter?
                         self.takeTurn()
                     print
@@ -296,8 +304,7 @@ class Game:
         print 
         scenarioChoice = self.pickScenario()
         print
-        battle = Battle(scenarioChoice)
-        battle.startBattle()
+        scenario = Scenario(scenarioChoice)
         
     def pickScenario(self):
         scenarioChoice = 0

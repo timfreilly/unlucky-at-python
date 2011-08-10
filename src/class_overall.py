@@ -21,7 +21,7 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
 
 
 class Actor:
-    def __init__(self, chosenName, isNPC=False):
+    def __init__(self, chosenName, isNPC=False, isHidden=False):
         self._name=chosenName
         self.brav=random.randint(1,100)
         self.conc=random.randint(1,100)
@@ -37,6 +37,7 @@ class Actor:
         self.team=''
         self.initiative=0      #Place in the turn order.  Higher is earlier in the turn.
         self.isNPC=isNPC
+        self.isHidden=isHidden #Some NPCs start the battle hidden and are revealed/added later in the scenario
         self.flags=[]          #flags are temporary status effects that modify rolls
                                #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
         self.focus=None        #focus is the actor whom this actor is currently "Locked On" to.
@@ -139,6 +140,8 @@ class Actor:
 
     def addRoots(self):
         if not self.isNPC:
+            print self
+            print
             print "Select your Roots"
             print
         roots = 1 if (self.brav+self.conc+self.grit)>120 else 2
@@ -208,7 +211,7 @@ class Actor:
         self.gear.weapons.append(self.weapon)
         if self.weapon.type.isRange:
             self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3)
-        print self.cap_name,"chooses a",self.weapon.type.name+'.'
+#        print self.cap_name,"chooses a",self.weapon.type.name+'.'
         
     def rollInitiative(self):
         self.initiative = random.randint(1,10)+self.getBonus(self.grit)

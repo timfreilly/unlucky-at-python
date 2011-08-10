@@ -7,8 +7,9 @@ allWeapons=[{'name':'six-shooter',  'range':1,  'maxbullets':6,     'ammo':'bull
 
 allScenarios=[{'title':'Lonely Day at the Bank',
                'actors':[
-                         {'location':(16,16),'team':'robbers','isNPC':False},
-                         {'name':'the banker','location':(0,0),'team':'bankers','isNPC':True}
+                         {'location':(16,16),'team':'robbers','isNPC':False,'isHidden':False},
+                         {'name':'the banker','location':(0,0),'team':'bankers','isNPC':True,'isHidden':False},
+                         {'name':'the sheriff','location':(8,16),'team':'bankers','isNPC':True,'isHidden':True}
                          ],    
                'teams':[
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
@@ -19,8 +20,8 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                                 },
                'events':[
                          {'condition':'self.roundCount > 15','actions':[
-                                                                       "self.createActor({'name':'the sherriff','location':(8,16),'team':'bankers','isNPC':True})"
-                                                                       ]}
+                                                                        "self.showActor('the sheriff')"
+                                                                        ]}
                         ],
                'introduction':'''
 You have 15 turns to rob a bank.
@@ -36,9 +37,9 @@ to be captured.  Good luck, partner!
                
                {'title':'Busy Bank',
                 'actors':[
-                          {'location':(16,16),'team':'robbers','isNPC':False},
-                          {'name':'the banker','location':(0,0),'team':'bankers', 'isNPC':True},
-                          {'name':'the guard', 'location':(0,16),'team':'bankers','isNPC':True}
+                          {'location':(16,16),'team':'robbers','isNPC':False,'isHidden':False},
+                          {'name':'the banker','location':(0,0),'team':'bankers', 'isNPC':True,'isHidden':False},
+                          {'name':'the guard', 'location':(0,16),'team':'bankers','isNPC':True,'isHidden':False}
                           ],
                 'teams':[
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
@@ -62,11 +63,11 @@ Good luck, partner!
                 
                 {'title':'Apache Pass',
                 'actors':[
-                          {'location':(16,16),'team':'soldiers','isNPC':False},
-                          {'name':'the captain','location':(8,15),'team':'soldiers','isNPC':True},
-                          {'name':'an apache warrior','location':(0,9),'team':'apache', 'isNPC':True},
-                          {'name':'an apache warrior','location':(0,12),'team':'apache', 'isNPC':True},
-                          {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True}
+                          {'location':(16,16),'team':'soldiers','isNPC':False,'isHidden':False},
+                          {'name':'the captain','location':(8,15),'team':'soldiers','isNPC':True,'isHidden':False},
+                          {'name':'an apache warrior','location':(0,9),'team':'apache', 'isNPC':True,'isHidden':False},
+                          {'name':'an apache warrior','location':(0,12),'team':'apache', 'isNPC':True,'isHidden':False},
+                          {'name':'the apache leader', 'location':(0,16),'team':'apache','isNPC':True,'isHidden':False}
                           ],
                 'teams':[
                         {'name':'apache','weaponList':['bow','tomahawk'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
