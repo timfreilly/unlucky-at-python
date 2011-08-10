@@ -15,13 +15,11 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
-               'endConditions':{
-#                                'self.roundCount > 15':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
-                                },
                'events':[
-                         {'condition':'self.roundCount > 15','actions':[
-                                                                        "self.showActor('the sheriff')"
-                                                                        ]}
+                         {'condition':'self.roundCount > 15',
+                          'actions':[
+                                    "self.showActor('the sheriff')"
+                                    ]}
                         ],
                'introduction':'''
 You have 15 turns to rob a bank.
@@ -45,10 +43,11 @@ to be captured.  Good luck, partner!
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
-               'events':{},
-               'endConditions':{
-                                'self.roundCount > 25':'You\'ve waited too long and the sheriff walks in the door.\nYou lose!'
-                                },
+               'events':[{'condition':'self.roundCount > 5',
+                          'actions':[
+                                    "self.endBattle('You have waited too long and the sheriff walks in the door.  You lose!',victory=False)"
+                                    ]}
+                         ],
                 'introduction':'''
 You are desperate for cash and have no option
 but to break into a busy bank.  You have 25
@@ -73,10 +72,11 @@ Good luck, partner!
                         {'name':'apache','weaponList':['bow','tomahawk'],'defeatMessage':'You have disabled them all without reinforcements!  You survive!'},
                         {'name':'soldiers','weaponList':['six-shooter','rifle','saber'],'defeatMessage':'You and the captain could not make it happen!\nYou Lose!'}
                         ],
-                'endConditions':{
-                                'self.roundCount > 25':'You have lasted long enough for help to arrive.\nYou win!'
-                                },
-               'events':{},                                
+               'events':[{'condition':'self.roundCount > 25',
+                          'actions':[
+                                    "self.endBattle('You have lasted long enough for help to arrive.  You win!',victory=True)"
+                                    ]}
+                         ],                              
                 'introduction':'''
 You and your captain have been ambushed while on 
 a scouting run.  You are staring down three apache

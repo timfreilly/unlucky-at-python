@@ -38,13 +38,12 @@ class Scenario:
             self.createActor(partialActor,weaponList)
         
         self.events = scenarioData['events']
-        self.endConditions = scenarioData['endConditions']
         print scenarioData['introduction']
         
-        battle = Battle(self.actors, self.teams, self.events, self.endConditions)
+        battle = Battle(self.actors, self.teams, self.events)
         battle.startBattle()
    
-    def createActor(self,partialActor,weaponsList):
+    def createActor(self,partialActor,weaponList):
         name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
         actor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
         self.actors.append(actor)
@@ -58,11 +57,10 @@ class Scenario:
         time.sleep(1)     
 
 class Battle:
-    def __init__(self, actors, teams, events, endConditions):
+    def __init__(self, actors, teams, events):
         self.actors = actors
         self.teams = teams
         self.events = events
-        self.endConditions = endConditions
         
     def showActors(self):
         self.turnOver = False
@@ -92,7 +90,9 @@ class Battle:
         for event in self.events:
             if eval(event['condition']):
                 for action in event['actions']:
-                    eval(action)
+                    result = eval(action)
+                    if result=='win' or result=='loss':
+                        return True
                 del self.events[self.events.index(event)]
 
         for team in self.teams:
@@ -101,13 +101,16 @@ class Battle:
             if standing==0:
                 print team['defeatMessage']
                 return True
-        for condition in self.endConditions:
-            if eval(condition):
-                print self.endConditions[condition]
-                return True
         return False
     
-    def showActor(self,actorName):
+    def endBattle(self,message,victory): #one of the events
+        print message
+        if victory==True:
+            return 'win' 
+        else:
+            return 'loss'
+    
+    def showActor(self,actorName): #one of the events
         actor = next(actor for actor in self.actors if actor.name==actorName)
         print '---------------------'
         print actor.cap_name,'has arrived!'
