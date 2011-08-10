@@ -30,21 +30,21 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
 
 
 class Scenario:  
-    def __init__(self, scenarioChoice):
-        self.scenarioData = data.allScenarios[scenarioChoice]
-        
+    def __init__(self, scenarioData):
         self.actors = []
-        for partialActor in self.scenarioData['actors']:
-            self.createActor(partialActor)
-        self.teams = self.scenarioData['teams']
-        self.events = self.scenarioData['events']
-        self.endConditions = self.scenarioData['endConditions']
-        print self.scenarioData['introduction']
+        self.teams = scenarioData['teams']
+        for partialActor in scenarioData['actors']:
+            weaponList = next(team for team in self.teams if team['name']==partialActor['team'])['weaponList']
+            self.createActor(partialActor,weaponList)
+        
+        self.events = scenarioData['events']
+        self.endConditions = scenarioData['endConditions']
+        print scenarioData['introduction']
         
         battle = Battle(self.actors, self.teams, self.events, self.endConditions)
         battle.startBattle()
    
-    def createActor(self,partialActor): #TODO: Need to suppress this information for isHidden characters.  Could also just cut down the amount of info
+    def createActor(self,partialActor,weaponsList):
         name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
         actor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
         self.actors.append(actor)
@@ -52,9 +52,9 @@ class Scenario:
         actor.team = partialActor['team']
         actor.addRoots()
         print
-        for team in self.scenarioData['teams']:        #Not totally satisfied with this code, which looks through the teams to get to the weaponList
-            if team['name'] == actor.team:
-                actor.addWeapon(team['weaponList'])
+        
+        actor.addWeapon(weaponList)
+        
         time.sleep(1)     
 
 class Battle:
@@ -108,7 +108,7 @@ class Battle:
         return False
     
     def showActor(self,actorName):
-        actor = [actor for actor in self.actors if actor.name==actorName][0]
+        actor = next(actor for actor in self.actors if actor.name==actorName)
         print '---------------------'
         print actor.cap_name,'has arrived!'
         print '---------------------'
@@ -305,7 +305,7 @@ class Game:
         print 
         scenarioChoice = self.pickScenario()
         print
-        scenario = Scenario(scenarioChoice)
+        scenario = Scenario(data.allScenarios[scenarioChoice])
         
     def pickScenario(self):
         scenarioChoice = 0
