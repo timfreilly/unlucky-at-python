@@ -45,7 +45,7 @@ class Scenario:
         battle.startBattle()
    
     def createActor(self,partialActor): #TODO: Need to suppress this information for isHidden characters.  Could also just cut down the amount of info
-        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name?')
+        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
         actor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
         self.actors.append(actor)
         actor.x, actor.y = partialActor['location']
@@ -77,11 +77,11 @@ class Battle:
         self.turnOver = False
         print "High Bravery or a successful grab aids melee strikes."
         print "Melee hits aren't as sharp as bullets, but concussion does add up."
-        print "Your accuracy with a gun relies on your Concentration."        
+        print "Your accuracy with a gun relies on your Concentration."
+        print "If you draw on the same turn you shoot, you are less likely to hit."        
         print "Intimidation relies on your Grit."
         print "Winning a battle of wills may push your opponent to cower in fear."
         print "Digging Deep improves your next action by 20%."
-        print "If you draw on the same turn you shoot, you are less likely to hit."
         print
         print
         time.sleep(2)
@@ -106,6 +106,7 @@ class Battle:
                 print self.endConditions[condition]
                 return True
         return False
+    
     def showActor(self,actorName):
         actor = [actor for actor in self.actors if actor.name==actorName][0]
         print '---------------------'
@@ -281,9 +282,9 @@ class Battle:
                     elif not actor.isHidden:
                         self.currentActor = actor #TODO: Should this just be a parameter?
                         self.takeTurn()
-                    print
-                    print
-                    time.sleep(1)
+                        print
+                        print
+                        time.sleep(1)
 
             turn -= 1
             if turn == -100:
