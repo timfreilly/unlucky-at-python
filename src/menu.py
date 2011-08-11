@@ -21,7 +21,7 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Spend a moment Digging Deep.",            "OFFENSE Digs Deep and prepares for action.",   "self.currentActor.dig()"],
             ["Get help with the menu.",                 "",                                             "self.showGuide()"],
             ["Check the status of the fight.",          "",                                             "self.showActors()"],
-            ["Quit.",                                   "",                                             "self.shouldQuit = True" ],
+            ["Flee.",                                   "",                                             "self.currentActor.flee()" ],
             ["Walk 2 feet away from DEFENSE.",          "OFFENSE walks 2 feet away from DEFENSE.",      "self.currentActor.moveTowards(self.currentActor.focus,-2)"],
             ["Reload your WEAPON.",                     "OFFENSE reloads.",                             "self.currentActor.reload()"],
             ["Swing with your WEAPON.",                 "OFFENSE attempts to hit DEFENSE with a saber.", "self.currentActor.swing(self.currentActor.focus)"],
@@ -42,6 +42,10 @@ class Scenario:
         
         battle = Battle(self.actors, self.teams, self.events)
         battle.startBattle()
+        
+        print
+        print
+        print 'Goodbye!'
    
     def createActor(self,partialActor,weaponList):
         name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
@@ -103,14 +107,14 @@ class Battle:
                 return True
         return False
     
-    def endBattle(self,message,victory): #one of the events
+    def endBattle(self,message,victory): #this is barely useful
         print message
         if victory==True:
             return 'win' 
         else:
             return 'loss'
     
-    def showActor(self,actorName): #one of the events
+    def revealActor(self,actorName): #one of the events
         actor = next(actor for actor in self.actors if actor.name==actorName)
         print '---------------------'
         print actor.cap_name,'has arrived!'
@@ -267,10 +271,9 @@ class Battle:
     def startBattle(self):
         for actor in self.actors:
             actor.rollInitiative()
-        self.shouldQuit=False
         self.roundCount=1
         turn = 100 #The game "counts down" from 100 and each actor gets a turn whenever their number comes up
-        while not self.gameEnd() and not self.shouldQuit: 
+        while not self.gameEnd(): 
             if turn == 100:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
@@ -294,11 +297,6 @@ class Battle:
                 self.roundCount+=1
                 turn = 100
 
-                
-
-        print
-        print
-        print 'Goodbye!'
 
 class Game:
     def __init__(self):

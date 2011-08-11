@@ -374,6 +374,9 @@ class Actor:
     def dig(self):
         self.flags.append('DIGGING')
         self.affectMorale(10)
+    def flee(self):
+        self.isHidden = True
+        self.flags.append('FLED')
     def descState(self):
         adjectives = []
         if self.wounddebuff <= -30:

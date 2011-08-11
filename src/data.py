@@ -18,7 +18,7 @@ allScenarios=[{'title':'Lonely Day at the Bank',
                'events':[
                          {'condition':'self.roundCount > 15',
                           'actions':[
-                                    "self.showActor('the sheriff')"
+                                    "self.revealActor('the sheriff')"
                                     ]}
                         ],
                'introduction':'''
