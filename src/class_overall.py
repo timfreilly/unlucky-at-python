@@ -159,7 +159,7 @@ class Actor:
                 print "3. Trail worn      +10 grit                 (health, intimidation)"
                 print "4. Lucky           +7  health               (lots of health)"
                 print "5. Jack of spades  +15 to traits under 30"
-                print "6. Knuckles        +1  concussion           (harder punches)"
+                print "6. Knuckles        +2  concussion           (harder punches)"
                 root = 0
                 while root not in range(1,7):
                     try:
@@ -185,7 +185,7 @@ class Actor:
                 if self.grit < 30:
                     self.grit += 15
             elif root==6:
-                self.concussionRoot=1
+                self.concussionRoot=2
 
     def addWeapon(self,weaponList):
         if self.isNPC:
