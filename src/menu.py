@@ -43,6 +43,8 @@ class Scenario:
         battle = Battle(self.actors, self.teams, self.events)
         battle.startBattle()
         
+        print 'DEBUG',battle.result #TODO: remove
+        
         print
         print
         print 'Goodbye!'
@@ -65,6 +67,7 @@ class Battle:
         self.actors = actors
         self.teams = teams
         self.events = events
+        self.result = None
         
     def showActors(self):
         self.turnOver = False
@@ -94,25 +97,22 @@ class Battle:
         for event in self.events:
             if eval(event['condition']):
                 for action in event['actions']:
-                    result = eval(action)
-                    if result=='win' or result=='loss':
+                    eval(action)
+                    if self.result: #if result has been changed, the battle should end.
                         return True
                 del self.events[self.events.index(event)]
-
         for team in self.teams:
+            isPlayerTeam = True if len([actor for actor in self.actors if not actor.isNPC and actor.team==team['name']]) else False
             standing = len([actor for actor in self.actors if actor.team == team['name'] and not actor.isDisabled and not actor.isHidden])  #list comprehension, heck yeah!
             
             if standing==0:
-                print team['defeatMessage']
+                self.endBattle(team['defeatMessage'], not isPlayerTeam)
                 return True
         return False
     
     def endBattle(self,message,victory): #this is barely useful
         print message
-        if victory==True:
-            return 'win' 
-        else:
-            return 'loss'
+        self.result = 'win' if victory else 'loss'
     
     def revealActor(self,actorName): #one of the events
         actor = next(actor for actor in self.actors if actor.name==actorName)
@@ -256,7 +256,7 @@ class Battle:
                         print "Please enter your choice by number."
             
             turnText=legalOptions[turnChoice-1][1] #Types text based on option choice
-            turnText=turnText.replace("OFFENSE",self.currentActor.name)
+            turnText=turnText.replace("OFFENSE",self.currentActor.cap_name)
             turnText=turnText.replace("DEFENSE",self.currentActor.focus.name)
             turnText=turnText.replace("DISTANCE",str(dist))
             turnText=turnText.replace("HALF",str(dist/2))
@@ -273,7 +273,7 @@ class Battle:
             actor.rollInitiative()
         self.roundCount=1
         turn = 100 #The game "counts down" from 100 and each actor gets a turn whenever their number comes up
-        while not self.gameEnd(): 
+        while not self.gameEnd(): #TODO: One weird thing is that gameEnd is run every tick of initiative
             if turn == 100:
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
