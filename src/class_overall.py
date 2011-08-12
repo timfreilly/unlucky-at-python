@@ -34,7 +34,7 @@ class Actor:
         self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
         self.x=0
         self.y=0
-        self.team=''
+        self.team=None
         self.initiative=0      #Place in the turn order.  Higher is earlier in the turn.
         self.isNPC=isNPC
         self.isHidden=isHidden #Some NPCs start the battle hidden and are revealed/added later in the scenario

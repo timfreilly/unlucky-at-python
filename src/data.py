@@ -43,7 +43,7 @@ to be captured.  Good luck, partner!
                         {'name':'bankers','weaponList':['six-shooter','shotgun'],'defeatMessage':'All resistance is disabled!  You make off with the cash!'},
                         {'name':'robbers','weaponList':['six-shooter','shotgun','rifle','saber'],'defeatMessage':'Your opposition is too strong. You can not complete your task!\nYou Lose!'}
                         ],
-               'events':[{'condition':'self.roundCount > 5',
+               'events':[{'condition':'self.roundCount > 25',
                           'actions':[
                                     "self.endBattle('You have waited too long and the sheriff walks in the door.  You lose!',victory=False)"
                                     ]}

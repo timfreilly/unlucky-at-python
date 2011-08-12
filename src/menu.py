@@ -29,38 +29,56 @@ allOptions=[["Run 8 feet to DEFENSE.",                  "OFFENSE runs 8 feet tow
             ["Escape from GRABBER's hold",              "OFFENSE struggles against GRABBER's hold.",    "self.currentActor.escape()"]]
 
 
+class Team:
+    def __init__(self, name, weaponList, defeatMessage):
+        self.members = []
+        self.name = name
+        self.weaponList = weaponList
+        self.defeatMessage = defeatMessage
+        
+    def __len__(self):
+        return len(self.members)
+        
+    def isPlayerTeam(self):
+        return True if len([actor for actor in self.members if not actor.isNPC]) else False
+    
+    def getStandingMembers(self):
+        return [actor for actor in self.members if not actor.isDisabled and not actor.isHidden]
+    standingMembers = property(getStandingMembers)
+
 class Scenario:  
     def __init__(self, scenarioData):
         self.actors = []
-        self.teams = scenarioData['teams']
+        self.teams = {} #key:value is string name:instance
+        for team in scenarioData['teams']:
+            newTeam = Team(team['name'],team['weaponList'],team['defeatMessage'])
+            self.teams[team['name']] = newTeam #add a new dictionary entry with that team name with the value being the reference
+        
         for partialActor in scenarioData['actors']:
-            weaponList = next(team for team in self.teams if team['name']==partialActor['team'])['weaponList']
-            self.createActor(partialActor,weaponList)
+            name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
+            newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
+            newActor.team = self.teams[partialActor['team']]
+            newActor.x, newActor.y = partialActor['location']
+            newActor.addRoots()
+            print
+            newActor.addWeapon(newActor.team.weaponList)
+            self.actors.append(newActor)
+            self.teams[partialActor['team']].members.append(newActor)
         
         self.events = scenarioData['events']
         print scenarioData['introduction']
-        
+        time.sleep(3)
         battle = Battle(self.actors, self.teams, self.events)
         battle.startBattle()
         
-        print 'DEBUG',battle.result #TODO: remove
+        self.result = battle.result #straight pass-through for now
         
         print
         print
         print 'Goodbye!'
    
-    def createActor(self,partialActor,weaponList):
-        name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
-        actor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
-        self.actors.append(actor)
-        actor.x, actor.y = partialActor['location']
-        actor.team = partialActor['team']
-        actor.addRoots()
-        print
         
-        actor.addWeapon(weaponList)
-        
-        time.sleep(1)     
+   
 
 class Battle:
     def __init__(self, actors, teams, events):
@@ -101,12 +119,9 @@ class Battle:
                     if self.result: #if result has been changed, the battle should end.
                         return True
                 del self.events[self.events.index(event)]
-        for team in self.teams:
-            isPlayerTeam = True if len([actor for actor in self.actors if not actor.isNPC and actor.team==team['name']]) else False
-            standing = len([actor for actor in self.actors if actor.team == team['name'] and not actor.isDisabled and not actor.isHidden])  #list comprehension, heck yeah!
-            
-            if standing==0:
-                self.endBattle(team['defeatMessage'], not isPlayerTeam)
+        for team in self.teams.values():
+            if not team.standingMembers:
+                self.endBattle(team.defeatMessage, not team.isPlayerTeam)
                 return True
         return False
     
@@ -153,7 +168,7 @@ class Battle:
             legalOptions.append(allOptions[8]) #dig deep
         if not self.currentActor.isNPC:
             if len([actor for actor in self.actors if actor.team != self.currentActor.team and not actor.isDisabled and not actor.isHidden]) > 1: 
-                legalOptions.append(allOptions[15])
+                legalOptions.append(allOptions[15]) #Focus
             legalOptions.append(allOptions[9]) #menu help
             legalOptions.append(allOptions[10]) #status
             legalOptions.append(allOptions[11]) #quit
