@@ -45,11 +45,17 @@ class Team:
     def getStandingMembers(self):
         return [actor for actor in self.members if not actor.isDisabled and not actor.isHidden]
     standingMembers = property(getStandingMembers)
+    
+class Event:
+    def __init__(self, condition, actions):
+        self.condition = condition
+        self.actions = actions
 
 class Scenario:  
     def __init__(self, scenarioData):
         self.actors = []
         self.teams = {} #key:value is string name:instance
+        self.events = []
         for team in scenarioData['teams']:
             newTeam = Team(team['name'],team['weaponList'],team['defeatMessage'])
             self.teams[team['name']] = newTeam #add a new dictionary entry with that team name with the value being the reference
@@ -65,7 +71,10 @@ class Scenario:
             self.actors.append(newActor)
             self.teams[partialActor['team']].members.append(newActor)
         
-        self.events = scenarioData['events']
+        for event in scenarioData['events']:
+            newEvent = Event(event['condition'],event['actions'])
+            self.events.append(newEvent)
+        
         print scenarioData['introduction']
         time.sleep(3)
         battle = Battle(self.actors, self.teams, self.events)
@@ -113,8 +122,8 @@ class Battle:
     def gameEnd(self): 
         #TODO: doesn't belong in "gameEnd" but good enough for now
         for event in self.events:
-            if eval(event['condition']):
-                for action in event['actions']:
+            if eval(event.condition):
+                for action in event.actions:
                     eval(action)
                     if self.result: #if result has been changed, the battle should end.
                         return True
