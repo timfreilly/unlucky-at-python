@@ -53,7 +53,7 @@ class Event:
         self.actions = actions
 
 class Scenario:  
-    def __init__(self, scenarioData):
+    def __init__(self, scenarioData, player=None):
         self.actors = []
         self.teams = {} #key:value is string name:instance
         self.events = []
@@ -61,14 +61,21 @@ class Scenario:
             newTeam = Team(team['name'],team['weaponList'],team['defeatMessage'])
             self.teams[team['name']] = newTeam #add a new dictionary entry with that team name with the value being the reference
         
+        
         for partialActor in scenarioData['actors']:
-            name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
-            newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
-            newActor.team = self.teams[partialActor['team']]
+            if not partialActor['isNPC'] and player: #if the player file was loaded and we've found a player slot in the scenario, load him instead of new
+                newActor = player
+                newActor.team = self.teams[partialActor['team']]
+                newActor.isHidden = False
+            else:
+                name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
+                newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
+                newActor.addRoots()
+                print
+                newActor.team = self.teams[partialActor['team']]
+                newActor.addWeapon(newActor.team.weaponList)
+            
             newActor.x, newActor.y = partialActor['location']
-            newActor.addRoots()
-            print
-            newActor.addWeapon(newActor.team.weaponList)
             self.actors.append(newActor)
             self.teams[partialActor['team']].members.append(newActor)
         
@@ -84,15 +91,16 @@ class Scenario:
         self.result = battle.result #straight pass-through for now
         
         player = next(actor for actor in battle.actors if not actor.isNPC)
-        player.team = None
-        f = file('test.uap','w')
-        pickle.dump(player, f)
-        f.close()
-        
+        self.cleanPlayer(player)
         print
         print
         print 'Goodbye!'
    
+    def cleanPlayer(self, player):
+        player.team = None
+        player.flags = []
+        player.focus = []
+        self.finalPlayer = player
         
    
 
@@ -335,16 +343,12 @@ class Game:
         print '^^^^  UNLUCKY AT CARDS  ^^^^^'
         print '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
         print 
-        print 'Choose mode:'
-        print '1) Start Game'
-        print '2) Dev Tools'
-        mode = input('Choose mode')
-        if mode == 1:
-            scenarioChoice = self.pickScenario()
-            print
-            scenario = Scenario(data.allScenarios[scenarioChoice])
-        else:
-            self.devTools()
+        player = self.loadPlayer()
+        scenarioChoice = self.pickScenario()
+        print
+        scenario = Scenario(data.allScenarios[scenarioChoice], player)
+        self.savePlayer(scenario.finalPlayer)
+
         
     def pickScenario(self):
         scenarioChoice = 0
@@ -362,11 +366,20 @@ class Game:
                 print "Please enter your choice by number."
         return scenarioChoice - 1
 
-    def devTools(self):
-        f = file('test.uap','r')
-        pc = pickle.load(f)
+    def loadPlayer(self):
+        try:
+            f = file('test.uap','r')
+            loadPlayer = pickle.load(f)
+            f.close()   
+            return loadPlayer     
+        except:
+            return None
+        
+    def savePlayer(self, player):
+        f = file('test.uap','w')
+        pickle.dump(player, f)
         f.close()
-        print pc.name
+
 
 
 
