@@ -2,6 +2,7 @@ import random
 import time
 import copy
 from operator import itemgetter
+import pickle
 
 
 import class_overall
@@ -81,6 +82,12 @@ class Scenario:
         battle.startBattle()
         
         self.result = battle.result #straight pass-through for now
+        
+        player = next(actor for actor in battle.actors if not actor.isNPC)
+        player.team = None
+        f = file('test.uap','w')
+        pickle.dump(player, f)
+        f.close()
         
         print
         print
@@ -328,9 +335,16 @@ class Game:
         print '^^^^  UNLUCKY AT CARDS  ^^^^^'
         print '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
         print 
-        scenarioChoice = self.pickScenario()
-        print
-        scenario = Scenario(data.allScenarios[scenarioChoice])
+        print 'Choose mode:'
+        print '1) Start Game'
+        print '2) Dev Tools'
+        mode = input('Choose mode')
+        if mode == 1:
+            scenarioChoice = self.pickScenario()
+            print
+            scenario = Scenario(data.allScenarios[scenarioChoice])
+        else:
+            self.devTools()
         
     def pickScenario(self):
         scenarioChoice = 0
@@ -348,5 +362,14 @@ class Game:
                 print "Please enter your choice by number."
         return scenarioChoice - 1
 
+    def devTools(self):
+        f = file('test.uap','r')
+        pc = pickle.load(f)
+        f.close()
+        print pc.name
+
+
 
 game = Game()
+
+
