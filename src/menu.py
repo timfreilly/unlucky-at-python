@@ -68,7 +68,7 @@ class Scenario:
                 newActor.team = self.teams[partialActor['team']]
                 newActor.isHidden = False
             else:
-                name = partialActor['name'] if 'name' in partialActor else raw_input('What is your character\'s name? ')
+                name = partialActor['name']  
                 newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
                 newActor.addRoots()
                 print
@@ -99,8 +99,10 @@ class Scenario:
     def cleanPlayer(self, player):
         player.team = None
         player.flags = []
-        player.focus = []
+        player.focus = None
+        player.losthp = 0
         self.finalPlayer = player
+        
         
    
 
@@ -373,7 +375,11 @@ class Game:
             f.close()   
             return loadPlayer     
         except:
-            return None
+            name = raw_input('What is your character\'s name? ')
+            newPlayer = class_overall.Actor(name)
+            newPlayer.addRoots()
+            newPlayer.addWeapon(['six-shooter','shotgun','rifle','saber'])
+            return newPlayer
         
     def savePlayer(self, player):
         f = file('test.uap','w')
