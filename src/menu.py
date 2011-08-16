@@ -369,17 +369,24 @@ class Game:
         return scenarioChoice - 1
 
     def loadPlayer(self):
+        player = None
         try:
             f = file('test.uap','r')
-            loadPlayer = pickle.load(f)
-            f.close()   
-            return loadPlayer     
         except:
+            f = None    
+        if f:
+            doLoad = raw_input("Bring your Actor for a sequel? ")
+            if doLoad.lower() in ['yes','y','ok']:
+                player = pickle.load(f)
+            f.close()   
+                   
+        if not player:  
             name = raw_input('What is your character\'s name? ')
-            newPlayer = class_overall.Actor(name)
-            newPlayer.addRoots()
-            newPlayer.addWeapon(['six-shooter','shotgun','rifle','saber'])
-            return newPlayer
+            player = class_overall.Actor(name)
+            player.addRoots()
+            player.addWeapon(['six-shooter','shotgun','rifle','saber'])
+        
+        return player
         
     def savePlayer(self, player):
         f = file('test.uap','w')
