@@ -308,35 +308,44 @@ class Battle:
             turnAction=legalOptions[turnChoice-1][2] #Takes the action based on the choice
             exec turnAction
 
-
-    def startBattle(self):
+    def setInitiativeOrder(self):
+        inits = [(999,'New Round')]  #the game sends back "New Round" every time things loop around
         for actor in self.actors:
             actor.rollInitiative()
+            inits.append((actor.initiative, actor))
+            
+        inits = sorted(inits, key=lambda inits: inits[0], reverse=True)
+        index = 0
+        while 1:
+            yield inits[index][1]
+            index += 1
+            if index == len(inits):
+                index = 0
+
+            
+
+    def startBattle(self):
+        initiativeOrder = self.setInitiativeOrder()
         self.roundCount=1
-        turn = 100 #The game "counts down" from 100 and each actor gets a turn whenever their number comes up
-        while not self.gameEnd(): #TODO: One weird thing is that gameEnd is run every tick of initiative
-            if turn == 100:
+        while not self.gameEnd():
+            actor = initiativeOrder.next()
+            if actor == 'New Round':
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print "Beginning round number ",self.roundCount,"."
                 print "~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~"
                 print
                 time.sleep(1)
+                self.roundCount += 1
+            else:
+                if actor.isDisabled:
+                    print actor.descState(),'and can not act!'
+                elif not actor.isHidden:
+                    self.currentActor = actor #TODO: Should this just be a parameter?
+                    self.takeTurn()
+                    print
+                    print
+                    time.sleep(1)
 
-            for actor in self.actors:
-                if actor.initiative == turn:
-                    if actor.isDisabled:
-                        print actor.descState(),'and can not act!'
-                    elif not actor.isHidden:
-                        self.currentActor = actor #TODO: Should this just be a parameter?
-                        self.takeTurn()
-                        print
-                        print
-                        time.sleep(1)
-
-            turn -= 1
-            if turn == -100:
-                self.roundCount+=1
-                turn = 100
 
 
 class Game:
