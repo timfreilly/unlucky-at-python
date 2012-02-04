@@ -90,3 +90,24 @@ harm you, so aim true.
 Good luck, partner!                
                 '''
                 }]
+
+allRooms = [{'name':'Main Street',
+             'description':'The mostly mainly street seen in years',
+             'leadsTo':['Shack','Bank']
+             
+             
+             },
+            {'name':'Shack',
+             'description':'This shack is safe from attack',
+             'leadsTo':['Main Street']
+             
+             },
+            {'name':'Bank',
+             'description':'A small bank in a small town',
+             'leadsTo':['Main Street'],
+             'starts':'Lonely Day at the Bank'
+             }
+            
+            
+            
+            ]

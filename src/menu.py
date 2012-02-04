@@ -71,7 +71,6 @@ class Scenario:
                 name = partialActor['name']  
                 newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
                 newActor.addRoots()
-                print
                 newActor.team = self.teams[partialActor['team']]
                 newActor.addWeapon(newActor.team.weaponList)
             
