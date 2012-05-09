@@ -1,0 +1,1 @@
+This is my text-based python game.  I use it mostly to play around with python commands.  I want to add some more documentation over time, mostly so my students can look here and get a sense of what they could try out.
