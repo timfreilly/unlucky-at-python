@@ -31,11 +31,19 @@ class Actor:
         self.grit = kwargs.get('grit',random.randint(1,100))
         #roots
         #team
-        #weapon stuff
         self.x = kwargs.get('x',0)
         self.y = kwargs.get('y',0)
         self.isNPC = kwargs.get('isNPC',False)
         self.isHidden = kwargs.get('isHidden',False) #some NPCs start inactive
+        #weapon/inventory stuff
+        startWeapons = kwargs.get('weapons',[])
+        startAmmos = kwargs.get('ammos',[])
+        if 'weapon' in kwargs:  #using 'if' not '.get' to avoid empty weapons
+            startWeapons.append(kwargs['weapon'])
+        if 'ammo' in kwargs:
+            startAmmos.append(kwargs['ammo'])
+        self.gear=class_weapon.Gear(weapons=startWeapons, ammos=startAmmos) #Empty inventory
+        
 
         #stats that are reset on character creation
 
@@ -51,7 +59,7 @@ class Actor:
                                #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
         self.focus=None        #focus is the actor whom this actor is currently "Locked On" to.
                                #It is meant to be used to get early 3+ support in, and may disappear after
-        self.gear=class_weapon.Gear()
+        
         
     @classmethod    
     def fromJSON(cls, json):

@@ -44,13 +44,16 @@ class Weapon:
               
 class Gear:
     def __init__(self, **kwargs):
-        weapons = kwargs.get('weapons',[])
+        startWeapons = kwargs.get('weapons',[])
         self.weapons = []
-        ammos = kwargs.get('ammos',[])
+        startAmmos = kwargs.get('ammos',[])
         self.ammos = []
-        for weapon in weapons:
-            self.weapons.append(Weapon(weapon))
-        for ammo in ammos:
+        print startWeapons
+        #trying to add an empty weapon
+        for weapon in startWeapons:
+            print weapon
+            self.weapons.append(Weapon(type=weapon))
+        for ammo in startAmmos:
             self.addAmmo(**ammo)
             
     @classmethod
