@@ -22,6 +22,7 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
 
 class Actor:
     def __init__(self, chosenName, isNPC=False, isHidden=False):
+        #TODO: use kwargs to capture any other stats that want to be set?
         self._name=chosenName
         self.brav=random.randint(1,100)
         self.conc=random.randint(1,100)
@@ -44,6 +45,20 @@ class Actor:
                                #It is meant to be used to get early 3+ support in, and may disappear after
         self.gear=class_weapon.Gear()
         
+    @classmethod    
+    def fromJSON(cls, json):
+        # call with Actor.fromJSON(blah)
+        #
+        #things I want to be able to init with JSON:
+        # - name
+        # - brav/conc/grit
+        # - root status
+        # - x/y
+        # - team
+        # - isNPC
+        # - isHidden
+        # - weapon, gear, weaponList (will need fromJSON for gear, at the very least)
+        return cls() #this calls init with the params in the parens    
         
     def __str__(self):
         return self.cap_name+"'s stats: "+str(self.hp)+" Health Points, \nBravery: "+str(self.brav)+"\tConcentration: "+str(self.conc)+"\tGrit: "+str(self.grit)
