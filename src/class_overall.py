@@ -21,24 +21,34 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
 
 
 class Actor:
-    def __init__(self, chosenName, isNPC=False, isHidden=False):
+    def __init__(self, **kwargs): #was: chosenName, isNPC=False, isHidden=False
+        #TODO: Seems like a good time to clean up init as well, and split 
+        #      generated from specifiable attributes
         #TODO: use kwargs to capture any other stats that want to be set?
-        self._name=chosenName
-        self.brav=random.randint(1,100)
-        self.conc=random.randint(1,100)
-        self.grit=random.randint(1,100)
+        #for key, value in kwargs.iteritems():
+        #need to manage defaults vs kw
+        
+        #stats that can be provided
+        self._name = kwargs.get('name','Stranger') #or random name generator
+        self.brav = kwargs.get('brav',random.randint(1,100))
+        self.conc = kwargs.get('conc',random.randint(1,100))
+        self.grit = kwargs.get('grit',random.randint(1,100))
+        #roots
+        #team
+        #weapon stuff
+        self.x = kwargs.get('x',0)
+        self.y = kwargs.get('y',0)
+        self.isNPC = kwargs.get('isNPC',False)
+        self.isHidden = kwargs.get('isHidden',False) #some NPCs start inactive
+
         self.losthp=0
         self.concuss=0         #negative up to 15
         self.morale=100+self.getBonus(self.grit)
         self.healthRoot=0      #set to 7 if player picks that root
         self.concussionRoot=0  #set to 1 if player picks that root
         self.grappleActor=None #stores a player that is either grappling or grabbled by the actor
-        self.x=0
-        self.y=0
         self.team=None
         self.initiative=0      #Place in the turn order.  Higher is earlier in the turn.
-        self.isNPC=isNPC
-        self.isHidden=isHidden #Some NPCs start the battle hidden and are revealed/added later in the scenario
         self.flags=[]          #flags are temporary status effects that modify rolls
                                #current flags: MOVINGFAST, MOVINGSLOW, DRAWING, DIGGING
         self.focus=None        #focus is the actor whom this actor is currently "Locked On" to.
@@ -58,6 +68,15 @@ class Actor:
         # - isNPC
         # - isHidden
         # - weapon, gear, weaponList (will need fromJSON for gear, at the very least)
+        
+        #put another way, here are the things that I presently "clean" from the player when pickling him:
+        #player.team = None
+        #player.flags = []
+        #player.focus = None
+        #player.losthp = 0
+        #I should probably also be cleaning morale and concussion
+        
+        
         return cls() #this calls init with the params in the parens    
         
     def __str__(self):

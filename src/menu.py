@@ -69,7 +69,7 @@ class Scenario:
                 newActor.isHidden = False
             else:
                 name = partialActor['name']  
-                newActor = class_overall.Actor(name,partialActor['isNPC'],partialActor['isHidden'])
+                newActor = class_overall.Actor(name=name,isNPC=partialActor['isNPC'],isHidden=partialActor['isHidden'])
                 newActor.addRoots()
                 newActor.team = self.teams[partialActor['team']]
                 newActor.addWeapon(newActor.team.weaponList)
@@ -390,7 +390,7 @@ class Game:
                    
         if not player:  
             name = raw_input('What is your character\'s name? ')
-            player = class_overall.Actor(name)
+            player = class_overall.Actor(name=name)
             player.addRoots()
             player.addWeapon(['six-shooter','shotgun','rifle','saber'])
         
