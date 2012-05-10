@@ -32,15 +32,30 @@ class WeaponType:
             return 'Short Range'
         
 class Weapon:
-    def __init__(self,name):
-        self.type = WeaponType.TypeFromName(name)
-        self.bullets = self.type.maxBullets  
+    def __init__(self,**kwargs):
+        #TODO: replace "six-shooter" below with a weaponList-based picker
+        self.type = WeaponType.TypeFromName(kwargs.get('type','six-shooter')) 
+        self.bullets = kwargs.get('bullets',self.type.maxBullets)
         self.drawn = False
+        
+    @classmethod
+    def fromJSON(cls, json):
+        pass #TODO: 
               
 class Gear:
-    def __init__(self):
+    def __init__(self, **kwargs):
+        weapons = kwargs.get('weapons',[])
         self.weapons = []
+        ammos = kwargs.get('ammos',[])
         self.ammos = []
+        for weapon in weapons:
+            self.weapons.append(Weapon(weapon))
+        for ammo in ammos:
+            self.addAmmo(**ammo)
+            
+    @classmethod
+    def fromJSON(cls, json):
+        pass #TODO:
         
     def addAmmo(self,type,quantity):
         for ammo in self.ammos:

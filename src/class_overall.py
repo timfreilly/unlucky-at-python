@@ -22,13 +22,9 @@ locationAndDamage=[["Left Leg", 40, 70, 200, 1000], #allows for mods over 100, 4
 
 class Actor:
     def __init__(self, **kwargs): #was: chosenName, isNPC=False, isHidden=False
-        #TODO: Seems like a good time to clean up init as well, and split 
-        #      generated from specifiable attributes
-        #TODO: use kwargs to capture any other stats that want to be set?
-        #for key, value in kwargs.iteritems():
-        #need to manage defaults vs kw
-        
+
         #stats that can be provided
+        
         self._name = kwargs.get('name','Stranger') #or random name generator
         self.brav = kwargs.get('brav',random.randint(1,100))
         self.conc = kwargs.get('conc',random.randint(1,100))
@@ -40,6 +36,8 @@ class Actor:
         self.y = kwargs.get('y',0)
         self.isNPC = kwargs.get('isNPC',False)
         self.isHidden = kwargs.get('isHidden',False) #some NPCs start inactive
+
+        #stats that are reset on character creation
 
         self.losthp=0
         self.concuss=0         #negative up to 15
@@ -241,7 +239,7 @@ class Actor:
                     print "Please enter your choice by number."
                 except NameError:
                     print "Please enter your choice by number."
-        self.weapon = class_weapon.Weapon(weaponList[weaponChoice-1])
+        self.weapon = class_weapon.Weapon(type=weaponList[weaponChoice-1])
         self.gear.weapons.append(self.weapon)
         if self.weapon.type.isRange:
             self.gear.addAmmo(self.weapon.type,self.weapon.type.maxBullets*3)
